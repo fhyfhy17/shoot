@@ -29,7 +29,7 @@ public class IgniteCacheConfig {
                 .setEnabled(true)
                 .setWriteBatchSize(20)
                 .setWriteCoalescing(true)
-                .setWriteDelaySeconds(10)
+                .setWriteDelaySeconds(1)
                 .setImplementation(playerDBStore);
 
         mapConfig.setMapStoreConfig(mapStoreConfig);
@@ -45,7 +45,7 @@ public class IgniteCacheConfig {
                 .setEnabled(true)
                 .setWriteBatchSize(20)
                 .setWriteCoalescing(true)
-                .setWriteDelaySeconds(10)
+                .setWriteDelaySeconds(1)
                 .setImplementation(userDBStore);
         mapConfig.setMapStoreConfig(mapStoreConfig);
         return mapConfig;
@@ -59,7 +59,7 @@ public class IgniteCacheConfig {
                 .setEnabled(true)
                 .setWriteBatchSize(20)
                 .setWriteCoalescing(true)
-                .setWriteDelaySeconds(10)
+                .setWriteDelaySeconds(1)
                 .setImplementation(unionDBStore);
         mapConfig.setMapStoreConfig(mapStoreConfig);
         return mapConfig;

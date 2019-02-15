@@ -5,6 +5,7 @@ import com.hazelcast.config.*;
 import com.pojo.ServerInfo;
 import com.util.ContextUtil;
 import com.util.IpUtil;
+import com.util.ReflectionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Configuration
 @Slf4j
@@ -25,29 +27,47 @@ public class HazelCastConfig {
 
     @Bean(name = "hazelcast")
     public Config config() {
-        ClasspathXmlConfig classpathXmlConfig = new ClasspathXmlConfig("cluster.xml");
+
+        Config config = new Config(ContextUtil.id + "-hazelcastConfig");
         //本地服务名
-        classpathXmlConfig.setInstanceName(ContextUtil.id);
-        classpathXmlConfig.getMemberAttributeConfig().setAttributes(Collections.singletonMap(Constant.SERVER_INFO, serverInfo));
+        config.setInstanceName(ContextUtil.id);
+        config.getMemberAttributeConfig().setAttributes(Collections.singletonMap(Constant.SERVER_INFO, serverInfo));
+
+        config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
+        config.getNetworkConfig().getJoin().getAwsConfig().setEnabled(false);
+        config.getNetworkConfig().getJoin().getGcpConfig().setEnabled(false);
+        config.getNetworkConfig().getJoin().getAzureConfig().setEnabled(false);
+        config.getNetworkConfig().getJoin().getKubernetesConfig().setEnabled(false);
+        config.getNetworkConfig().getJoin().getEurekaConfig().setEnabled(false);
+
+        AtomicInteger i = new AtomicInteger(20);
+        ReflectionUtil.getSerializeClasses().forEach(x -> {
+            config.getSerializationConfig().addSerializerConfig(new SerializerConfig()
+                    .setImplementation(new PstStreamSerializer<>(x, i.incrementAndGet()))
+                    .setTypeClass(x));
+
+        });
+
+
         //自身IP
-        TcpIpConfig tcpIpConfig = classpathXmlConfig.getNetworkConfig().getJoin().getTcpIpConfig();
+        TcpIpConfig tcpIpConfig = config.getNetworkConfig().getJoin().getTcpIpConfig();
         tcpIpConfig.setEnabled(true);
         tcpIpConfig.addMember(IpUtil.getHostIp());
         //发现IP
-        InterfacesConfig interfaces = classpathXmlConfig.getNetworkConfig().getInterfaces();
+        InterfacesConfig interfaces = config.getNetworkConfig().getInterfaces();
 
         interfaces.setEnabled(true);
         interfaces.addInterface("10.0.*.*");
 
         if (!Objects.isNull(mapConfigs)) {
             for (MapConfig mapConfig : mapConfigs) {
-                classpathXmlConfig.addMapConfig(mapConfig);
+                config.addMapConfig(mapConfig);
             }
         }
 
-        classpathXmlConfig.addListenerConfig(
+        config.addListenerConfig(
                 new ListenerConfig("com.config.ClusterMembershipListener"));
-        return classpathXmlConfig;
+        return config;
     }
 }
 

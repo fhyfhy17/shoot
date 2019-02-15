@@ -18,7 +18,7 @@ public class TaskEntry extends BaseEntry {
         super(id);
     }
 
-    List<TaskPo> tasks = new ArrayList<>();
+    private List<TaskPo> tasks = new ArrayList<>();
     @Indexed
     private long playerId;
 

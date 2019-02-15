@@ -111,6 +111,15 @@ public class SerializeUtil {
         return configuration.asByteArray(m);
     }
 
+//    private static byte[] pstMts(Message message) {
+//        return ProtostuffUtil.serializeObject(message, Message.class);
+//    }
+//
+//    private static Message pstStm(byte[] s) {
+//        return ProtostuffUtil.deserializeObject(s, Message.class);
+//    }
+
+
     private static Message kryoStm(byte[] s) {
         Message m = null;
         try (
@@ -203,13 +212,21 @@ public class SerializeUtil {
         byte[] kryoString = kryoMts(m);
         byte[] colferString = colferMts(m);
         byte[] fstString = fstMts(m);
-
+//        byte[] pstString = pstMts(m);
         long start2 = System.currentTimeMillis();
         for (int i = 0; i < count; i++) {
             kryoMts(m);
         }
         long end2 = System.currentTimeMillis();
         log.info("kryo msg to String = {}", end2 - start2);
+
+//        long start32 = System.currentTimeMillis();
+//        for (int i = 0; i < count; i++) {
+//            pstMts(m);
+//        }
+//        long end32 = System.currentTimeMillis();
+//        log.info("pst msg to String = {}", end32 - start32);
+
 
         long start5 = System.currentTimeMillis();
         for (int i = 0; i < count; i++) {
@@ -255,6 +272,14 @@ public class SerializeUtil {
 
         log.info("kryo String to msg  = {}", (end4 - start4));
 
+//        long start34 = System.currentTimeMillis();
+//        for (int i = 0; i < count; i++) {
+//            pstStm(pstString);
+//        }
+//        long end34 = System.currentTimeMillis();
+//
+//        log.info("pst String to msg  = {}", (end34 - start34));
+
 
         long start14 = System.currentTimeMillis();
         for (int i = 0; i < count; i++) {
@@ -291,6 +316,7 @@ public class SerializeUtil {
 
         log.info("");
         log.info("kryo String大小 = {}", kryoString.length);
+//        log.info("pst String大小 = {}", pstString.length);
         log.info("colfer String大小 = {}", colferString.length);
         log.info("fast String大小 = {}", fastString.length);
         log.info("prorto String大小 = {}", protoString.length);

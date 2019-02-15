@@ -75,6 +75,26 @@ public class WebTestEnter {
         UnionEntry u = new UnionEntry(IdCreator.nextId(UnionEntry.class));
         IMap<Long, UnionEntry> map = hazelcastInstance.getMap(CacheEnum.UnionEntryCache.name());
         map.put(u.getId(), u);
+
+
+        PlayerEntry u2 = new PlayerEntry(IdCreator.nextId(PlayerEntry.class));
+        u2.setExp(3);
+        u2.setName("王三");
+        IMap<Long, PlayerEntry> map2 = hazelcastInstance.getMap(CacheEnum.PlayerEntryCache.name());
+        map2.put(u2.getId(), u2);
+
+
+        IMap<Long, PlayerEntry> map3 = hazelcastInstance.getMap(CacheEnum.PlayerEntryCache.name());
+        System.out.println(map3.get(u2.getId()));
+    }
+
+
+    @RequestMapping("/test/addUnion2")
+    public void addUnion2() {
+
+        IMap<Long, PlayerEntry> map3 = hazelcastInstance.getMap(CacheEnum.PlayerEntryCache.name());
+//        map3.loadAll(true);
+        System.out.println("成功啦" + map3.get(1L));
     }
 
     @RequestMapping("/test/createPlayer")

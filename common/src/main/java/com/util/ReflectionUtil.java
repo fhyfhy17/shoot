@@ -2,6 +2,7 @@ package com.util;
 
 import com.annotation.SeqClassName;
 import com.entry.BaseEntry;
+import com.entry.Serialize;
 import com.google.common.collect.Lists;
 import org.reflections.Reflections;
 
@@ -55,6 +56,12 @@ public class ReflectionUtil {
         return reflections.getSubTypesOf(BaseEntry.class);
     }
 
+    public static Set<Class<? extends Serialize>> getSerializeClasses() {
+        Reflections reflections = new Reflections("com.entry");
+        Set<Class<? extends Serialize>> subTypesOf = reflections.getSubTypesOf(Serialize.class);
+        subTypesOf.removeIf(next -> next.equals(BaseEntry.class));
+        return subTypesOf;
+    }
 
     public static void main(String[] args) {
 //        getSeqClassNames();

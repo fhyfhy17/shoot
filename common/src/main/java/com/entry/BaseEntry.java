@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id;
 
 @Getter
 @Setter
-public class BaseEntry {
+public class BaseEntry implements Serialize {
 
     @Id
     @Setter(AccessLevel.NONE)
@@ -16,4 +16,5 @@ public class BaseEntry {
     public BaseEntry(long id) {
         this.id = id;
     }
+
 }

@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "_sequence")
 @Getter
 @Setter
-public class SeqEntry {
+public class SeqEntry implements Serialize {
 
 
     private String collName;// 集合名称

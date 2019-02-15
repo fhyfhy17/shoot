@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 public class PlayerEntry extends BaseEntry {
 
+
     public PlayerEntry(long id) {
         super(id);
     }

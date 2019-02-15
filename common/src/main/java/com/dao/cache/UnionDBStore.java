@@ -2,16 +2,17 @@ package com.dao.cache;
 
 import com.dao.UnionRepository;
 import com.entry.UnionEntry;
+import com.google.common.collect.Maps;
+import com.hazelcast.core.MapStoreAdapter;
 import com.util.SpringUtils;
-import org.apache.ignite.cache.store.CacheStoreAdapter;
 import org.springframework.stereotype.Repository;
 
-import javax.cache.Cache;
 import javax.cache.integration.CacheLoaderException;
-import javax.cache.integration.CacheWriterException;
+import java.util.Collection;
+import java.util.Map;
 
 @Repository
-public class UnionDBStore extends CacheStoreAdapter<Long, UnionEntry> {
+public class UnionDBStore extends MapStoreAdapter<Long, UnionEntry> {
 
     @Override
     public UnionEntry load(Long key) throws CacheLoaderException {
@@ -19,16 +20,38 @@ public class UnionDBStore extends CacheStoreAdapter<Long, UnionEntry> {
         return unionRepository.findById(key).orElse(null);
     }
 
+
     @Override
-    public void write(Cache.Entry<? extends Long, ? extends UnionEntry> entry) throws CacheWriterException {
+    public void delete(Long key) {
         UnionRepository unionRepository = SpringUtils.getBean(UnionRepository.class);
-        UnionEntry unionEntry = entry.getValue();
+        unionRepository.deleteById(key);
+    }
+
+    @Override
+    public void store(Long key, UnionEntry unionEntry) {
+        UnionRepository unionRepository = SpringUtils.getBean(UnionRepository.class);
         unionRepository.save(unionEntry);
     }
 
     @Override
-    public void delete(Object key) throws CacheWriterException {
+    public void storeAll(Map<Long, UnionEntry> map) {
         UnionRepository unionRepository = SpringUtils.getBean(UnionRepository.class);
-        unionRepository.deleteById((Long) key);
+        unionRepository.saveAll(map.values());
     }
+
+    @Override
+    public void deleteAll(Collection<Long> keys) {
+        UnionRepository unionRepository = SpringUtils.getBean(UnionRepository.class);
+        keys.forEach(unionRepository::deleteById);
+    }
+
+    @Override
+    public Map<Long, UnionEntry> loadAll(Collection<Long> keys) {
+        UnionRepository unionRepository = SpringUtils.getBean(UnionRepository.class);
+        Iterable<UnionEntry> allById = unionRepository.findAllById(keys);
+        Map<Long, UnionEntry> map = Maps.newHashMap();
+        allById.forEach(unionEntry -> map.put(unionEntry.getId(), unionEntry));
+        return map;
+    }
+
 }

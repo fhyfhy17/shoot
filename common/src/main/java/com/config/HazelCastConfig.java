@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 @Configuration
 @Slf4j
@@ -18,7 +20,8 @@ public class HazelCastConfig {
 
     @Autowired
     private ServerInfo serverInfo;
-
+    @Autowired(required = false)
+    private List<MapConfig> mapConfigs;
 
     @Bean(name = "hazelcast")
     public Config config() {
@@ -34,7 +37,14 @@ public class HazelCastConfig {
         InterfacesConfig interfaces = classpathXmlConfig.getNetworkConfig().getInterfaces();
 
         interfaces.setEnabled(true);
-        interfaces.addInterface("192.168.*.*");
+        interfaces.addInterface("10.0.*.*");
+
+        if (!Objects.isNull(mapConfigs)) {
+            for (MapConfig mapConfig : mapConfigs) {
+                classpathXmlConfig.addMapConfig(mapConfig);
+            }
+        }
+
         classpathXmlConfig.addListenerConfig(
                 new ListenerConfig("com.config.ClusterMembershipListener"));
         return classpathXmlConfig;

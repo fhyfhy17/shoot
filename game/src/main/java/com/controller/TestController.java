@@ -1,9 +1,6 @@
 package com.controller;
 
-import com.config.CacheManager;
-import com.entry.BaseEntry;
 import com.entry.PlayerEntry;
-import com.enums.CacheEnum;
 import com.event.EventDispatcher;
 import com.event.playerEvent.TestEvent;
 import com.google.protobuf.MessageLite;
@@ -13,9 +10,6 @@ import com.service.TestService;
 import com.util.CountUtil;
 import com.util.IdCreator;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ignite.Ignite;
-import org.apache.ignite.IgniteAtomicSequence;
-import org.apache.ignite.IgniteCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -45,8 +39,6 @@ public class TestController extends BaseController {
         PlayerEntry playerEntry = new PlayerEntry(IdCreator.nextId(PlayerEntry.class));
         playerEntry.setName("王=四");
 
-        IgniteCache<Long, BaseEntry> cache = CacheManager.getCache(CacheEnum.PlayerEntryCache);
-        cache.put(playerEntry.getId(), playerEntry);
 
 //        }
         EventDispatcher.playerEventDispatch(new TestEvent(player.getPlayerId(), "mykey"));

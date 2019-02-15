@@ -2,7 +2,7 @@ package com.controller.interceptor.handlerInterceptorImpl;
 
 import com.controller.ControllerHandler;
 import com.controller.interceptor.HandlerInterceptor;
-import com.manager.VertxMessageManager;
+import com.manager.ServerInfoManager;
 import com.net.msg.Options;
 import com.pojo.Message;
 import com.util.ContextUtil;
@@ -22,7 +22,7 @@ public class ResultReplyInterceptor implements HandlerInterceptor {
         }
 
         Message messageResult = buildMessage(result, message);
-        VertxMessageManager.sendMessage(message.getFrom(), messageResult);
+        ServerInfoManager.sendMessage(message.getFrom(), messageResult);
 
     }
 

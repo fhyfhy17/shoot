@@ -2,18 +2,20 @@ package com.dao.cache;
 
 import com.dao.UserRepository;
 import com.entry.UserEntry;
-import org.apache.ignite.cache.store.CacheStoreAdapter;
+import com.google.common.collect.Maps;
+import com.hazelcast.core.MapStoreAdapter;
+import com.util.SpringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.cache.Cache;
 import javax.cache.integration.CacheLoaderException;
-import javax.cache.integration.CacheWriterException;
+import java.util.Collection;
+import java.util.Map;
 
 @Repository
-public class UserDBStore extends CacheStoreAdapter<Long, UserEntry> {
+public class UserDBStore extends MapStoreAdapter<Long, UserEntry> {
 
     @Autowired
     private UserRepository userRepo;
@@ -26,17 +28,38 @@ public class UserDBStore extends CacheStoreAdapter<Long, UserEntry> {
         return userRepo.findById(key).orElse(null);
     }
 
+
     @Override
-    public void write(Cache.Entry<? extends Long, ? extends UserEntry> entry) throws CacheWriterException {
-        UserEntry userEntry = entry.getValue();
-        logger.info(String.valueOf(userRepo));
-        userRepo.save(userEntry);
+    public void delete(Long key) {
+        UserRepository userRepository = SpringUtils.getBean(UserRepository.class);
+        userRepository.deleteById(key);
     }
 
     @Override
-    public void delete(Object key) throws CacheWriterException {
-        logger.info(String.valueOf(userRepo));
-        userRepo.deleteById((Long) key);
+    public void store(Long key, UserEntry userEntry) {
+        UserRepository userRepository = SpringUtils.getBean(UserRepository.class);
+        userRepository.save(userEntry);
+    }
+
+    @Override
+    public void storeAll(Map<Long, UserEntry> map) {
+        UserRepository userRepository = SpringUtils.getBean(UserRepository.class);
+        userRepository.saveAll(map.values());
+    }
+
+    @Override
+    public void deleteAll(Collection<Long> keys) {
+        UserRepository userRepository = SpringUtils.getBean(UserRepository.class);
+        keys.forEach(userRepository::deleteById);
+    }
+
+    @Override
+    public Map<Long, UserEntry> loadAll(Collection<Long> keys) {
+        UserRepository userRepository = SpringUtils.getBean(UserRepository.class);
+        Iterable<UserEntry> allById = userRepository.findAllById(keys);
+        Map<Long, UserEntry> map = Maps.newHashMap();
+        allById.forEach(userEntry -> map.put(userEntry.getId(), userEntry));
+        return map;
     }
 
 }

@@ -2,17 +2,17 @@ package com.dao.cache;
 
 import com.dao.PlayerRepository;
 import com.entry.PlayerEntry;
+import com.google.common.collect.Maps;
+import com.hazelcast.core.MapStoreAdapter;
 import com.util.SpringUtils;
-import org.apache.ignite.cache.store.CacheStoreAdapter;
 import org.springframework.stereotype.Repository;
 
-import javax.cache.Cache;
 import javax.cache.integration.CacheLoaderException;
-import javax.cache.integration.CacheWriterException;
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
 
 @Repository
-public class PlayerDBStore extends CacheStoreAdapter<Long, PlayerEntry> {
+public class PlayerDBStore extends MapStoreAdapter<Long, PlayerEntry> {
 
     @Override
     public PlayerEntry load(Long key) throws CacheLoaderException {
@@ -21,15 +21,36 @@ public class PlayerDBStore extends CacheStoreAdapter<Long, PlayerEntry> {
     }
 
     @Override
-    public void write(Cache.Entry<? extends Long, ? extends PlayerEntry> entry) throws CacheWriterException {
+    public void delete(Long key) {
         PlayerRepository playerRepository = SpringUtils.getBean(PlayerRepository.class);
-        PlayerEntry playerEntry = entry.getValue();
+        playerRepository.deleteById(key);
+    }
+
+    @Override
+    public void store(Long key, PlayerEntry playerEntry) {
+        PlayerRepository playerRepository = SpringUtils.getBean(PlayerRepository.class);
         playerRepository.save(playerEntry);
     }
 
     @Override
-    public void delete(Object key) throws CacheWriterException {
+    public void storeAll(Map<Long, PlayerEntry> map) {
         PlayerRepository playerRepository = SpringUtils.getBean(PlayerRepository.class);
-        playerRepository.deleteById((Long) key);
+        playerRepository.saveAll(map.values());
     }
+
+    @Override
+    public void deleteAll(Collection<Long> keys) {
+        PlayerRepository playerRepository = SpringUtils.getBean(PlayerRepository.class);
+        keys.forEach(playerRepository::deleteById);
+    }
+
+    @Override
+    public Map<Long, PlayerEntry> loadAll(Collection<Long> keys) {
+        PlayerRepository playerRepository = SpringUtils.getBean(PlayerRepository.class);
+        Iterable<PlayerEntry> allById = playerRepository.findAllById(keys);
+        Map<Long, PlayerEntry> map = Maps.newHashMap();
+        allById.forEach(playerEntry -> map.put(playerEntry.getId(), playerEntry));
+        return map;
+    }
+
 }

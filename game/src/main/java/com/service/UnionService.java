@@ -3,10 +3,7 @@ package com.service;
 import com.annotation.EventListener;
 import com.annotation.IgniteTransaction;
 import com.annotation.P;
-import com.aop.IgniteTransactionAspect;
 import com.dao.UnionRepository;
-import com.entry.PlayerEntry;
-import com.entry.UnionEntry;
 import com.enums.CacheEnum;
 import com.enums.CacheParamterEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +21,8 @@ public class UnionService {
     @IgniteTransaction(cacheEnum = {CacheEnum.UnionEntryCache})
     public void addContribute(@P(p = CacheParamterEnum.UnionEntryCache) long unionId, long contribute) {
 
-        UnionEntry unionEntry = (UnionEntry) IgniteTransactionAspect.THREAD_LOCAL.get()[0];
-        unionEntry.setContribution(unionEntry.getContribution() + contribute);
+//        UnionEntry unionEntry = (UnionEntry) IgniteTransactionAspect.THREAD_LOCAL.get()[0];
+//        unionEntry.setContribution(unionEntry.getContribution() + contribute);
 
     }
 
@@ -34,11 +31,11 @@ public class UnionService {
             @P(p = CacheParamterEnum.UnionEntryCache) long unionId
             , @P(p = CacheParamterEnum.PlayerEntryCache) long playerId)
     {
-        UnionEntry unionEntry = (UnionEntry) IgniteTransactionAspect.THREAD_LOCAL.get()[0];
-        PlayerEntry playerEntry = (PlayerEntry) IgniteTransactionAspect.THREAD_LOCAL.get()[1];
-        unionEntry.getApplyList().remove(playerId);
-        unionEntry.getPlayerList().add(playerId);
-        playerEntry.setUnionId(unionId);
+//        UnionEntry unionEntry = (UnionEntry) IgniteTransactionAspect.THREAD_LOCAL.get()[0];
+//        PlayerEntry playerEntry = (PlayerEntry) IgniteTransactionAspect.THREAD_LOCAL.get()[1];
+//        unionEntry.getApplyList().remove(playerId);
+//        unionEntry.getPlayerList().add(playerId);
+//        playerEntry.setUnionId(unionId);
 
     }
 

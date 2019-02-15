@@ -12,6 +12,6 @@ public class ServerConfig {
 
     @Bean
     public SocketAddress socketAddress() {
-        return new InetSocketAddress(ContextUtil.tcpPort);
+        return new InetSocketAddress(ContextUtil.nettyPort);
     }
 }

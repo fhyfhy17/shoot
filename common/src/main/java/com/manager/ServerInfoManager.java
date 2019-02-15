@@ -3,8 +3,10 @@ package com.manager;
 import cn.hutool.core.util.RandomUtil;
 import com.enums.TypeEnum;
 import com.node.RemoteNode;
+import com.pojo.Message;
 import com.pojo.ServerInfo;
 import com.util.ContextUtil;
+import com.util.SerializeUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -17,6 +19,7 @@ public class ServerInfoManager {
 
     private static ConcurrentHashMap<String, ServerInfo> serverInfos = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<String, RemoteNode> remotes = new ConcurrentHashMap<>();
+
     public static ConcurrentHashMap<String, ServerInfo> getAllServerInfos() {
         return serverInfos;
     }
@@ -84,4 +87,9 @@ public class ServerInfoManager {
         return remotes.get(serverId);
     }
 
+
+    public static void sendMessage(String queue, Message message) {
+        RemoteNode remoteNode = ServerInfoManager.getRemoteNode(queue);
+        remoteNode.sendReqMsg(SerializeUtil.mts(message));
+    }
 }

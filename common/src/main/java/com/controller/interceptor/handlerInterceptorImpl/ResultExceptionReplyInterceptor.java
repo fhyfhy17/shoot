@@ -3,7 +3,7 @@ package com.controller.interceptor.handlerInterceptorImpl;
 import com.Constant;
 import com.controller.ControllerHandler;
 import com.controller.interceptor.HandlerInterceptor;
-import com.manager.VertxMessageManager;
+import com.manager.ServerInfoManager;
 import com.net.msg.LOGIN_MSG;
 import com.net.msg.Options;
 import com.pojo.Message;
@@ -23,7 +23,7 @@ public class ResultExceptionReplyInterceptor implements HandlerInterceptor {
         }
 
         Message messageResult = buildMessage();
-        VertxMessageManager.sendMessage(message.getFrom(), messageResult);
+        ServerInfoManager.sendMessage(message.getFrom(), messageResult);
     }
 
     private Message buildMessage() {

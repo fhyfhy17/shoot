@@ -11,6 +11,9 @@ public class ContextUtil {
     public static int tcpPort;
     public static String zkIpPort;
     public static String ti;
+    public static int nettyPort;
+
+
     @Value("${server.serverId}")
 
     public void setId(String id) {
@@ -35,6 +38,12 @@ public class ContextUtil {
     @Value("${server.ti}")
     public void setTi(String ti) {
         ContextUtil.ti = ti;
+    }
+
+
+    @Value("${netty.port:0}")
+    public void setNettyPort(int nettyPort) {
+        ContextUtil.nettyPort = nettyPort;
     }
 
 

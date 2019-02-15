@@ -1,15 +1,14 @@
 package com.controller;
 
-import com.config.CacheManager;
 import com.dao.PlayerRepository;
 import com.dao.UserRepository;
-import com.entry.BaseEntry;
 import com.entry.PlayerEntry;
 import com.entry.UnionEntry;
 import com.enums.CacheEnum;
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IMap;
 import com.lock.zk.ZkDistributedLock;
 import com.manager.ServerInfoManager;
-import com.manager.VertxMessageManager;
 import com.mongoListener.SaveEventListener;
 import com.net.msg.LOGIN_MSG;
 import com.net.msg.Options;
@@ -21,18 +20,11 @@ import com.util.IdCreator;
 import com.util.SerializeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
-import org.apache.ignite.Ignite;
-import org.apache.ignite.IgniteCache;
-import org.apache.ignite.IgniteMessaging;
-import org.apache.ignite.cache.CachePeekMode;
-import org.apache.ignite.transactions.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.cache.Cache;
-import java.util.Iterator;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -47,48 +39,16 @@ public class WebTestEnter {
     UserRepository userRepository;
     @Autowired
     SaveEventListener saveEventListener;
-    @Autowired
-    private Ignite ignite;
-    @Autowired
-    @Qualifier(value = "im")
-    private IgniteMessaging igniteMessaging;
+
     @Autowired
     private UnionService unionService;
+
+    @Autowired
+    @Qualifier("ha")
+    private HazelcastInstance hazelcastInstance;
 //    @Autowired
 //    RedissonConfig redissonConfig;
 
-
-    @RequestMapping("/test/seq")
-    public void testSeq() {
-
-//        IgniteAtomicSequence seq = ignite.atomicSequence(
-//                "abctest", // Sequence name.
-//                0,       // Initial value for sequence.
-//                true     // Create if it does not exist.
-//        );
-//
-//        seq.getAndAdd(2);
-//        long l = seq.incrementAndGet();
-
-        IgniteCache<Long, BaseEntry> cache = CacheManager.getCache(CacheEnum.PlayerEntryCache);
-        try (Transaction tx = ignite.transactions().txStart()) {
-
-
-            tx.commit();
-        }
-
-
-        cache.invoke(1071010079177838592L, (entry, args) -> {
-            PlayerEntry value = (PlayerEntry) entry.getValue();
-            value.setCoin(value.getCoin() + 3);
-            entry.setValue(value);
-            return null;
-        });
-
-        PlayerEntry p = (PlayerEntry) cache.get(1071010079177838592L);
-
-        System.out.println("给ID为5的加3个coin，现在的coin为: " + p.getCoin());
-    }
 
     @RequestMapping("/test/a")
     public void test() {
@@ -113,15 +73,16 @@ public class WebTestEnter {
     @RequestMapping("/test/addUnion")
     public void addUnion() {
         UnionEntry u = new UnionEntry(IdCreator.nextId(UnionEntry.class));
-        IgniteCache<Long, BaseEntry> cache = CacheManager.getCache(CacheEnum.UnionEntryCache);
-        cache.put(u.getId(), u);
+        IMap<Long, UnionEntry> map = hazelcastInstance.getMap(CacheEnum.UnionEntryCache.name());
+        map.put(u.getId(), u);
     }
 
     @RequestMapping("/test/createPlayer")
     public void createPlayer() {
         PlayerEntry playerEntry = new PlayerEntry(IdCreator.nextId(PlayerEntry.class));
-        IgniteCache<Long, BaseEntry> cache = CacheManager.getCache(CacheEnum.PlayerEntryCache);
-        cache.put(playerEntry.getId(), playerEntry);
+        IMap<Long, PlayerEntry> map = hazelcastInstance.getMap(CacheEnum.PlayerEntryCache.name());
+
+        map.put(playerEntry.getId(), playerEntry);
 //        1077939648774410240
     }
 
@@ -192,37 +153,6 @@ public class WebTestEnter {
         }
     }
 
-    @RequestMapping("/test/cache")
-    public void cache() {
-
-
-        IgniteCache<Long, BaseEntry> cache = CacheManager.getCache(CacheEnum.PlayerEntryCache);
-        BaseEntry baseEntry = cache.get(1069906836339036160L);
-        BaseEntry baseEntry2 = cache.get(1069907277709840384L);
-
-        cache.clear(1069906836339036160L);
-//cache.loadCache((aLong, baseEntry1) -> true,1069906836339036160L);
-
-
-        System.out.println("======================");
-
-        Iterable iterable = cache.localEntries(CachePeekMode.ALL);
-        Iterator iterator = iterable.iterator();
-        while (iterator.hasNext()) {
-            Object next = iterator.next();
-            Cache.Entry<Long, PlayerEntry> playerEntryMap = (Cache.Entry<Long, PlayerEntry>) next;
-            System.out.println(playerEntryMap.getKey());
-            System.out.println(playerEntryMap.getValue().getId() + "_" + playerEntryMap.getValue().getName());
-        }
-    }
-
-    @RequestMapping("/test/igniteMessage")
-    public void testIgniteMessage() {
-        for (int i = 0; i < 1000000; i++) {
-            igniteMessaging.sendOrdered("login-1", "abcdefghigklmnopqrstuvwxyz", 10000);
-        }
-
-    }
 
     @RequestMapping("/test/vertxMessage")
     public void testVertxMessage() {
@@ -238,7 +168,7 @@ public class WebTestEnter {
 
         for (int i = 0; i < 1000000; i++) {
             message.setUid(1);
-            VertxMessageManager.sendMessage("login-1", message);
+            ServerInfoManager.sendMessage("login-1", message);
         }
 
     }

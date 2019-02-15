@@ -3,63 +3,66 @@ package com.config;
 import com.dao.cache.PlayerDBStore;
 import com.dao.cache.UnionDBStore;
 import com.dao.cache.UserDBStore;
-import com.entry.PlayerEntry;
-import com.entry.UnionEntry;
-import com.entry.UserEntry;
 import com.enums.CacheEnum;
-import org.apache.ignite.cache.CacheAtomicityMode;
-import org.apache.ignite.cache.CacheMode;
-import org.apache.ignite.configuration.CacheConfiguration;
+import com.hazelcast.config.MapConfig;
+import com.hazelcast.config.MapStoreConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.cache.configuration.FactoryBuilder;
 
 @Configuration
 public class IgniteCacheConfig {
 
+    @Autowired
+    private PlayerDBStore playerDBStore;
+    @Autowired
+    private UserDBStore userDBStore;
+    @Autowired
+    private UnionDBStore unionDBStore;
+
     @Bean
-    public CacheConfiguration playerEntryCache() {
-        CacheConfiguration<Long, PlayerEntry> cacheCfg = new CacheConfiguration<>(CacheEnum.PlayerEntryCache.name());
-        cacheCfg.setAtomicityMode(CacheAtomicityMode.ATOMIC);
-        cacheCfg.setReadThrough(true);
-        cacheCfg.setWriteThrough(true);
-        cacheCfg.setWriteBehindEnabled(true);
-        cacheCfg.setWriteBehindFlushSize(1000);
-        cacheCfg.setWriteBehindFlushFrequency(10_000);
-        cacheCfg.setWriteBehindFlushThreadCount(1);
-        cacheCfg.setCacheStoreFactory(FactoryBuilder.factoryOf(PlayerDBStore.class));
-        cacheCfg.setCacheMode(CacheMode.LOCAL);
-        return cacheCfg;
+    public MapConfig playerEntryCache() {
+        MapConfig mapConfig = new MapConfig(CacheEnum.PlayerEntryCache.name());
+        MapStoreConfig mapStoreConfig = new MapStoreConfig();
+
+        mapStoreConfig.setClassName(CacheEnum.PlayerEntryCache.name())
+                .setEnabled(true)
+                .setWriteBatchSize(20)
+                .setWriteCoalescing(true)
+                .setWriteDelaySeconds(10)
+                .setImplementation(playerDBStore);
+
+        mapConfig.setMapStoreConfig(mapStoreConfig);
+
+        return mapConfig;
     }
 
     @Bean
-    public CacheConfiguration userEntryCache() {
-
-        CacheConfiguration<Long, UserEntry> cacheCfg = new CacheConfiguration<>(CacheEnum.UserEntryCache.name());
-        cacheCfg.setAtomicityMode(CacheAtomicityMode.ATOMIC);
-        cacheCfg.setReadThrough(true);
-        cacheCfg.setWriteThrough(true);
-        cacheCfg.setWriteBehindEnabled(true);
-        cacheCfg.setWriteBehindFlushSize(1001);
-        cacheCfg.setWriteBehindFlushFrequency(10_000);
-        cacheCfg.setWriteBehindFlushThreadCount(1);
-        cacheCfg.setCacheStoreFactory(FactoryBuilder.factoryOf(UserDBStore.class));
-        cacheCfg.setCacheMode(CacheMode.LOCAL);
-        return cacheCfg;
+    public MapConfig userEntryCache() {
+        MapConfig mapConfig = new MapConfig(CacheEnum.UserEntryCache.name());
+        MapStoreConfig mapStoreConfig = new MapStoreConfig();
+        mapStoreConfig.setClassName(CacheEnum.UserEntryCache.name())
+                .setEnabled(true)
+                .setWriteBatchSize(20)
+                .setWriteCoalescing(true)
+                .setWriteDelaySeconds(10)
+                .setImplementation(userDBStore);
+        mapConfig.setMapStoreConfig(mapStoreConfig);
+        return mapConfig;
     }
 
     @Bean
-    public CacheConfiguration unionEntryCache() {
-
-        CacheConfiguration<Long, UnionEntry> cacheCfg = new CacheConfiguration<>(CacheEnum.UnionEntryCache.name());
-        cacheCfg.setAtomicityMode(CacheAtomicityMode.TRANSACTIONAL);
-        cacheCfg.setReadThrough(true);
-        cacheCfg.setWriteThrough(true);
-        cacheCfg.setCacheStoreFactory(FactoryBuilder.factoryOf(UnionDBStore.class));
-        cacheCfg.setCacheMode(CacheMode.PARTITIONED);
-        cacheCfg.setBackups(3);
-        return cacheCfg;
+    public MapConfig unionEntryCache() {
+        MapConfig mapConfig = new MapConfig(CacheEnum.UnionEntryCache.name());
+        MapStoreConfig mapStoreConfig = new MapStoreConfig();
+        mapStoreConfig.setClassName(CacheEnum.UnionEntryCache.name())
+                .setEnabled(true)
+                .setWriteBatchSize(20)
+                .setWriteCoalescing(true)
+                .setWriteDelaySeconds(10)
+                .setImplementation(unionDBStore);
+        mapConfig.setMapStoreConfig(mapStoreConfig);
+        return mapConfig;
     }
 
 }

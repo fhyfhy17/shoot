@@ -1,17 +1,14 @@
 package com.service;
 
 import com.annotation.EventListener;
-import com.config.CacheManager;
 import com.dao.PlayerRepository;
 import com.dao.UserRepository;
 import com.entry.PlayerEntry;
 import com.entry.UserEntry;
-import com.enums.CacheEnum;
 import com.event.playerEvent.TestEvent;
 import com.google.common.eventbus.Subscribe;
+import com.hazelcast.config.MapConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ignite.IgniteCache;
-import org.apache.ignite.configuration.CacheConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,20 +25,17 @@ public class TestService {
     UserRepository userRepository;
 
     @Autowired
-    private List<CacheConfiguration> repoList;
+    private List<MapConfig> repoList;
 
 
     @Subscribe
     public void test(TestEvent testEvent) {
-        for (CacheConfiguration cacheConfiguration : repoList) {
-            System.out.println(cacheConfiguration.getName());
+        for (MapConfig mapConfig : repoList) {
+            System.out.println(mapConfig.getName());
         }
 
         testEvent.getTestWord();
 
-        IgniteCache cache = CacheManager.getCache(CacheEnum.PlayerEntryCache);
-        System.out.println(cache.get(testEvent.getTestWord()));
-        System.out.println(cache.get(testEvent.getTestWord()));
 //        log.info("test = {}", testEvent.getTestWord());
 //        for (String cacheName : cachemanager.getCacheNames()) {
 //            System.out.println("cacheName: " + cacheName);

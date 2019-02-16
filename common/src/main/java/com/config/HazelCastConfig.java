@@ -35,10 +35,7 @@ public class HazelCastConfig {
 
         config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
         config.getNetworkConfig().getJoin().getAwsConfig().setEnabled(false);
-        config.getNetworkConfig().getJoin().getGcpConfig().setEnabled(false);
-        config.getNetworkConfig().getJoin().getAzureConfig().setEnabled(false);
-        config.getNetworkConfig().getJoin().getKubernetesConfig().setEnabled(false);
-        config.getNetworkConfig().getJoin().getEurekaConfig().setEnabled(false);
+
 
         AtomicInteger i = new AtomicInteger(20);
         ReflectionUtil.getSerializeClasses().forEach(x -> {

@@ -7,12 +7,13 @@ import com.entry.PlayerEntry;
 import com.entry.UserEntry;
 import com.event.playerEvent.TestEvent;
 import com.google.common.eventbus.Subscribe;
-import com.hazelcast.config.MapConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+//import com.hazelcast.config.MapConfig;
 
 @Service
 @EventListener
@@ -24,15 +25,15 @@ public class TestService {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
-    private List<MapConfig> repoList;
+//    @Autowired(required = false)
+//    private List<MapConfig> repoList;
 
 
     @Subscribe
     public void test(TestEvent testEvent) {
-        for (MapConfig mapConfig : repoList) {
-            System.out.println(mapConfig.getName());
-        }
+//        for (MapConfig mapConfig : repoList) {
+//            System.out.println(mapConfig.getName());
+//        }
 
         testEvent.getTestWord();
 

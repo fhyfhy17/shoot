@@ -1,5 +1,8 @@
 package com.util;
 
+import com.alibaba.fastjson.JSON;
+import com.pojo.ServerInfo;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,4 +39,9 @@ public class Util {
         return Arrays.stream(us).collect(Collectors.toList());
     }
 
+
+    public static ServerInfo transToServerInfo(String serverString) {
+        ServerInfo serverInfo = JSON.parseObject(serverString.split("==")[1], ServerInfo.class);
+        return serverInfo;
+    }
 }

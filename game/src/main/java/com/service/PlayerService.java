@@ -4,22 +4,21 @@ import com.alibaba.fastjson.JSONObject;
 import com.annotation.EventListener;
 import com.annotation.ServiceLog;
 import com.aop.ServiceLogAspect;
+import com.config.CacheHelper;
 import com.dao.PlayerRepository;
 import com.dao.UserRepository;
 import com.entry.PlayerEntry;
 import com.entry.UserEntry;
-import com.enums.CacheEnum;
 import com.event.playerEvent.PlayerLoginEvent;
 import com.exception.exceptionNeedSendToClient.NoPlayerWhenLoginException;
 import com.google.common.eventbus.Subscribe;
-import com.hazelcast.core.HazelcastInstance;
 import com.net.msg.LOGIN_MSG;
 import com.pojo.Player;
 import com.util.IdCreator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.ehcache.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,9 +39,6 @@ public class PlayerService {
     @Autowired
     private OnlineService onlineService;
 
-    @Autowired
-    @Qualifier("ha")
-    private HazelcastInstance hazelcastInstance;
 
     @Subscribe
     @ServiceLog
@@ -64,7 +60,9 @@ public class PlayerService {
         AtomicInteger a = new AtomicInteger();
         a.addAndGet(2);
 
-        PlayerEntry playerEntry = (PlayerEntry) hazelcastInstance.getMap(CacheEnum.PlayerEntryCache.name()).get(playerId);
+        Cache<Long, PlayerEntry> playerEntryCache = CacheHelper.getPlayerEntryCache();
+
+        PlayerEntry playerEntry = playerEntryCache.get(playerId);
 
         if (Objects.isNull(playerEntry)) {
             throw new NoPlayerWhenLoginException();
@@ -88,14 +86,14 @@ public class PlayerService {
             PlayerEntry playerEntry = new PlayerEntry(index);
             playerEntry.setName("游客" + index);
             playerEntry.setUid(uid);
-            hazelcastInstance.getMap(CacheEnum.PlayerEntryCache.name()).put(index, playerEntry);
+            CacheHelper.getPlayerEntryCache().put(index, playerEntry);
             // 存储到角色列表
             userEntry.getPlayerIds().add(index);
             userRepository.save(userEntry);
             playerIds = userEntry.getPlayerIds();
         }
         for (Long playerId : playerIds) {
-            PlayerEntry playerEntry = (PlayerEntry) hazelcastInstance.getMap(CacheEnum.PlayerEntryCache.name()).get(playerId);
+            PlayerEntry playerEntry = CacheHelper.getPlayerEntryCache().get(playerId);
 
             builder.addPlayers(buildPlayerInfo(playerEntry));
         }

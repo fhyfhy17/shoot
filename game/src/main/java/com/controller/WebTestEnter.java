@@ -2,11 +2,8 @@ package com.controller;
 
 import com.dao.PlayerRepository;
 import com.dao.UserRepository;
+import com.dao.cache.PlayerDBStore;
 import com.entry.PlayerEntry;
-import com.entry.UnionEntry;
-import com.enums.CacheEnum;
-import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IMap;
 import com.lock.zk.ZkDistributedLock;
 import com.manager.ServerInfoManager;
 import com.mongoListener.SaveEventListener;
@@ -20,12 +17,19 @@ import com.util.IdCreator;
 import com.util.SerializeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.ehcache.config.builders.WriteBehindConfigurationBuilder;
+import org.ehcache.config.units.MemoryUnit;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 //import com.config.RedissonConfig;
@@ -43,9 +47,9 @@ public class WebTestEnter {
     @Autowired
     private UnionService unionService;
 
-    @Autowired
-    @Qualifier("ha")
-    private HazelcastInstance hazelcastInstance;
+//    @Autowired
+//    @Qualifier("ha")
+//    private HazelcastInstance hazelcastInstance;
 //    @Autowired
 //    RedissonConfig redissonConfig;
 
@@ -70,41 +74,41 @@ public class WebTestEnter {
 
     }
 
-    @RequestMapping("/test/addUnion")
-    public void addUnion() {
-        UnionEntry u = new UnionEntry(IdCreator.nextId(UnionEntry.class));
-        IMap<Long, UnionEntry> map = hazelcastInstance.getMap(CacheEnum.UnionEntryCache.name());
-        map.put(u.getId(), u);
+//    @RequestMapping("/test/addUnion")
+//    public void addUnion() {
+//        UnionEntry u = new UnionEntry(IdCreator.nextId(UnionEntry.class));
+//        IMap<Long, UnionEntry> map = hazelcastInstance.getMap(CacheEnum.UnionEntryCache.name());
+//        map.put(u.getId(), u);
+//
+//
+//        PlayerEntry u2 = new PlayerEntry(IdCreator.nextId(PlayerEntry.class));
+//        u2.setExp(3);
+//        u2.setName("王三");
+//        IMap<Long, PlayerEntry> map2 = hazelcastInstance.getMap(CacheEnum.PlayerEntryCache.name());
+//        map2.put(u2.getId(), u2);
+//
+//
+//        IMap<Long, PlayerEntry> map3 = hazelcastInstance.getMap(CacheEnum.PlayerEntryCache.name());
+//        System.out.println(map3.get(u2.getId()));
+//    }
 
 
-        PlayerEntry u2 = new PlayerEntry(IdCreator.nextId(PlayerEntry.class));
-        u2.setExp(3);
-        u2.setName("王三");
-        IMap<Long, PlayerEntry> map2 = hazelcastInstance.getMap(CacheEnum.PlayerEntryCache.name());
-        map2.put(u2.getId(), u2);
-
-
-        IMap<Long, PlayerEntry> map3 = hazelcastInstance.getMap(CacheEnum.PlayerEntryCache.name());
-        System.out.println(map3.get(u2.getId()));
-    }
-
-
-    @RequestMapping("/test/addUnion2")
-    public void addUnion2() {
-
-        IMap<Long, PlayerEntry> map3 = hazelcastInstance.getMap(CacheEnum.PlayerEntryCache.name());
-//        map3.loadAll(true);
-        System.out.println("成功啦" + map3.get(1L));
-    }
-
-    @RequestMapping("/test/createPlayer")
-    public void createPlayer() {
-        PlayerEntry playerEntry = new PlayerEntry(IdCreator.nextId(PlayerEntry.class));
-        IMap<Long, PlayerEntry> map = hazelcastInstance.getMap(CacheEnum.PlayerEntryCache.name());
-
-        map.put(playerEntry.getId(), playerEntry);
-//        1077939648774410240
-    }
+//    @RequestMapping("/test/addUnion2")
+//    public void addUnion2() {
+//
+//        IMap<Long, PlayerEntry> map3 = hazelcastInstance.getMap(CacheEnum.PlayerEntryCache.name());
+////        map3.loadAll(true);
+//        System.out.println("成功啦" + map3.get(1L));
+//    }
+//
+//    @RequestMapping("/test/createPlayer")
+//    public void createPlayer() {
+//        PlayerEntry playerEntry = new PlayerEntry(IdCreator.nextId(PlayerEntry.class));
+//        IMap<Long, PlayerEntry> map = hazelcastInstance.getMap(CacheEnum.PlayerEntryCache.name());
+//
+//        map.put(playerEntry.getId(), playerEntry);
+////        1077939648774410240
+//    }
 
     AtomicInteger a = new AtomicInteger(0);
     StopWatch s = new StopWatch();
@@ -207,6 +211,32 @@ public class WebTestEnter {
             RemoteNode remoteNode = ServerInfoManager.getRemoteNode("login-1");
             remoteNode.sendReqMsg(SerializeUtil.mts(message));
         }
+
+    }
+
+    @RequestMapping("/test/ehcache")
+    public void aaa() {
+        CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder().build(true);
+
+        Cache<Long, PlayerEntry> writeBehindCache = cacheManager.createCache("writeBehindCache",
+                CacheConfigurationBuilder.newCacheConfigurationBuilder(Long.class, PlayerEntry.class, ResourcePoolsBuilder.newResourcePoolsBuilder().heap(10, MemoryUnit.GB))
+                        .withLoaderWriter(new PlayerDBStore())
+                        .add(WriteBehindConfigurationBuilder
+                                .newBatchedWriteBehindConfiguration(1, TimeUnit.SECONDS, 1000)
+                                .queueSize(3000)
+                                .concurrencyLevel(1)
+                                .enableCoalescing()
+
+                        )
+                        .build());
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+//        for (int i = 0; i < 1000000; i++) {
+//            PlayerEntry playerEntry = new PlayerEntry(IdCreator.nextId(PlayerEntry.class));
+//
+//            writeBehindCache.put(playerEntry.getId(), playerEntry);
+//        }
+        System.out.println("用时：" + stopWatch.getTime());
 
     }
 }

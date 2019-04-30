@@ -1,8 +1,6 @@
 package com.net;
 
 
-import com.net.msg.LOGIN_MSG;
-import com.net.msg.Options;
 import com.pojo.NettyMessage;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
@@ -51,21 +49,8 @@ public class NettyServerMsgHandler extends ChannelInboundHandlerAdapter {
             if (session == null) {
                 return;
             }
-            connectManager.checkMessage(session, message);
-            // 登录流程
-            if (message.getId() == LOGIN_MSG.CTS_LOGIN.getDescriptor().getOptions().getExtension(Options.messageId)) {
-                //没有uid的时候，先用session做 区分，hash 分发到login
-                LOGIN_MSG.CTS_LOGIN.Builder cts_login = LOGIN_MSG.CTS_LOGIN.parseFrom(message.getData()).toBuilder();
-                cts_login.setSessionId(session.getId());
-                message.setData(cts_login.build().toByteArray());
-            } else {
-                if (session.getUid() == 0) {
-                    //TODO 返回消息，请登录
-                    return;
-                }
-                message.setUid(session.getUid());
-            }
-            connectManager.addMessage(message);
+            connectManager.dealMessage(session,message);
+            
         } catch (Exception ex) {
             log.error("将关闭客户端连接...", ex);
             ctx.close();

@@ -77,10 +77,9 @@ public class ConnectManager {
         this.userIdToConnectMap.put(uid, session);
         return session;
     }
-
-    //TODO 这得修整 ，变成正式的
-    public void removeConnect(Channel channel) {
-        //玩家断线调用，清除缓存，由于多端问题，通过区分不同的sessionId进行删除
+	
+	
+	public void removeConnect(Channel channel) {
         if (channel == null) {
             return;
         }
@@ -93,7 +92,8 @@ public class ConnectManager {
             return;
         }
         Session sessionNow = this.userIdToConnectMap.get(session.getUid());
-        if (sessionNow.getId() == session.getId()) {
+		if(sessionNow.getId().equals(session.getId()))
+		{
             this.userIdToConnectMap.remove(session.getUid());
         }
 

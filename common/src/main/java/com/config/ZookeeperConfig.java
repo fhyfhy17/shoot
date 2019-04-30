@@ -32,7 +32,7 @@ public class ZookeeperConfig {
 
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(300, 3, 1000);
         CuratorFramework curator = CuratorFrameworkFactory.builder()
-                .connectString("192.168.1.28")
+                .connectString("127.0.0.1")
                 .namespace("shoot")
                 .sessionTimeoutMs(2000)
                 .retryPolicy(retryPolicy).build();

@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @EventListener
@@ -53,12 +52,10 @@ public class PlayerService {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("player", player);
         ServiceLogAspect.THREAD_LOCAL.set(jsonObject);
-        builder.setPlayerInfo(buildPlayerInfo(player.getPlayerEntry()));
+        builder.setPlayerInfo(buildPlayerInfo(player.playerPart.getPlayerEntry()));
     }
 
     private Player loadPlayer(long playerId) throws NoPlayerWhenLoginException {
-        AtomicInteger a = new AtomicInteger();
-        a.addAndGet(2);
 
         Cache<Long, PlayerEntry> playerEntryCache = CacheHelper.getPlayerEntryCache();
 
@@ -68,7 +65,7 @@ public class PlayerService {
             throw new NoPlayerWhenLoginException();
         }
         Player player = new Player();
-        player.setPlayerEntry(playerEntry);
+        player.initParts();
         player.setPlayerId(playerEntry.getId());
         player.setUid(playerEntry.getUid());
 
@@ -82,13 +79,13 @@ public class PlayerService {
         List<Long> playerIds = userEntry.getPlayerIds();
         if (CollectionUtils.isEmpty(playerIds)) {
             // 创建一个角色并存储
-            long index = IdCreator.nextId(PlayerEntry.class);
-            PlayerEntry playerEntry = new PlayerEntry(index);
-            playerEntry.setName("游客" + index);
+            long playerId = IdCreator.nextId(PlayerEntry.class);
+            PlayerEntry playerEntry = new PlayerEntry(playerId);
+            playerEntry.setName("游客" + playerId);
             playerEntry.setUid(uid);
-            CacheHelper.getPlayerEntryCache().put(index, playerEntry);
+            CacheHelper.getPlayerEntryCache().put(playerId, playerEntry);
             // 存储到角色列表
-            userEntry.getPlayerIds().add(index);
+            userEntry.getPlayerIds().add(playerId);
             userRepository.save(userEntry);
             playerIds = userEntry.getPlayerIds();
         }

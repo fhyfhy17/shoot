@@ -9,5 +9,11 @@ public enum CacheEnum {
     UnionEntryCache,
     /***/
     TaskEntryCache,
+    /***/
+    BagEntryCache,
     ;
+
+    public static CacheEnum getEnumByName(String name) {
+        return CacheEnum.valueOf(name);
+    }
 }

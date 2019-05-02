@@ -4,8 +4,6 @@ import com.entry.PlayerEntry;
 import lombok.Getter;
 import lombok.Setter;
 import org.ehcache.Cache;
-import org.ehcache.CacheManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,8 +11,6 @@ import org.springframework.stereotype.Component;
 @Setter
 public class PlayerPart extends BasePart {
 
-    @Autowired
-    private CacheManager cacheManager;
 
     private PlayerEntry playerEntry;
 

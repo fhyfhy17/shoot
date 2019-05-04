@@ -61,7 +61,9 @@ public class GenTemplatesUtil {
         Iterator<Element> it = root.getChildren().<Element>iterator();
         List<Attribute> attrList = new ArrayList<>();
         if (it.hasNext()) {
-            it.next().getAttributes().forEach(x ->
+            Element next = it.next();
+
+            next.getAttributes().forEach(x ->
             {
                 Attribute attr = (Attribute) x;
                 attrList.add(attr);
@@ -83,8 +85,11 @@ public class GenTemplatesUtil {
         buff.append("package com.template.templates;\n\n")
                 .append("import com.annotation.Template;\n")
                 .append("import lombok.Data;\n")
+                .append("\r\n")
                 .append("import java.util.*;\n")
-                .append("import org.springframework.stereotype.Component;\n");
+                .append("\r\n")
+                .append("import org.springframework.stereotype.Component;\n")
+                .append("\r\n");
 
 
         buff.append("@Data\n");
@@ -95,13 +100,20 @@ public class GenTemplatesUtil {
         buff.append("public class ").append(toUpperFirstLetter(className)).append(" extends AbstractTemplate {\n");
 
 
+
         for (Attribute attr : attrList) {
             String key = attr.getName();
             String value = attr.getValue();
             if ("id".equals(key)) {
                 continue;
             }
-            buff.append("\n\tprivate ").append(getType(value)).append(" ").append(key).append(";");
+            Pair<String, String> type = getType(value);
+
+            buff.append("\n    private ").append(type.t1).append(" ")
+                    .append(key)
+                    .append("".equals(type.t2) ? "" : " = " + type.t2)
+                    .append("; //");
+//                    .append()
         }
         buff.append("\n");
 
@@ -126,21 +138,39 @@ public class GenTemplatesUtil {
 
     }
 
-    public static String getType(String value) {
-
-        if (value.contains("array")) {
-            value = value.substring(0, value.indexOf("array"));
+    public static Pair<String, String> getType(String value) {
+        if (value.contains("[][]")) {
+            value = value.substring(0, value.indexOf("[][]"));
+            value = "List<List<" + toUpperFirstLetter(value) + ">>";
+            Pair<String, String> pair = new Pair<>(value, "new ArrayList<>()");
+            return pair;
+        } else if (value.contains("[]")) {
+            value = value.substring(0, value.indexOf("[]"));
             value = "List<" + toUpperFirstLetter(value) + ">";
-            return value;
+            Pair<String, String> pair = new Pair<>(value, "new ArrayList<>()");
+            return pair;
         } else {
-            return value;
+            value = singleToUpperFirstLetter(value);
+            Pair<String, String> pair = new Pair<>(value, "");
+            return pair;
         }
+    }
+
+    public static String singleToUpperFirstLetter(String letter) {
+        if (letter.equals("string")) {
+            return "String";
+        }
+        if (letter.equals("bool")) {
+            return "boolean";
+        }
+        return letter;
     }
 
     public static String toUpperFirstLetter(String letter) {
         if (letter.equals("int")) {
             letter = "integer";
         }
+
         char[] arr = letter.toCharArray();
         arr[0] = Character.toUpperCase(arr[0]);
         return String.valueOf(arr);

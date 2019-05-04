@@ -1,9 +1,11 @@
 package com.part;
 
-import com.entry.PlayerEntry;
+import com.entry.BagEntry;
+import com.tool.BagMy;
 import lombok.Getter;
 import lombok.Setter;
 import org.ehcache.Cache;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,13 +13,18 @@ import org.springframework.stereotype.Component;
 @Setter
 public class BagPart extends BasePart {
 
-    private PlayerEntry playerEntry;
+    private BagEntry bagEntry;
+
+    @Autowired
+    private BagMy bagMy;
 
     @Override
     public void onLoad() {
         player.bagPart = this;
-        Cache<Long, PlayerEntry> cache = cacheManager.getCache(getCacheName(), Long.class, PlayerEntry.class);
-        playerEntry = cache.get(player.getPlayerId());
+        Cache<Long, BagEntry> cache = cacheManager.getCache(getCacheName(), Long.class, BagEntry.class);
+        bagEntry = cache.get(player.getPlayerId());
+        bagMy.init(bagEntry);
+
     }
 
 

@@ -51,7 +51,7 @@ public class TemplateLoader {
             }
 
         } catch (Exception e) {
-            log.error("加载 XML 资源文件 {} ", fileName, e);
+            log.error("加载 XML 资源文件 {} 报错", fileName, e);
         }
 
         if (ts.isEmpty()) {
@@ -61,6 +61,7 @@ public class TemplateLoader {
         return ts;
     }
 
+    // FIXME  烦，写得一坨便便，有时间再细改吧，List这里写得头疼，还有判空问题什么的
     private static <T> void setProperties(T object, String fieldName, String fieldValue) {
         PropertyDescriptor prop;
         try {
@@ -77,6 +78,7 @@ public class TemplateLoader {
             boolean emptyVal = "".equals(fieldValue);
             Object val = null;
             switch (field) {
+
                 case "List":
                     Field f = null;
                     try {
@@ -87,35 +89,86 @@ public class TemplateLoader {
 
                     Type genericReturnType = f.getGenericType();
 
+                    int wrapCount = 0;
+
                     Class<?> typeClass = null;
                     if (genericReturnType instanceof ParameterizedType) {
-                        Type[] actualTypeArguments = ((ParameterizedType) genericReturnType).getActualTypeArguments();
-                        typeClass = (Class<?>) actualTypeArguments[0];
+                        ParameterizedType g2 = (ParameterizedType) genericReturnType;
+
+
+                        Type[] actualTypeArguments = g2.getActualTypeArguments();
+                        Type t = actualTypeArguments[0];
+                        if (t instanceof Class) {
+                            typeClass = (Class<?>) t;
+                        } else if (g2.getRawType().getTypeName().equals("java.util.List")) {
+                            Type actualTypeArguments1 = g2.getActualTypeArguments()[0];
+                            ParameterizedType g3 = (ParameterizedType) actualTypeArguments1;
+                            typeClass = (Class<?>) (g3.getActualTypeArguments()[0]);
+                            wrapCount++;
+                        }
                     }
-
                     if (typeClass == String.class) {
-                        String[] vs = fieldValue.split(",");
-                        List<String> list = new ArrayList<>();
-                        Collections.addAll(list, vs);
-                        val = list;
+                        if (wrapCount == 0) {
+                            String[] vs = fieldValue.split(",");
+                            List<String> list = new ArrayList<>();
+                            Collections.addAll(list, vs);
+                            val = list;
+                        } else {
+                            List<List<String>> list = new ArrayList<>();
+                            String[] vs = fieldValue.split(";");
+                            for (String v : vs) {
+                                String[] temp = v.split(",");
+                                List<String> a = new ArrayList<>();
+                                Collections.addAll(a, temp);
+                                list.add(a);
+                            }
+                            val = list;
+                        }
                     } else if (typeClass == Integer.class) {
-                        String[] vs = fieldValue.split(",");
+                        if (wrapCount == 0) {
+                            String[] vs = fieldValue.split(",");
 
-                        if (vs.length > 0) {
-                            val = Arrays.stream(vs).filter(v -> !(null == v) && !"".equals(v.trim())).map(Integer::parseInt).collect(Collectors.toList());
+                            if (vs.length > 0) {
+                                val = Arrays.stream(vs).filter(v -> !(null == v) && !"".equals(v.trim())).map(Integer::parseInt).collect(Collectors.toList());
+                            }
+                        } else {
+                            List<List<Integer>> list = new ArrayList<>();
+                            String[] vs = fieldValue.split(";");
+                            for (String v : vs) {
+                                List<Integer> c = new ArrayList<>();
+                                String[] temp = v.split(",");
+                                for (String a : temp) {
+                                    if (a != null && !"".equals(a.trim())) {
+                                        c.add(Integer.parseInt(a));
+                                    }
+                                }
+                                list.add(c);
+                            }
+                            val = list;
                         }
+
                     } else if (typeClass == Double.class) {
-                        String[] vs = fieldValue.split(",");
-
-                        if (vs.length > 0) {
-                            val = Arrays.stream(vs).filter(v -> !(null == v) && !"".equals(v.trim())).map(TemplateLoader::formatDouble).collect(Collectors.toList());
+                        if (wrapCount == 0) {
+                            String[] vs = fieldValue.split(",");
+                            if (vs.length > 0) {
+                                val = Arrays.stream(vs).filter(v -> !(null == v) && !"".equals(v.trim())).map(TemplateLoader::formatDouble).collect(Collectors.toList());
+                            }
+                        } else {
+                            List<List<Double>> list = new ArrayList<>();
+                            String[] vs = fieldValue.split(";");
+                            for (String v : vs) {
+                                List<Double> c = new ArrayList<>();
+                                String[] temp = v.split(",");
+                                for (String a : temp) {
+                                    if (a != null && !"".equals(a.trim())) {
+                                        c.add(formatDouble(a));
+                                    }
+                                }
+                                list.add(c);
+                            }
+                            val = list;
                         }
-                    } else if (typeClass == Float.class) {
-                        String[] vs = fieldValue.split(",");
 
-                        if (vs.length > 0) {
-                            val = Arrays.stream(vs).filter(v -> !(null == v) && !"".equals(v.trim())).map(TemplateLoader::formatFloat).collect(Collectors.toList());
-                        }
                     }
                     break;
                 case "String":
@@ -155,10 +208,10 @@ public class TemplateLoader {
                             break;
                     }
                     break;
+
                 default:
                     return;
             }
-
             m.invoke(object, val);
 
         } catch (Exception e) {

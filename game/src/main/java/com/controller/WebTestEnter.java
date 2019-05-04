@@ -77,8 +77,8 @@ public class WebTestEnter {
 //    @RequestMapping("/test/addUnion")
 //    public void addUnion() {
 //        UnionEntry u = new UnionEntry(IdCreator.nextId(UnionEntry.class));
-//        IMap<Long, UnionEntry> map = hazelcastInstance.getMap(CacheEnum.UnionEntryCache.name());
-//        map.put(u.getId(), u);
+//        IMap<Long, UnionEntry> idIndexMap = hazelcastInstance.getMap(CacheEnum.UnionEntryCache.name());
+//        idIndexMap.put(u.getId(), u);
 //
 //
 //        PlayerEntry u2 = new PlayerEntry(IdCreator.nextId(PlayerEntry.class));
@@ -104,9 +104,9 @@ public class WebTestEnter {
 //    @RequestMapping("/test/createPlayer")
 //    public void createPlayer() {
 //        PlayerEntry playerEntry = new PlayerEntry(IdCreator.nextId(PlayerEntry.class));
-//        IMap<Long, PlayerEntry> map = hazelcastInstance.getMap(CacheEnum.PlayerEntryCache.name());
+//        IMap<Long, PlayerEntry> idIndexMap = hazelcastInstance.getMap(CacheEnum.PlayerEntryCache.name());
 //
-//        map.put(playerEntry.getId(), playerEntry);
+//        idIndexMap.put(playerEntry.getId(), playerEntry);
 ////        1077939648774410240
 //    }
 

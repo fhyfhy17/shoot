@@ -38,12 +38,15 @@ public class XlsxToXmlUtil {
                     if (!isLetterDigit(sheet.getSheetName())) {
                         continue;
                     }
+                    if (sheet.getSheetName().contains("Sheet")) {
+                        continue;
+                    }
                     System.out.println("正在生成" + fileName + "_" + sheet.getSheetName());
 
 
                     Row row = sheet.getRow(0);
                     if (row == null) {
-                        return;
+                        break;
                     }
                     List<String> list = new ArrayList<>();
                     for (int i = 0; i < row.getLastCellNum(); i++) {
@@ -79,7 +82,8 @@ public class XlsxToXmlUtil {
                                 root.addContent(elements.detach());
                                 continue;
                             }
-                            elements.setAttribute(name, getCellValue(cell).trim());
+                            String cellValue = getCellValue(cell);
+                            elements.setAttribute(name, cellValue == null ? "" : cellValue.trim());
                             root.addContent(elements.detach());
                         }
 
@@ -135,7 +139,7 @@ public class XlsxToXmlUtil {
     }
 
     public static void main(String[] args) throws IOException {
-        write("F:/xlsx/");
+        write("D:/xlsx/");
         // read();
         // getFiles(".");
     }

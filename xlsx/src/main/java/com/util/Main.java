@@ -1,5 +1,7 @@
 package com.util;
 
+import java.io.IOException;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -16,6 +18,13 @@ public class Main {
                 break;
             case "xls":
                 XlsToxmlUtil.generate(args[1]);
+                break;
+            case "genTemplates":
+                try {
+                    GenTemplatesUtil.genarate();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 System.out.println("没有匹配的功能，请检查输入");

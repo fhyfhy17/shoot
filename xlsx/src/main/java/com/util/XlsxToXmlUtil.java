@@ -142,18 +142,15 @@ public class XlsxToXmlUtil {
 
     public static void generate() {
         try {
-            String path = System.getProperty("user.dir");
 
-            String binPath = path.substring(0, path.lastIndexOf(File.separator));
+            String binPath = FileUtil.getBinPath();
 
             System.out.println(binPath);
             String xlsxPath = binPath
                     + File.separator
                     + "xlsx";
             System.out.println(xlsxPath);
-            String xmlPath = binPath
-                    + File.separator
-                    + "templates";
+            String xmlPath = FileUtil.getTemplatesPah();
 
 
             write(xlsxPath, xmlPath);

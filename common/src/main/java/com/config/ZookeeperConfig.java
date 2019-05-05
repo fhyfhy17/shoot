@@ -38,6 +38,8 @@ public class ZookeeperConfig {
                 .retryPolicy(retryPolicy).build();
 
         curator.start();
+        //递归创建路径，如果已存在就不创建
+        curator.create().creatingParentContainersIfNeeded().forPath(Constant.ZOOKEEPER_PATH);
 
         //加入路径监听
         final PathChildrenCache childrenCache = new PathChildrenCache(curator, Constant.ZOOKEEPER_PATH, true);

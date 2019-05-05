@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,12 +38,18 @@ public class TemplateManager {
                 continue;
             }
             Template templateAnno = o.getClass().getAnnotation(Template.class);
-
-            String path = "templates" + File.separator + templateAnno.path();
-            InputStream xmlInput = this.getClass().getClassLoader().getResourceAsStream(path);
+    
+            String path=System.getProperty("user.dir")
+                    + File.separator
+                    + "bin"
+                    + File.separator
+                    + "templates"
+                    + File.separator
+                    + templateAnno.path();
+          
             Class<? extends AbstractTemplate> subclass = o.getClass().asSubclass(AbstractTemplate.class);
             this.templates.put(subclass,
-                    loader.loadTemplate(path, xmlInput, subclass)
+                    loader.loadTemplate(new File(path), subclass)
                             .stream()
                             .collect(Collectors.toMap(AbstractTemplate::getId, Function.identity())));
         }

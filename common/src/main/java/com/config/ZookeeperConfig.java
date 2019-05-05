@@ -38,6 +38,7 @@ public class ZookeeperConfig {
                 .retryPolicy(retryPolicy).build();
 
         curator.start();
+        
 
         //加入路径监听
         final PathChildrenCache childrenCache = new PathChildrenCache(curator, Constant.ZOOKEEPER_PATH, true);

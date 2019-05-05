@@ -1,4 +1,4 @@
-package com.util.objectPool;
+package com.util;
 
 public class StringUtil {
 

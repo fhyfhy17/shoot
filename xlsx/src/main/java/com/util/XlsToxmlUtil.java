@@ -97,9 +97,12 @@ public class XlsToxmlUtil {
         return str.matches(regex);
     }
 
-    public static void main(String[] args) throws IOException {
-        write("D://");
-        // read();
-        // getFiles(".");
+    public static void generate(String path) {
+        try {
+            write(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 }

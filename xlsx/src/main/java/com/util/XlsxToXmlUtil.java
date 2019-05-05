@@ -1,7 +1,6 @@
 package com.util;
 
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jdom.Document;
@@ -9,21 +8,17 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@Slf4j
 public class XlsxToXmlUtil {
     private static DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public static void write(String path) throws IOException {
+    public static void write(String path, String xmlPath) throws IOException {
         List<String> filelist = FileUtil.getFiles(path, ".xlsx");
         for (String fileName : filelist) {
             // 这里是生成工作簿
@@ -90,8 +85,15 @@ public class XlsxToXmlUtil {
                     }
                     Format format = Format.getPrettyFormat();
                     XMLOutputter XMLOut = new XMLOutputter(format);
-                    int index = fileName.lastIndexOf("\\");
-                    XMLOut.output(Doc, new FileOutputStream(fileName.substring(0, index) + "\\xml\\" + fileName.substring(index) + "_" + sheet.getSheetName() + ".xml"));
+
+                    String xmlName = xmlPath
+                            + File.separator
+                            + (fileName.contains(File.separator + "type" + File.separator) ? "type" + File.separator : "")
+                            + fileName.substring(fileName.lastIndexOf(File.separator) + 1)
+                            + "_"
+                            + sheet.getSheetName() + ".xml";
+
+                    XMLOut.output(Doc, new FileOutputStream(xmlName));
                 }
 
             } catch (Exception e) {
@@ -138,9 +140,32 @@ public class XlsxToXmlUtil {
         return str.matches(regex);
     }
 
-    public static void main(String[] args) throws IOException {
-        write("D:/xlsx/");
-        // read();
-        // getFiles(".");
+    public static void generate(String path) {
+        try {
+            String binPath = path
+                    + File.separator
+                    + "bin";
+
+            String xlsxPath = binPath
+                    + File.separator
+                    + "xlsx";
+
+            String xmlPath = binPath
+                    + File.separator
+                    + "templates";
+
+
+            write(xlsxPath, xmlPath);
+            write(xlsxPath + File.separator + "type", xmlPath);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+//
+//    public static void main(String[] args) throws IOException {
+//        write(args[0]);
+//        // read();
+//        // getFiles(".");
+//    }
 }

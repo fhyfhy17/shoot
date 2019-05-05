@@ -140,16 +140,17 @@ public class XlsxToXmlUtil {
         return str.matches(regex);
     }
 
-    public static void generate(String path) {
+    public static void generate() {
         try {
-            String binPath = path
-                    + File.separator
-                    + "bin";
+            String path = System.getProperty("user.dir");
 
+            String binPath = path.substring(0, path.lastIndexOf(File.separator));
+
+            System.out.println(binPath);
             String xlsxPath = binPath
                     + File.separator
                     + "xlsx";
-
+            System.out.println(xlsxPath);
             String xmlPath = binPath
                     + File.separator
                     + "templates";

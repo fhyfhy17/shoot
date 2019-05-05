@@ -9,7 +9,7 @@ import org.jdom.input.SAXBuilder;
 import org.springframework.stereotype.Component;
 
 import java.beans.PropertyDescriptor;
-import java.io.InputStream;
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -22,12 +22,12 @@ import java.util.stream.Collectors;
 @Component
 public class TemplateLoader {
 
-    <T extends AbstractTemplate> List<T> loadTemplate(String fileName, InputStream xmlInput, Class<T> clazz) {
+    <T extends AbstractTemplate> List<T> loadTemplate(File file, Class<T> clazz) {
 
         List<T> ts = new ArrayList<>();
 
         try {
-            Document doc = new SAXBuilder().build(xmlInput);
+            Document doc = new SAXBuilder().build(file);
             Element root = doc.getRootElement();
             Iterator<Element> it = root.getChildren().iterator();
             int count = 0;
@@ -44,18 +44,18 @@ public class TemplateLoader {
                     setProperties(t, attr.getName(), value);
                 }
                 if (ts.stream().anyMatch(x -> x.getId() == t.getId())) {
-                    log.error("文件= {} 发现重复ID= {} ", fileName, t.getId());
+                    log.error("文件= {} 发现重复ID= {} ", file.getName(), t.getId());
                     continue;
                 }
                 ts.add(t);
             }
 
         } catch (Exception e) {
-            log.error("加载 XML 资源文件 {} 报错", fileName, e);
+            log.error("加载 XML 资源文件 {} 报错", file.getName(), e);
         }
 
         if (ts.isEmpty()) {
-            log.error("警告：XML 资源文件加载为空：{}", fileName);
+            log.error("警告：XML 资源文件加载为空：{}", file.getName());
         }
 
         return ts;

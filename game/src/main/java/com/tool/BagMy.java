@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.template.TemplateManager;
 import com.template.templates.ItemTemplate;
+import com.template.templates.type.OverBagType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
@@ -133,27 +134,50 @@ public class BagMy {
         addItem(Arrays.asList(itemInfos));
 
     }
+    //========================================================================
 
-
-    public void putItems(List<TempCell> list) {
+    public boolean putItems(List<TempCell> list) {
+        if (Objects.isNull(list)) {
+            return false;
+        }
         for (TempCell tempCell : list) {
             //TODO 创建物品的方法需要完善
             ItemPo itemPo = new ItemPo();
             itemPo.id = tempCell.tempItemId;
             itemPo.num = tempCell.tempNum;
             itemPo.index = tempCell.tempIndex;
-            indexMap.put(itemPo.index, itemPo);
-            //减一个空格
-            emptyList.remove(itemPo.index);
-            //装填map
-            addIdIndexMap(itemPo.index, itemPo);
+            if (itemPo.index > 0) {
+                indexMap.put(itemPo.index, itemPo);
+                //减一个空格
+                emptyList.remove(itemPo.index);
+                //装填map
+                addIdIndexMap(itemPo.index, itemPo);
+            } else {
+                // 这里发邮件 ，可以定义在item表里，发不进去放在哪，也可以把isForceAdd定义为枚举，指定发不进去放哪
+                switch (itemPo.index) {
+                    case OverBagType.Mail:
+                        //TODO 发邮件
+                        break;
+                    case OverBagType.Discard:
+                        //直接就不处理，忽略
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
+        return true;
     }
+
 
     /**
      * 把能不能放进去，转化为，一共要占用几个空格问题。
+     * 强制填加是进不去的进邮件
+     * @param itemInfos    要添加的物品s
+     * @param overBagType 放不下怎么办
+     * @return 格子记录
      */
-    public List<TempCell> testPut(List<ItemInfo> itemInfos) {
+    public List<TempCell> testPut(List<ItemInfo> itemInfos, int overBagType) {
 
 
         List<TempCell> tempCells = new ArrayList<>();
@@ -187,17 +211,20 @@ public class BagMy {
             allUseNum += needEmptyNum;
         }
 
-        if (allUseNum > emptyList.size()) {
-            //TODO 位置不足加不进去
+        if (allUseNum > emptyList.size() && overBagType == OverBagType.Refuse) {
             return null;
         }
+
 
         //把空格填起来，返回记录操作数据
         List<Integer> tempEmptyList = new ArrayList<>(emptyList);
         for (ItemInfo itemInfo : itemInfos) {
             ItemTemplate t = tm.getTemplate(ItemTemplate.class, itemInfo.id);
             while (itemInfo.num > 0) {
-                Integer index = tempEmptyList.remove(0);
+                int index = overBagType;
+                if (tempEmptyList.size() > 0) {
+                    index = tempEmptyList.remove(0);
+                }
                 int canPutNum = calCanPutNum(t, itemInfo, 0);
                 TempCell tempCell = new TempCell(itemInfo.id, index, canPutNum);
                 tempCells.add(tempCell);

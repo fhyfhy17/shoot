@@ -1,14 +1,22 @@
 package com.util;
 
 
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,7 +41,7 @@ public class XlsxToXmlUtil {
                     if (!isLetterDigit(sheet.getSheetName())) {
                         continue;
                     }
-                    if (sheet.getSheetName().contains("Sheet")) {
+                    if (sheet.getSheetName().contains("Sheet")&&!fileName.contains(File.separator+"type"+File.separator)) {
                         continue;
                     }
                     System.out.println("正在生成" + fileName + "_" + sheet.getSheetName());

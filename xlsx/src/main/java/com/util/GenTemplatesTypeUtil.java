@@ -88,7 +88,7 @@ public class GenTemplatesTypeUtil {
         }
 
         String templateFileName = "";
-        String xmlName = file.getName().split("_")[1];
+        String xmlName = file.getName().split("_")[0];
         templateFileName = xmlName.substring(0, xmlName.indexOf("."));
         writeToModel(templateFileName, typeList, file.getName(), first, last, typeList.size());
 //

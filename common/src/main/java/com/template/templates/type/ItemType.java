@@ -6,13 +6,15 @@ public class ItemType {
 
     public static final int Equip = 2;//装备
 
-    public static final int Tool = 3;//工具（可使用）
+    public static final int Box = 3;//礼包
+
+    public static final int Prop = 4;//道具（可以使用）
 
 
     public static final int FIRST_ID = 1;//第一个ID
 
-    public static final int LAST_ID = 3;//最后一个ID
+    public static final int LAST_ID = 4;//最后一个ID
 
-    public static final int TYPE_SIZE = 3;//ID数量
+    public static final int TYPE_SIZE = 4;//ID数量
 
 }

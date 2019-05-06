@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ItemInfo implements Cloneable {
+public class ItemInfo {
 
     /**
      * 物品ID

@@ -277,6 +277,17 @@ public class BagMy {
         }
     }
 
+//    public boolean testGet(List<ItemInfo> list){
+//        List<TempCell> tempCells = new ArrayList<>();
+//
+//        for (ItemInfo itemInfo : list) {
+//            Map<Integer, ItemPo> integerItemPoMap = idIndexMap.get(itemInfo.id);
+//
+//        }
+//
+//
+//    }
+
 
     @Data
     @AllArgsConstructor

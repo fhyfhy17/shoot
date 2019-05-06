@@ -38,7 +38,5 @@ public class ItemTemplate extends AbstractTemplate {
     private String enableTime; //
     private List<List<Integer>> baseAttributes = new ArrayList<>(); //
     private List<List<Integer>> equipActions = new ArrayList<>(); //
-    private List<List<Integer>> useActions = new ArrayList<>(); //
-    private boolean passEnterBag; //
 
 }

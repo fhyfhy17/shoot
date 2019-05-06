@@ -10,11 +10,13 @@ public class ItemType {
 
     public static final int Prop = 4;//道具（可以使用）
 
+    public static final int Currency = 5;//货币
+
 
     public static final int FIRST_ID = 1;//第一个ID
 
-    public static final int LAST_ID = 4;//最后一个ID
+    public static final int LAST_ID = 5;//最后一个ID
 
-    public static final int TYPE_SIZE = 4;//ID数量
+    public static final int TYPE_SIZE = 5;//ID数量
 
 }

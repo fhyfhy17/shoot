@@ -5,5 +5,6 @@
   <tr id="2" name="equip" describe="装备" />
   <tr id="3" name="box" describe="礼包" />
   <tr id="4" name="prop" describe="道具（可以使用）" />
+  <tr id="5" name="currency" describe="货币"/>
 </root>
 

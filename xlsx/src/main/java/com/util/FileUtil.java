@@ -11,7 +11,7 @@ public class FileUtil {
         File root = new File(filePath);
         File[] files = root.listFiles(pathname -> {
             String name = pathname.getName();
-            return name.endsWith(filter);
+            return name.endsWith(filter) && !name.startsWith("~");
         });
         List<String> filelist = new ArrayList<>();
         for (File file : files) {

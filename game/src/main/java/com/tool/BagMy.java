@@ -1,12 +1,12 @@
 package com.tool;
 
-import com.entry.BagEntry;
 import com.entry.po.ItemInfo;
 import com.entry.po.ItemPo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.template.TemplateManager;
 import com.template.templates.ItemTemplate;
+import com.template.templates.type.ItemType;
 import com.template.templates.type.ItemUseType;
 import com.template.templates.type.OverBagType;
 import com.util.Util;
@@ -32,9 +32,9 @@ public class BagMy {
     public List<Integer> emptyList = new ArrayList<>();
 
 
-    public void init(BagEntry bagEntry, TemplateManager templateManager) {
+    public void init(Map<Integer, ItemPo> indexMap, TemplateManager templateManager) {
         this.tm = templateManager;
-        indexMap = bagEntry.indexMap;
+        this.indexMap = indexMap;
         if (CollectionUtils.isEmpty(indexMap)) {
             for (int i = 1; i < maxIndex + 1; i++) {
                 indexMap.put(i, null);
@@ -86,6 +86,12 @@ public class BagMy {
                 //装填map
                 addIdIndexMap(itemPo.index, itemPo);
             } else {
+                //特殊数，代表不进背包，是货币型，进行其它操作
+                if (itemPo.index == -99) {
+                    //TODO 取得对应的子类型
+                    // 进行加操作，调取对应模块，  主要是为是统一奖励，也可以定义多个类型
+                }
+
                 // 这里发邮件 ，可以定义在item表里，发不进去放在哪，也可以把isForceAdd定义为枚举，指定发不进去放哪
                 switch (itemPo.index) {
                     case OverBagType.Mail:
@@ -121,6 +127,14 @@ public class BagMy {
         while (it.hasNext()) {
             ItemInfo itemInfo = it.next();
             ItemTemplate t = tm.getTemplate(ItemTemplate.class, itemInfo.id);
+
+            if (t.getType() == ItemType.Currency) {
+                TempCell tempCell = new TempCell(itemInfo.id, -99, itemInfo.num);
+                tempCells.add(tempCell);
+                it.remove();
+                continue;
+            }
+
             Map<Integer, ItemPo> indexItemPo = idIndexMap.get(itemInfo.getId());
             for (Map.Entry<Integer, ItemPo> entry : indexItemPo.entrySet()) {
                 if (entry.getValue().isSingleNumMax()) {

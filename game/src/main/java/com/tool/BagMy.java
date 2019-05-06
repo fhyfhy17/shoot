@@ -14,7 +14,14 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -178,7 +185,19 @@ public class BagMy {
             return canPutNum;
         }
     }
-
+    
+    
+    private int calCanGetNum(ItemInfo itemInfo, int hasNum) {
+        int canGetNum = hasNum;
+        if (canGetNum >= itemInfo.num) {
+            canGetNum -= itemInfo.num;
+            itemInfo.num =0;
+            return canGetNum;
+        } else {
+            itemInfo.num -= canGetNum;
+            return canGetNum;
+        }
+    }
     /**
      * 添加物品，尽量放，放不下的发邮件
      *
@@ -277,16 +296,83 @@ public class BagMy {
         }
     }
 
-//    public boolean testGet(List<ItemInfo> list){
-//        List<TempCell> tempCells = new ArrayList<>();
-//
-//        for (ItemInfo itemInfo : list) {
-//            Map<Integer, ItemPo> integerItemPoMap = idIndexMap.get(itemInfo.id);
-//
-//        }
-//
-//
-//    }
+    
+    private void setCellEmpty(int index){
+        ItemPo itemPo=indexMap.get(index);
+        if(Objects.isNull(itemPo))
+        {
+            return;
+        }
+        indexMap.put(index,null);
+        idIndexMap.get(itemPo.id).remove(index);
+        emptyList.add(index);
+    }
+    
+    public boolean costItems(List<ItemInfo> list)
+    {
+        List<TempCell> tempCells=testGet(list);
+        if(Objects.isNull(tempCells))
+        {
+            return false;
+        }
+        for(TempCell tempCell : tempCells)
+        {
+            ItemPo itemPo=indexMap.get(tempCell.tempIndex);
+            itemPo.num-=tempCell.getTempNum();
+            if(itemPo.num==0)
+            {
+                setCellEmpty(itemPo.index);
+            }
+        }
+        return true;
+    }
+    
+    public List<TempCell> testGet(List<ItemInfo> list){
+        List<TempCell> tempCells = new ArrayList<>();
+    
+        for (ItemInfo itemInfo : list) {
+            //先判断一遍够不够
+           if( idIndexMap.get(itemInfo.id).values().stream().mapToInt(ItemPo::getNum).sum()<itemInfo.num){
+               return null;
+           }
+        }
+    
+        for(ItemInfo itemInfo : list)
+        {
+            Map<Integer,ItemPo> integerItemPoMap=idIndexMap.get(itemInfo.id);
+            List<ItemPo> itemPos=Util.mapValueSortReturnList(integerItemPoMap);
+        
+        
+            for(ItemPo itemPo : itemPos)
+            {
+                int canGetNum=calCanGetNum(itemInfo,itemPo.num);
+                TempCell tempCell=new TempCell(itemInfo.id,itemPo.index,canGetNum);
+                tempCells.add(tempCell);
+                if(itemInfo.num<=0)
+                {
+                    break;
+                }
+            }
+        }
+        return tempCells;
+
+    }
+    
+    public boolean costItems(Map<Long, Integer> map) {
+        return costItems(map.entrySet().stream()
+                .map(x -> new ItemInfo(x.getKey(), x.getValue()))
+                .collect(Collectors.toList()));
+    }
+    
+    
+    public boolean costItems(Long itemId, Integer num) {
+        return costItems(Lists.newArrayList(new ItemInfo(itemId, num)));
+    }
+    
+    public boolean costItems(ItemInfo... itemInfos) {
+        return addItemRefuse(Arrays.asList(itemInfos));
+        
+    }
 
 
     @Data

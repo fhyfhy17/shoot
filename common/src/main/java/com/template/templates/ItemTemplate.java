@@ -15,9 +15,8 @@ public class ItemTemplate extends AbstractTemplate {
     private String name; //
     private String describe; //
     private int type; //
+    private int useType; //
     private int unlockRewardNum; //
-    private int showType; //
-    private int secondType; //
     private int singlePlusMax; //
     private int totalPlusMax; //
     private int itemLevel; //
@@ -40,9 +39,6 @@ public class ItemTemplate extends AbstractTemplate {
     private List<List<Integer>> baseAttributes = new ArrayList<>(); //
     private List<List<Integer>> equipActions = new ArrayList<>(); //
     private List<List<Integer>> useActions = new ArrayList<>(); //
-    private int prePropShowType; //
     private boolean passEnterBag; //
-    private boolean useCostItemNum; //
-    private int progressBarID; //
 
 }

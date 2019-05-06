@@ -7,10 +7,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.template.TemplateManager;
 import com.template.templates.ItemTemplate;
+import com.template.templates.type.ItemUseType;
 import com.template.templates.type.OverBagType;
 import com.util.Util;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
  * 背包
  */
 @Component
+@Slf4j
 public class BagMy {
     @Autowired
     private TemplateManager tm;
@@ -374,6 +377,28 @@ public class BagMy {
         
     }
 
+    public boolean useItem(long itemId,int num){
+        if(!costItems(itemId,num))
+        {
+            return false;
+        }
+        //TODO  使用条件等
+        ItemTemplate t=tm.getTemplate(ItemTemplate.class,itemId);
+        switch(t.getType())
+        {
+            case ItemUseType.OpenBox:
+                
+                break;
+            case ItemUseType.Cost:
+            
+                break;
+            default:
+                log.error("未配置使用类型");
+                break;
+        }
+        return true;
+    
+    }
 
     @Data
     @AllArgsConstructor

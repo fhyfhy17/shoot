@@ -19,6 +19,8 @@ public class BagEntry extends BaseEntry {
 
 
     public Map<Integer, ItemPo> indexMap = new HashMap<>();
+    //TODO 每一个entry应该对应自己的数据。这个不应该放在这，每个entry 用接口都是操作自己的数据
+    public Map<Integer,Long> currencyMap = new HashMap<>();
 
     public BagEntry(long id) {
         super(id);

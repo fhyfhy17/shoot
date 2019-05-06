@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-  <tr id="int" name="string" describe="string"/>
-  <tr id="1" name="stuff" describe="材料（不可使用）"/>
-  <tr id="2" name="equip" describe="装备"/>
-  <tr id="3" name="tool" describe="工具（可使用）"/>
+  <tr id="int" name="string" describe="string" />
+  <tr id="1" name="stuff" describe="材料（不可使用）" />
+  <tr id="2" name="equip" describe="装备" />
+  <tr id="3" name="box" describe="礼包" />
+  <tr id="4" name="prop" describe="道具（可以使用）" />
 </root>
 

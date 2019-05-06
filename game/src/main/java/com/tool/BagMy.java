@@ -13,43 +13,33 @@ import com.util.Util;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 背包
+ * 有格背包接口，可做背包 ，仓库，物品栏等
  */
-@Component
+
 @Slf4j
 public class BagMy {
-    @Autowired
+
     private TemplateManager tm;
     public int maxIndex = 64;
     public Map<Long, Map<Integer, ItemPo>> idIndexMap = new HashMap<>();
-    //    public Map<Long, Integer> numMap = new HashMap<>();
     public Map<Integer, ItemPo> indexMap = new HashMap<>();
     public List<Integer> emptyList = new ArrayList<>();
 
 
-    public void initWithBorn() {
-        for (int i = 1; i < maxIndex + 1; i++) {
-            indexMap.put(i, null);
-        }
-        calCell();
-    }
-
-    public void init(BagEntry bagEntry) {
+    public void init(BagEntry bagEntry, TemplateManager templateManager) {
+        this.tm = templateManager;
         indexMap = bagEntry.indexMap;
+        if (CollectionUtils.isEmpty(indexMap)) {
+            for (int i = 1; i < maxIndex + 1; i++) {
+                indexMap.put(i, null);
+            }
+        }
         calCell();
     }
 

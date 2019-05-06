@@ -3,10 +3,11 @@ package com.pojo;
 import com.part.BagPart;
 import com.part.BasePart;
 import com.part.PlayerPart;
+import com.util.SpringUtils;
 import lombok.Data;
 import org.ehcache.CacheManager;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -18,16 +19,17 @@ public class Player {
     public PlayerPart playerPart;
     public BagPart bagPart;
 
-    @Autowired
     private CacheManager cacheManager;
-    @Autowired
+
     private List<BasePart> parts;
 
     public Player() {
-
+        cacheManager = SpringUtils.getBean(CacheManager.class);
+        parts = new ArrayList<>(SpringUtils.getBeansOfType(BagPart.class).values());
     }
 
     public void initParts() {
+
         parts.forEach(x -> {
             x.setPlayer(this);
             x.onLoad();

@@ -1,6 +1,7 @@
 package com.part;
 
 import com.entry.BagEntry;
+import com.template.TemplateManager;
 import com.tool.BagMy;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,8 +15,9 @@ import org.springframework.stereotype.Component;
 public class BagPart extends BasePart {
 
     private BagEntry bagEntry;
-
     @Autowired
+    private TemplateManager templateManager;
+
     private BagMy bagMy;
 
     @Override
@@ -23,7 +25,8 @@ public class BagPart extends BasePart {
         player.bagPart = this;
         Cache<Long, BagEntry> cache = cacheManager.getCache(getCacheName(), Long.class, BagEntry.class);
         bagEntry = cache.get(player.getPlayerId());
-        bagMy.init(bagEntry);
+        bagMy = new BagMy();
+        bagMy.init(bagEntry, templateManager);
 
     }
 

@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ItemPo implements Cloneable {
+public class ItemPo implements Comparable<ItemPo> {
 
     /**
      * 物品ID
@@ -18,7 +18,10 @@ public class ItemPo implements Cloneable {
      * 物品数目
      */
     public int num;
-
+    /**
+     * 所在序号
+     */
+    public int index = -1;
     /**
      * 失效时间(-1为失效或过期)
      */
@@ -35,23 +38,9 @@ public class ItemPo implements Cloneable {
     public boolean hasRedPoint;
 
 
-    /**
-     * 回收标记
-     */
-    public boolean canRelease;
 
-    /**
-     * 所在序号
-     */
-    public int index = -1;
 
     public ItemPo() {
-    }
-
-    //FIXME 要修改
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
     }
 
 
@@ -76,5 +65,11 @@ public class ItemPo implements Cloneable {
             return 0;
 
         return config.getSinglePlusMax() - num;
+    }
+
+    //TODO 这需要具体排序规则
+    @Override
+    public int compareTo(ItemPo o) {
+        return 0;
     }
 }

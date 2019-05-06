@@ -8,9 +8,9 @@ import com.google.common.collect.Maps;
 import com.template.TemplateManager;
 import com.template.templates.ItemTemplate;
 import com.template.templates.type.OverBagType;
+import com.util.Util;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 规则定为，能放就尽量放，放不下的发邮件
+ * 背包
  */
 @Component
 public class BagMy {
@@ -56,85 +56,18 @@ public class BagMy {
 
     private void calCell() {
         for (Map.Entry<Integer, ItemPo> entry : indexMap.entrySet()) {
-            int index = entry.getKey();
-            ItemPo itemPo = entry.getValue();
-            if (Objects.isNull(itemPo)) {
-                emptyList.add(index);
-            } else {
-                addIdIndexMap(index, itemPo);
-            }
+            calIndexCell(entry.getKey(), entry.getValue());
         }
     }
 
-
-    /**
-     * 查找某一ID的空闲格集合 TODO 明天改出来一个，可以计算多物品，混合个数，测试能不能放进去的逻辑
-     */
-    public List<TempCell> calIdleCells(long itemId) {
-        return indexMap.entrySet().stream().filter(x -> {
-
-            ItemPo itemPo = x.getValue();
-
-            if (Objects.isNull(itemPo)) {
-                return true;
-            }
-            return !itemPo.isSingleNumMax();
-
-        }).map(x -> {
-            ItemTemplate t = tm.getTemplate(ItemTemplate.class, itemId);
-            return new TempCell(itemId, x.getKey(), t.getSinglePlusMax() - x.getValue().num);
-        }).collect(Collectors.toList());
-    }
-
-    public void realAdd(TempCell idleCell, int num) {
-        indexMap.get(idleCell.tempIndex).num += num;
-        idleCell.tempNum -= num;
-
-    }
-
-    public void addItem(ItemInfo item) {
-        List<TempCell> idleCells = calIdleCells(item.id);
-        if (CollectionUtils.isEmpty(idleCells)) {
-            //TODO 发邮件
-            return;
+    private void calIndexCell(int index, ItemPo itemPo) {
+        if (Objects.isNull(itemPo)) {
+            emptyList.add(index);
+        } else {
+            addIdIndexMap(index, itemPo);
         }
-        for (TempCell idleCell : idleCells) {
-            if (item.num <= idleCell.tempNum) {
-                realAdd(idleCell, item.num);
-                return;
-            }
-            if (idleCell.tempNum < 1) {
-                continue;
-            }
-            item.num = item.num - idleCell.tempNum;
-            realAdd(idleCell, idleCell.tempNum);
-        }
-        if (item.num > 0) {
-            //TODO 发邮件
-        }
-
     }
 
-    public void addItem(List<ItemInfo> itemInfos) {
-        itemInfos.forEach(this::addItem);
-    }
-
-    public void addItem(Map<Long, Integer> map) {
-        addItem(map.entrySet().stream()
-                .map(x -> new ItemInfo(x.getKey(), x.getValue()))
-                .collect(Collectors.toList()));
-    }
-
-
-    public void addItem(Long itemId, Integer num) {
-        addItem(Lists.newArrayList(new ItemInfo(itemId, num)));
-    }
-
-    public void addItem(ItemInfo... itemInfos) {
-        addItem(Arrays.asList(itemInfos));
-
-    }
-    //========================================================================
 
     public boolean putItems(List<TempCell> list) {
         if (Objects.isNull(list)) {
@@ -173,7 +106,8 @@ public class BagMy {
     /**
      * 把能不能放进去，转化为，一共要占用几个空格问题。
      * 强制填加是进不去的进邮件
-     * @param itemInfos    要添加的物品s
+     *
+     * @param itemInfos   要添加的物品s
      * @param overBagType 放不下怎么办
      * @return 格子记录
      */
@@ -244,6 +178,105 @@ public class BagMy {
             return canPutNum;
         }
     }
+
+    /**
+     * 添加物品，尽量放，放不下的发邮件
+     *
+     * @param itemInfos 物品s
+     */
+    public void addItemMail(List<ItemInfo> itemInfos) {
+        List<TempCell> tempCells = testPut(itemInfos, OverBagType.Mail);
+        putItems(tempCells);
+    }
+
+    public void addItemMail(Map<Long, Integer> map) {
+        addItemMail(map.entrySet().stream()
+                .map(x -> new ItemInfo(x.getKey(), x.getValue()))
+                .collect(Collectors.toList()));
+    }
+
+
+    public void addItemMail(Long itemId, Integer num) {
+        addItemMail(Lists.newArrayList(new ItemInfo(itemId, num)));
+    }
+
+    public void addItemMail(ItemInfo... itemInfos) {
+        addItemMail(Arrays.asList(itemInfos));
+    }
+
+    /**
+     * 添加物品，尽量放，放不下的直接丢弃
+     *
+     * @param itemInfos 物品s
+     */
+    public void addItemDiscard(List<ItemInfo> itemInfos) {
+        List<TempCell> tempCells = testPut(itemInfos, OverBagType.Discard);
+        putItems(tempCells);
+    }
+
+    public void addItemDiscard(Map<Long, Integer> map) {
+        addItemDiscard(map.entrySet().stream()
+                .map(x -> new ItemInfo(x.getKey(), x.getValue()))
+                .collect(Collectors.toList()));
+    }
+
+
+    public void addItemDiscard(Long itemId, Integer num) {
+        addItemDiscard(Lists.newArrayList(new ItemInfo(itemId, num)));
+    }
+
+    public void addItemDiscard(ItemInfo... itemInfos) {
+        addItemDiscard(Arrays.asList(itemInfos));
+    }
+
+    /**
+     * 添加物品，放不下返回false
+     *
+     * @param itemInfos 物品s
+     * @return 放不下返回false
+     */
+    public boolean addItemRefuse(List<ItemInfo> itemInfos) {
+        List<TempCell> tempCells = testPut(itemInfos, OverBagType.Refuse);
+        return putItems(tempCells);
+    }
+
+    public boolean addItemRefuse(Map<Long, Integer> map) {
+        return addItemRefuse(map.entrySet().stream()
+                .map(x -> new ItemInfo(x.getKey(), x.getValue()))
+                .collect(Collectors.toList()));
+    }
+
+
+    public boolean addItemRefuse(Long itemId, Integer num) {
+        return addItemRefuse(Lists.newArrayList(new ItemInfo(itemId, num)));
+    }
+
+    public boolean addItemRefuse(ItemInfo... itemInfos) {
+        return addItemRefuse(Arrays.asList(itemInfos));
+
+    }
+
+
+    /**
+     * 整理
+     * 由于，放入是紧着没满的放，用是紧着没满的用，所以整理只需要做排序就可以了
+     */
+    public void tidy() {
+        LinkedHashMap<Integer, ItemPo> sortedMap = Util.mapValueSort(indexMap);
+        indexMap.clear();
+        idIndexMap.clear();
+        emptyList.clear();
+        Iterator<ItemPo> it = sortedMap.values().iterator();
+        int index = 0;
+        while (it.hasNext()) {
+            ItemPo next = it.next();
+            index++;
+            next.setIndex(index);
+            indexMap.put(index, next);
+            calIndexCell(index, next);
+        }
+    }
+
 
     @Data
     @AllArgsConstructor

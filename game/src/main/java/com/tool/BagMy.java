@@ -376,7 +376,13 @@ public class BagMy {
         return addItemRefuse(Arrays.asList(itemInfos));
         
     }
-
+    
+    /**
+     * 使用物品
+     * @param itemId 物品ID
+     * @param num 个数
+     * @return 使用成功
+     */
     public boolean useItem(long itemId,int num){
         if(!costItems(itemId,num))
         {

@@ -12,7 +12,7 @@ public class ItemPo implements Comparable<ItemPo> {
     /**
      * 物品ID
      */
-    public long id;
+    public int id;
 
     /**
      * 物品数目

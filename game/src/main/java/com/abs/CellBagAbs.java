@@ -1,4 +1,4 @@
-package com.tool;
+package com.abs;
 
 import com.entry.po.ItemInfo;
 import com.entry.po.ItemPo;
@@ -15,7 +15,14 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -23,11 +30,12 @@ import java.util.stream.Collectors;
  */
 
 @Slf4j
-public class BagMy {
+public abstract class CellBagAbs
+{
 
     private TemplateManager tm;
     public int maxIndex = 64;
-    public Map<Long, Map<Integer, ItemPo>> idIndexMap = new HashMap<>();
+    public Map<Integer, Map<Integer, ItemPo>> idIndexMap = new HashMap<>();
     public Map<Integer, ItemPo> indexMap = new HashMap<>();
     public List<Integer> emptyList = new ArrayList<>();
 
@@ -215,14 +223,14 @@ public class BagMy {
         putItems(tempCells);
     }
 
-    public void addItemMail(Map<Long, Integer> map) {
+    public void addItemMail(Map<Integer, Integer> map) {
         addItemMail(map.entrySet().stream()
                 .map(x -> new ItemInfo(x.getKey(), x.getValue()))
                 .collect(Collectors.toList()));
     }
 
 
-    public void addItemMail(Long itemId, Integer num) {
+    public void addItemMail(Integer itemId, Integer num) {
         addItemMail(Lists.newArrayList(new ItemInfo(itemId, num)));
     }
 
@@ -240,14 +248,14 @@ public class BagMy {
         putItems(tempCells);
     }
 
-    public void addItemDiscard(Map<Long, Integer> map) {
+    public void addItemDiscard(Map<Integer, Integer> map) {
         addItemDiscard(map.entrySet().stream()
                 .map(x -> new ItemInfo(x.getKey(), x.getValue()))
                 .collect(Collectors.toList()));
     }
 
 
-    public void addItemDiscard(Long itemId, Integer num) {
+    public void addItemDiscard(Integer itemId, Integer num) {
         addItemDiscard(Lists.newArrayList(new ItemInfo(itemId, num)));
     }
 
@@ -266,14 +274,14 @@ public class BagMy {
         return putItems(tempCells);
     }
 
-    public boolean addItemRefuse(Map<Long, Integer> map) {
+    public boolean addItemRefuse(Map<Integer, Integer> map) {
         return addItemRefuse(map.entrySet().stream()
                 .map(x -> new ItemInfo(x.getKey(), x.getValue()))
                 .collect(Collectors.toList()));
     }
 
 
-    public boolean addItemRefuse(Long itemId, Integer num) {
+    public boolean addItemRefuse(Integer itemId, Integer num) {
         return addItemRefuse(Lists.newArrayList(new ItemInfo(itemId, num)));
     }
 
@@ -365,14 +373,14 @@ public class BagMy {
 
     }
     
-    public boolean costItems(Map<Long, Integer> map) {
+    public boolean costItems(Map<Integer, Integer> map) {
         return costItems(map.entrySet().stream()
                 .map(x -> new ItemInfo(x.getKey(), x.getValue()))
                 .collect(Collectors.toList()));
     }
     
     
-    public boolean costItems(Long itemId, Integer num) {
+    public boolean costItems(Integer itemId, Integer num) {
         return costItems(Lists.newArrayList(new ItemInfo(itemId, num)));
     }
     
@@ -387,7 +395,7 @@ public class BagMy {
      * @param num 个数
      * @return 使用成功
      */
-    public boolean useItem(long itemId,int num){
+    public boolean useItem(int itemId,int num){
         if(!costItems(itemId,num))
         {
             return false;
@@ -413,7 +421,7 @@ public class BagMy {
     @Data
     @AllArgsConstructor
     public static class TempCell {
-        private long tempItemId;
+        private int tempItemId;
         private int tempIndex;
         private int tempNum;
     }

@@ -10,7 +10,7 @@ public class ItemInfo {
     /**
      * 物品ID
      */
-    public long id;
+    public int id;
 
     /**
      * 物品数目
@@ -21,7 +21,7 @@ public class ItemInfo {
     public ItemInfo() {
     }
 
-    public ItemInfo(long id, int num) {
+    public ItemInfo(int id, int num) {
         this.num = num;
         this.id = id;
     }

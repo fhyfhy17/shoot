@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class TemplateManager {
     @Autowired
     private TemplateLoader loader;
-    private Map<Class<? extends AbstractTemplate>, Map<Long, AbstractTemplate>> templates = new HashMap<>();
+    private Map<Class<? extends AbstractTemplate>, Map<Integer, AbstractTemplate>> templates = new HashMap<>();
 
     /**
      * 加载模板数据的过程.
@@ -55,15 +55,15 @@ public class TemplateManager {
         }
     }
 
-    public Map<Class<? extends AbstractTemplate>, Map<Long, AbstractTemplate>> getTemplates() {
+    public Map<Class<? extends AbstractTemplate>, Map<Integer, AbstractTemplate>> getTemplates() {
         return this.templates;
     }
 
-    public <T extends AbstractTemplate> Map<Long, T> getTemplateMap(Class<? extends T> clazz) {
-        return (Map<Long, T>) this.templates.get(clazz);
+    public <T extends AbstractTemplate> Map<Integer, T> getTemplateMap(Class<? extends T> clazz) {
+        return (Map<Integer, T>) this.templates.get(clazz);
     }
 
-    public <T extends AbstractTemplate> T getTemplate(Class<? extends T> clazz, Long id) {
+    public <T extends AbstractTemplate> T getTemplate(Class<? extends T> clazz, Integer id) {
         return (T) this.templates.get(clazz).get(id);
     }
 

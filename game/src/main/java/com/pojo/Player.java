@@ -2,6 +2,7 @@ package com.pojo;
 
 import com.part.BagPart;
 import com.part.BasePart;
+import com.part.NoCellBagPart;
 import com.part.PlayerPart;
 import com.util.SpringUtils;
 import lombok.Data;
@@ -18,7 +19,8 @@ public class Player {
 
     public PlayerPart playerPart;
     public BagPart bagPart;
-
+    public NoCellBagPart noCellBagPart;
+    
     private CacheManager cacheManager;
 
     private List<BasePart> parts;

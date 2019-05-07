@@ -1,17 +1,23 @@
 package com.config;
 
 import com.dao.cache.BagDBStore;
+import com.dao.cache.NoCellBagDBStore;
 import com.dao.cache.PlayerDBStore;
 import com.dao.cache.UnionDBStore;
 import com.dao.cache.UserDBStore;
 import com.entry.BagEntry;
+import com.entry.NoCellBagEntry;
 import com.entry.PlayerEntry;
 import com.entry.UnionEntry;
 import com.entry.UserEntry;
 import com.enums.CacheEnum;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
-import org.ehcache.config.builders.*;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.PooledExecutionServiceConfigurationBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.ehcache.config.builders.WriteBehindConfigurationBuilder;
 import org.ehcache.config.units.MemoryUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -46,7 +52,8 @@ public class EhcacheCacheConfig {
     private UnionDBStore unionDBStore;
     @Autowired
     private BagDBStore bagDBStore;
-
+    @Autowired
+    private NoCellBagDBStore noCellBagDBStore;
 
     @Bean
     public Cache playerEntryCache() {
@@ -83,7 +90,26 @@ public class EhcacheCacheConfig {
 
         return bagEntryCache;
     }
-
+    
+    @Bean
+    public Cache noCellBagEntryCache() {
+        
+        Cache<Long,NoCellBagEntry> noCellBagEntryCache = cacheManager.createCache(CacheEnum.NoCellBagEntryCache.name(),
+                CacheConfigurationBuilder.newCacheConfigurationBuilder(Long.class, NoCellBagEntry.class, ResourcePoolsBuilder.newResourcePoolsBuilder().heap(10, MemoryUnit.GB))
+                        .withLoaderWriter(noCellBagDBStore)
+                        .add(WriteBehindConfigurationBuilder
+                                .newUnBatchedWriteBehindConfiguration()
+                                .queueSize(queueSize)
+                                .concurrencyLevel(concurrencyLevel)
+                                .useThreadPool(poolName)
+                        
+                        )
+                        .build());
+        
+        return noCellBagEntryCache;
+    }
+    
+    
     @Bean
     public Cache userEntryCache() {
         Cache<Long, UserEntry> userEntryCache = cacheManager.createCache(CacheEnum.UserEntryCache.name(),

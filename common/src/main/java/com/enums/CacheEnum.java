@@ -11,6 +11,8 @@ public enum CacheEnum {
     TaskEntryCache,
     /***/
     BagEntryCache,
+    /***/
+    NoCellBagEntryCache,
     ;
 
     public static CacheEnum getEnumByName(String name) {

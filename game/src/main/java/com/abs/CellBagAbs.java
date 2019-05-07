@@ -4,9 +4,10 @@ import com.entry.po.ItemInfo;
 import com.entry.po.ItemPo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.pojo.Player;
 import com.template.TemplateManager;
 import com.template.templates.ItemTemplate;
-import com.template.templates.type.ItemType;
+import com.template.templates.type.ItemBigType;
 import com.template.templates.type.ItemUseType;
 import com.template.templates.type.OverBagType;
 import com.util.Util;
@@ -38,11 +39,13 @@ public abstract class CellBagAbs
     public Map<Integer, Map<Integer, ItemPo>> idIndexMap = new HashMap<>();
     public Map<Integer, ItemPo> indexMap = new HashMap<>();
     public List<Integer> emptyList = new ArrayList<>();
+    private Player player;
 
 
-    public void init(Map<Integer, ItemPo> indexMap, TemplateManager templateManager) {
+    public void init(Map<Integer, ItemPo> indexMap, TemplateManager templateManager,Player player) {
         this.tm = templateManager;
         this.indexMap = indexMap;
+        this.player = player;
         if (CollectionUtils.isEmpty(indexMap)) {
             for (int i = 1; i < maxIndex + 1; i++) {
                 indexMap.put(i, null);
@@ -95,9 +98,9 @@ public abstract class CellBagAbs
                 addIdIndexMap(itemPo.index, itemPo);
             } else {
                 //特殊数，代表不进背包，是货币型，进行其它操作
-                if (itemPo.index == -99) {
-                    //TODO 取得对应的子类型
-                    // 进行加操作，调取对应模块，  主要是为是统一奖励，也可以定义多个类型
+                if (tempCell.bigType == ItemBigType.Currency) {
+                    ItemInfo itemInfo = new ItemInfo(tempCell.tempItemId,tempCell.tempNum);
+                    player.noCellBagPart.getNoCellBag().addItem(itemInfo);
                 }
 
                 // 这里发邮件 ，可以定义在item表里，发不进去放在哪，也可以把isForceAdd定义为枚举，指定发不进去放哪
@@ -136,8 +139,8 @@ public abstract class CellBagAbs
             ItemInfo itemInfo = it.next();
             ItemTemplate t = tm.getTemplate(ItemTemplate.class, itemInfo.id);
 
-            if (t.getType() == ItemType.Currency) {
-                TempCell tempCell = new TempCell(itemInfo.id, -99, itemInfo.num);
+            if (t.getBigType() == ItemBigType.Currency) {
+                TempCell tempCell = new TempCell(ItemBigType.Currency,itemInfo.id, 0, itemInfo.num);
                 tempCells.add(tempCell);
                 it.remove();
                 continue;
@@ -153,7 +156,7 @@ public abstract class CellBagAbs
                     break;
                 }
                 int canPutNum = calCanPutNum(t, itemInfo, entry.getValue().num);
-                TempCell tempCell = new TempCell(entry.getKey(), entry.getValue().index, canPutNum);
+                TempCell tempCell = new TempCell(ItemBigType.Item,entry.getKey(), entry.getValue().index, canPutNum);
                 tempCells.add(tempCell);
 
             }
@@ -182,7 +185,7 @@ public abstract class CellBagAbs
                     index = tempEmptyList.remove(0);
                 }
                 int canPutNum = calCanPutNum(t, itemInfo, 0);
-                TempCell tempCell = new TempCell(itemInfo.id, index, canPutNum);
+                TempCell tempCell = new TempCell(ItemBigType.Item,itemInfo.id, index, canPutNum);
                 tempCells.add(tempCell);
             }
         }
@@ -361,7 +364,7 @@ public abstract class CellBagAbs
             for(ItemPo itemPo : itemPos)
             {
                 int canGetNum=calCanGetNum(itemInfo,itemPo.num);
-                TempCell tempCell=new TempCell(itemInfo.id,itemPo.index,canGetNum);
+                TempCell tempCell=new TempCell(ItemBigType.Item,itemInfo.id,itemPo.index,canGetNum);
                 tempCells.add(tempCell);
                 if(itemInfo.num<=0)
                 {
@@ -421,6 +424,7 @@ public abstract class CellBagAbs
     @Data
     @AllArgsConstructor
     public static class TempCell {
+        private int bigType;
         private int tempItemId;
         private int tempIndex;
         private int tempNum;

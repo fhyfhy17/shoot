@@ -27,7 +27,7 @@ public class BagPart extends BasePart {
         Cache<Long, BagEntry> cache = cacheManager.getCache(getCacheName(), Long.class, BagEntry.class);
         bagEntry = cache.get(player.getPlayerId());
         bag= new CommonCellBag();
-        bag.init(bagEntry.indexMap, templateManager);
+        bag.init(bagEntry.indexMap, templateManager,player);
 
     }
 

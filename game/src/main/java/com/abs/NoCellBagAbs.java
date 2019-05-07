@@ -2,6 +2,7 @@ package com.abs;
 
 import com.entry.po.ItemInfo;
 import com.google.common.collect.Lists;
+import com.pojo.Player;
 import com.template.TemplateManager;
 import com.template.templates.ItemTemplate;
 import com.template.templates.type.ItemUseType;
@@ -27,10 +28,13 @@ public abstract class NoCellBagAbs
 	
 	public Map<Integer,Long> map=new HashMap<>();
 	
-	public void init(Map<Integer,Long> map,TemplateManager templateManager)
+	private Player player;
+	
+	public void init(Map<Integer,Long> map,TemplateManager templateManager,Player player)
 	{
 		this.tm=templateManager;
 		this.map=map;
+		this.player = player;
 		
 	}
 	

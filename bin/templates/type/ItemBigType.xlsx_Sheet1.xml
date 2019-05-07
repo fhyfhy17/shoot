@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-    <tr id="int" name="string" describe="string"/>
-    <tr id="1" name="item" describe="物品道具类"/>
-    <tr id="2" name="currency" describe="货币类"/>
-    <tr id="3" name="vit" describe="体力型货币"/>
+  <tr id="int" name="string" describe="string" />
+  <tr id="1" name="item" describe="物品道具类" />
+  <tr id="2" name="currency" describe="货币类(数值类）" />
 </root>
 

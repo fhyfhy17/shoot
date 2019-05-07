@@ -19,15 +19,15 @@ public class BagPart extends BasePart {
     @Autowired
     private TemplateManager templateManager;
 
-    private CellBagAbs cellBagAbs;
+    private CellBagAbs bag;
 
     @Override
     public void onLoad() {
         player.bagPart = this;
         Cache<Long, BagEntry> cache = cacheManager.getCache(getCacheName(), Long.class, BagEntry.class);
         bagEntry = cache.get(player.getPlayerId());
-        cellBagAbs= new CommonCellBag();
-        cellBagAbs.init(bagEntry.indexMap, templateManager);
+        bag= new CommonCellBag();
+        bag.init(bagEntry.indexMap, templateManager);
 
     }
 

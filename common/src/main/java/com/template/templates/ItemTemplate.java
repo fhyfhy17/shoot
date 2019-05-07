@@ -14,6 +14,7 @@ public class ItemTemplate extends AbstractTemplate {
 
     private String name; //
     private String describe; //
+    private int bigType; //
     private int type; //
     private int useType; //
     private int unlockRewardNum; //
@@ -23,7 +24,6 @@ public class ItemTemplate extends AbstractTemplate {
     private int limitLevel; //
     private List<Integer> limitVocations = new ArrayList<>(); //
     private int usePropLimit; //
-    private int limitGameLevel; //
     private boolean bindByGet; //
     private boolean bindByUse; //
     private boolean canTrade; //

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <tr id="int" name="string" describe="string" />
+  <tr id="1" name="levelLess" describe="等级不足" />
+  <tr id="2" name="CoinLess" describe="银币不足" />
+  <tr id="3" name="GoldLess" describe="金币不足" />
+</root>
+

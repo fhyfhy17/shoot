@@ -1,20 +1,56 @@
 package com.util;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class FileUtil {
 
+  
     public static List<String> getFiles(String filePath, String filter) {
+    
+        //Predicate<String> fileFilter = fileName->fileName.endsWith(filter)&&!fileName.startsWith("~");
+        //List<String> filelist = new ArrayList<>();
+        //try
+        //{
+        //    Files.walkFileTree(Paths.get(filePath),new SimpleFileVisitor<Path>(){
+        //        @Override
+        //        public FileVisitResult visitFile(Path file,BasicFileAttributes attrs) throws IOException
+        //        {
+        //            if(fileFilter.test(file.getFileName().toString())){
+        //                filelist.add(file.toFile().getAbsolutePath());
+        //
+        //            }
+        //            return super.visitFile(file,attrs);
+        //        }
+        //    });
+        //}
+        //catch(IOException e)
+        //{
+        //    e.printStackTrace();
+        //}
+    
+    
         File root = new File(filePath);
-        File[] files = root.listFiles(pathname -> {
-            String name = pathname.getName();
-            return name.endsWith(filter) && !name.startsWith("~");
-        });
+
+        FileFilter fileFilter =pathName -> pathName.getName().endsWith(filter)&&!pathName.getName().startsWith("~");
+
+
+        File[] files = root.listFiles(fileFilter);
+        if(Objects.isNull(files)){
+            return null;
+        }
         List<String> filelist = new ArrayList<>();
-        for (File file : files) {
+        Arrays.stream(files).forEach(file->{
             if (file.isDirectory()) {
                 getFiles(file.getAbsolutePath(), filter);
                 System.out.println("显示" + filePath + "下所有子目录及其文件" + file.getAbsolutePath());
@@ -22,7 +58,8 @@ public class FileUtil {
                 filelist.add(file.getAbsolutePath());
                 System.out.println("显示" + filePath + "下所有子目录" + file.getAbsolutePath());
             }
-        }
+        });
+
         return filelist;
     }
 

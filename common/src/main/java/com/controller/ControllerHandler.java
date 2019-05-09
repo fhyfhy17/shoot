@@ -19,13 +19,17 @@ public class ControllerHandler {
     private MethodParameter[] parameters;
     private int msgId;
     private MethodAccessor methodAccessor;
+    private FunType funType;
+    private Object fun;
 
-    public ControllerHandler(BaseController action, Method method, int msgId, MethodAccessor methodAccessor) {
+    public ControllerHandler(BaseController action, Method method, int msgId, MethodAccessor methodAccessor,FunType funType,Object fun) {
 
         this.action = action;
         this.method = method;
         this.msgId = msgId;
         this.methodAccessor = methodAccessor;
+        this.funType =funType;
+        this.fun = fun;
         Class<?>[] parameterTypes = this.method.getParameterTypes();
         MethodParameter[] parameters = new MethodParameter[parameterTypes.length];
         for (int i = 0; i < parameterTypes.length; i++) {
@@ -40,7 +44,7 @@ public class ControllerHandler {
 
     }
 
-    private Object[] getMethodArgumentValues(Message message) throws Exception {
+    public Object[] getMethodArgumentValues(Message message) throws Exception {
         Object[] args = new Object[parameters.length];
         for (int i = 0; i < args.length; i++) {
             MethodParameter methodParameter = this.parameters[i];

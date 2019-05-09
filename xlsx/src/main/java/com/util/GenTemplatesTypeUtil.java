@@ -13,6 +13,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 public class GenTemplatesTypeUtil {
 
@@ -27,6 +28,10 @@ public class GenTemplatesTypeUtil {
     }
 
     public static void convert(List<String> fileList) {
+        if(Objects.isNull(fileList)||fileList.isEmpty()){
+            System.err.println("没有找到任何文件");
+            return;
+        }
         for (String path : fileList) {
             File file = new File(path);
             if (!file.exists()) {

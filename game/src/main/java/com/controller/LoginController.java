@@ -16,7 +16,7 @@ public class LoginController extends BaseController {
     private PlayerService playerService;
 
 
-    public LOGIN_MSG.STC_PLAYER_LIST playerList(UidContext uidContext, LOGIN_MSG.CTS_PLAYER_LIST req) {
+    public LOGIN_MSG.STC_PLAYER_LIST playerList(UidContext uidContext,LOGIN_MSG.CTS_PLAYER_LIST req) {
         LOGIN_MSG.STC_PLAYER_LIST.Builder builder = LOGIN_MSG.STC_PLAYER_LIST.newBuilder();
 
         playerService.playerList(uidContext.getUid(), builder);
@@ -30,7 +30,7 @@ public class LoginController extends BaseController {
         return builder.build();
     }
 
-    public LOGIN_MSG.STC_PlayerInfo getPlayerInfo(UidContext uidContext, Player player, LOGIN_MSG.CTS_PlayerInfo req) {
+    public LOGIN_MSG.STC_PlayerInfo getPlayerInfo(UidContext uidContext,Player player,LOGIN_MSG.CTS_PlayerInfo req) {
         LOGIN_MSG.STC_PlayerInfo.Builder builder = LOGIN_MSG.STC_PlayerInfo.newBuilder();
 
         builder.setPlayerInfo(playerService.buildPlayerInfo(player.playerPart.getPlayerEntry()));

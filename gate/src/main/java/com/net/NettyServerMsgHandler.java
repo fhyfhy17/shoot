@@ -23,6 +23,7 @@ public class NettyServerMsgHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("打开连接");
         connectManager.initConnect(ctx.channel());
     }
 

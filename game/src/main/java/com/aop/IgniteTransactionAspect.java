@@ -25,7 +25,7 @@ public class IgniteTransactionAspect {
 //
 //
 //    @Around("trPoint()")
-//    public Object around(ProceedingJoinPoint pjp) throws ExceptionNeedSendToClient {
+//    public Object around(ProceedingJoinPoint pjp) throws StatusException {
 //        Object result = null;
 //        Signature signature = pjp.getSignature();
 //        MethodSignature methodSignature = (MethodSignature) signature;
@@ -59,7 +59,7 @@ public class IgniteTransactionAspect {
 //                caches[j].put(baseEntries[j].getId(), baseEntries[j]);
 //            }
 //            tx.commit();
-//        } catch (ExceptionNeedSendToClient e) {
+//        } catch (StatusException e) {
 //            throw e;
 //        } catch (Throwable throwable) {
 //            log.error("", throwable);

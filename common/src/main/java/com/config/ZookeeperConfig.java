@@ -12,7 +12,7 @@ import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
-import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.apache.curator.retry.RetryForever;
 import org.apache.zookeeper.CreateMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -30,11 +30,11 @@ public class ZookeeperConfig {
     @PostConstruct
     public void curatorFramework() throws Exception {
 
-        RetryPolicy retryPolicy = new ExponentialBackoffRetry(300, 3, 1000);
+        RetryPolicy retryPolicy = new RetryForever(20);
         CuratorFramework curator = CuratorFrameworkFactory.builder()
                 .connectString("127.0.0.1")
                 .namespace("shoot")
-                .sessionTimeoutMs(2000)
+                .sessionTimeoutMs(3000)
                 .retryPolicy(retryPolicy).build();
 
         curator.start();

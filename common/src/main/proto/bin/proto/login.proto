@@ -3,6 +3,7 @@ option java_package = "com.net.msg";
 option java_outer_classname = "LOGIN_MSG";
 
 import "options.proto";
+import "common.proto";
 
 message CTS_LOGIN{
 	option(messageId) = 10001;
@@ -13,7 +14,7 @@ message CTS_LOGIN{
 message STC_LOGIN{
 	option(messageId) = 10002;
 	int64 uid = 1;
-	bool suc = 2;
+	Status result =2;
 	string sessionId = 3;
 }
 
@@ -73,6 +74,7 @@ message CTS_GAME_LOGIN_PLAYER{
 message STC_GAME_LOGIN_PLAYER{
 	option(messageId) = 10011;
 	PLAYER_INFO playerInfo =1;
+	Status result =2;
 	//其它模块信息
 }
 

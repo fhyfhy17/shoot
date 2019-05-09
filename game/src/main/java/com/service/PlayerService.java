@@ -10,10 +10,12 @@ import com.dao.UserRepository;
 import com.entry.PlayerEntry;
 import com.entry.UserEntry;
 import com.event.playerEvent.PlayerLoginEvent;
-import com.exception.exceptionNeedSendToClient.NoPlayerWhenLoginException;
+import com.exception.StatusException;
 import com.google.common.eventbus.Subscribe;
 import com.net.msg.LOGIN_MSG;
+import com.part.BasePart;
 import com.pojo.Player;
+import com.template.templates.type.TipType;
 import com.util.IdCreator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -37,11 +39,14 @@ public class PlayerService {
 
     @Autowired
     private OnlineService onlineService;
+    
+    @Autowired
+    private List<BasePart> parts;
 
 
     @Subscribe
     @ServiceLog
-    public void login(PlayerLoginEvent playerLoginEvent) throws NoPlayerWhenLoginException {
+    public void login(PlayerLoginEvent playerLoginEvent) throws StatusException {
         long playerId = playerLoginEvent.getPlayerId();
         long uid = playerLoginEvent.getUid();
         LOGIN_MSG.STC_GAME_LOGIN_PLAYER.Builder builder = playerLoginEvent.getBuilder();
@@ -55,19 +60,21 @@ public class PlayerService {
         builder.setPlayerInfo(buildPlayerInfo(player.playerPart.getPlayerEntry()));
     }
 
-    private Player loadPlayer(long playerId) throws NoPlayerWhenLoginException {
+    private Player loadPlayer(long playerId) throws StatusException
+    {
 
         Cache<Long, PlayerEntry> playerEntryCache = CacheHelper.getPlayerEntryCache();
 
         PlayerEntry playerEntry = playerEntryCache.get(playerId);
 
         if (Objects.isNull(playerEntry)) {
-            throw new NoPlayerWhenLoginException();
+            throw new StatusException(TipType.NoPlayer);
         }
         Player player = new Player();
-        player.initParts();
         player.setPlayerId(playerEntry.getId());
         player.setUid(playerEntry.getUid());
+        player.initParts(parts);
+    
 
         return player;
 

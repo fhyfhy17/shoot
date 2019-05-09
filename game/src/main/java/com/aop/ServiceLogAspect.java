@@ -25,7 +25,7 @@ public class ServiceLogAspect {
             JSONObject jsonObject = THREAD_LOCAL.get();
             //jsonObject.fluentPut();   这日志还是得一个一个拼，木啥意思啊~~
 
-            log.info(jsonObject.toJSONString());
+            //log.info(jsonObject.toJSONString());
         } catch (Throwable e) {
             log.error("", e);
         } finally {

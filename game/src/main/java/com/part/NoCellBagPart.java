@@ -8,11 +8,15 @@ import lombok.Getter;
 import lombok.Setter;
 import org.ehcache.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 @Component
 @Getter
 @Setter
+@Order(2)
 public class NoCellBagPart extends BasePart {
 
     private NoCellBagEntry noCellBagEntry;
@@ -26,6 +30,10 @@ public class NoCellBagPart extends BasePart {
         player.noCellBagPart = this;
         Cache<Long, NoCellBagEntry> cache = cacheManager.getCache(getCacheName(), Long.class, NoCellBagEntry.class);
         noCellBagEntry = cache.get(player.getPlayerId());
+        if(Objects.isNull(noCellBagEntry)){
+            noCellBagEntry=new NoCellBagEntry(player.getPlayerId());
+            cache.put(player.getPlayerId(),noCellBagEntry);
+        }
         noCellBag= new CommonNoCellBag();
         noCellBag.init(noCellBagEntry.map, templateManager,player);
 

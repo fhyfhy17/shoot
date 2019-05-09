@@ -8,7 +8,6 @@ import com.util.SpringUtils;
 import lombok.Data;
 import org.ehcache.CacheManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -27,11 +26,11 @@ public class Player {
 
     public Player() {
         cacheManager = SpringUtils.getBean(CacheManager.class);
-        parts = new ArrayList<>(SpringUtils.getBeansOfType(BagPart.class).values());
     }
 
-    public void initParts() {
-
+    public void initParts(List<BasePart> parts) {
+        this.parts = parts;
+        
         parts.forEach(x -> {
             x.setPlayer(this);
             x.onLoad();

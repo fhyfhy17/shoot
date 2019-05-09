@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.controller.fun.FunType;
 import com.controller.resolver.MethodParameter;
 import com.controller.resolver.ResolverManager;
 import com.pojo.Message;

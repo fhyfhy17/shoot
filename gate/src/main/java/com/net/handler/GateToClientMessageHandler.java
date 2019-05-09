@@ -33,7 +33,7 @@ public class GateToClientMessageHandler extends MessageThreadHandler {
         //如果是登录返回消息
         if (message.getId() == LOGIN_MSG.STC_LOGIN.getDescriptor().getOptions().getExtension(Options.messageId)) {
             LOGIN_MSG.STC_LOGIN m = LOGIN_MSG.STC_LOGIN.parseFrom(message.getData());
-            if (m.getSuc()) {
+            if (m.getResult().getResult()) {
 
                 connectManager.register(m.getSessionId(), m.getUid());
                 connectManager.writeToClient(m.getUid(), message);

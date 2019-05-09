@@ -1,5 +1,10 @@
 package com.controller;
 
+import com.controller.fun.Fun1;
+import com.controller.fun.Fun2;
+import com.controller.fun.Fun3;
+import com.controller.fun.Fun4;
+import com.controller.fun.FunType;
 import com.google.common.collect.Maps;
 import com.google.protobuf.Message;
 import com.net.msg.Options;
@@ -74,21 +79,22 @@ public class ControllerFactory {
         {
             Object fun =null;
             FunType f= null;
+            boolean isVoid = void.class.isAssignableFrom(method.getReturnType());
            switch(method.getParameters().length){
                case 1:
-                   fun = getFun1Obj(method,controller);
+                   fun = getFun1Obj(method,controller,isVoid);
                    f = FunType.Fun1;
                    break;
                case 2:
-                   fun = getFun2Obj(method,controller);
+                   fun = getFun2Obj(method,controller,isVoid);
                    f = FunType.Fun2;
                    break;
                case 3:
-                   fun = getFun3Obj(method,controller);
+                   fun = getFun3Obj(method,controller,isVoid);
                    f = FunType.Fun3;
                    break;
                case 4:
-                   fun = getFun4Obj(method,controller);
+                   fun = getFun4Obj(method,controller,isVoid);
                    f = FunType.Fun4;
                    break;
                default:
@@ -103,7 +109,7 @@ public class ControllerFactory {
         return pair;
     }
     
-    private static Object getFun1Obj(Method method,BaseController controller){
+    private static Object getFun1Obj(Method method,BaseController controller,boolean isVoid){
         Class<?>[] types=method.getParameterTypes();
         MethodHandles.Lookup lookup = MethodHandles.lookup();
         CallSite site2 = null;
@@ -112,7 +118,7 @@ public class ControllerFactory {
             site2 = LambdaMetafactory.metafactory(lookup,
                     "apply",
                     MethodType.methodType(Fun1.class),
-                    MethodType.methodType(Object.class, Object.class, Object.class),
+                    MethodType.methodType(isVoid?void.class:Object.class, Object.class, Object.class),
                     lookup.findVirtual(controller.getClass(), method.getName(), MethodType.methodType(method.getReturnType(),types[0])),
                     MethodType.methodType(method.getReturnType(),controller.getClass(),types[0])
             );
@@ -134,7 +140,7 @@ public class ControllerFactory {
     }
     
     
-    private static Object getFun2Obj(Method method,BaseController controller){
+    private static Object getFun2Obj(Method method,BaseController controller,boolean isVoid){
         Class<?>[] types=method.getParameterTypes();
         MethodHandles.Lookup lookup = MethodHandles.lookup();
         CallSite site2 = null;
@@ -143,7 +149,7 @@ public class ControllerFactory {
              site2 = LambdaMetafactory.metafactory(lookup,
                     "apply",
                     MethodType.methodType(Fun2.class),
-                    MethodType.methodType(Object.class, Object.class, Object.class, Object.class),
+                    MethodType.methodType(isVoid?void.class:Object.class, Object.class, Object.class, Object.class),
                     lookup.findVirtual(controller.getClass(), method.getName(), MethodType.methodType(method.getReturnType(),types[0],types[1])),
                     MethodType.methodType(method.getReturnType(),controller.getClass(),types[0],types[1])
             );
@@ -166,7 +172,7 @@ public class ControllerFactory {
     
 
 
-    private static Object getFun3Obj(Method method,BaseController controller){
+    private static Object getFun3Obj(Method method,BaseController controller,boolean isVoid){
         Class<?>[] types=method.getParameterTypes();
         MethodHandles.Lookup lookup = MethodHandles.lookup();
         CallSite site2 = null;
@@ -175,7 +181,7 @@ public class ControllerFactory {
             site2 = LambdaMetafactory.metafactory(lookup,
                     "apply",
                     MethodType.methodType(Fun3.class),
-                    MethodType.methodType(Object.class, Object.class, Object.class, Object.class, Object.class),
+                    MethodType.methodType(isVoid?void.class:Object.class, Object.class, Object.class, Object.class, Object.class),
                     lookup.findVirtual(controller.getClass(), method.getName(), MethodType.methodType(method.getReturnType(),types[0],types[1],types[2])),
                     MethodType.methodType(method.getReturnType(),controller.getClass(),types[0],types[1],types[2])
             );
@@ -196,7 +202,7 @@ public class ControllerFactory {
         return null;
     }
     
-    private static Object getFun4Obj(Method method,BaseController controller){
+    private static Object getFun4Obj(Method method,BaseController controller,boolean isVoid){
         Class<?>[] types=method.getParameterTypes();
         MethodHandles.Lookup lookup = MethodHandles.lookup();
         CallSite site2 = null;
@@ -205,7 +211,7 @@ public class ControllerFactory {
             site2 = LambdaMetafactory.metafactory(lookup,
                     "apply",
                     MethodType.methodType(Fun4.class),
-                    MethodType.methodType(Object.class, Object.class, Object.class, Object.class, Object.class, Object.class),
+                    MethodType.methodType(isVoid?void.class:Object.class, Object.class, Object.class, Object.class, Object.class, Object.class),
                     lookup.findVirtual(controller.getClass(), method.getName(), MethodType.methodType(method.getReturnType(),types[0],types[1],types[2],types[3])),
                     MethodType.methodType(method.getReturnType(),controller.getClass(),types[0],types[1],types[2],types[3])
             );

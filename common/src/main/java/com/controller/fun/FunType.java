@@ -1,4 +1,4 @@
-package com.controller;
+package com.controller.fun;
 
 public enum FunType
 {

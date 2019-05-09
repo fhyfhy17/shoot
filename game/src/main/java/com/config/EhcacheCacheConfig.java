@@ -22,6 +22,7 @@ import org.ehcache.config.units.MemoryUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 @Configuration
 public class EhcacheCacheConfig {
@@ -29,15 +30,17 @@ public class EhcacheCacheConfig {
     private CacheManager cacheManager;
 
     private static final String poolName = "writeBackPool";
+    private static final String defaultName = "defaultPool";
     private static final int queueSize = 4096;
     private static final int concurrencyLevel = 3;
 
 
-    @Bean("cacheManager")
+    @Bean("cacheManagerMy")
     public CacheManager getCacheManager() {
         cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
                 .using(PooledExecutionServiceConfigurationBuilder
                         .newPooledExecutionServiceConfigurationBuilder()
+                        .defaultPool(defaultName,1,5)
                         .pool(poolName, 1, 5).build())
                 .build(true);
         return cacheManager;
@@ -55,6 +58,7 @@ public class EhcacheCacheConfig {
     @Autowired
     private NoCellBagDBStore noCellBagDBStore;
 
+    @DependsOn("cacheManagerMy")
     @Bean
     public Cache playerEntryCache() {
 
@@ -72,7 +76,7 @@ public class EhcacheCacheConfig {
 
         return playerEntryCache;
     }
-
+    @DependsOn("cacheManagerMy")
     @Bean
     public Cache bagEntryCache() {
 
@@ -90,7 +94,7 @@ public class EhcacheCacheConfig {
 
         return bagEntryCache;
     }
-    
+    @DependsOn("cacheManagerMy")
     @Bean
     public Cache noCellBagEntryCache() {
         
@@ -109,7 +113,7 @@ public class EhcacheCacheConfig {
         return noCellBagEntryCache;
     }
     
-    
+    @DependsOn("cacheManagerMy")
     @Bean
     public Cache userEntryCache() {
         Cache<Long, UserEntry> userEntryCache = cacheManager.createCache(CacheEnum.UserEntryCache.name(),
@@ -126,7 +130,7 @@ public class EhcacheCacheConfig {
 
         return userEntryCache;
     }
-
+    @DependsOn("cacheManagerMy")
     @Bean
     public Cache unionEntryCache() {
         Cache<Long, UnionEntry> unionEntryCache = cacheManager.createCache(CacheEnum.UnionEntryCache.name(),

@@ -1,4 +1,4 @@
-package com.controller;
+package com.controller.fun;
 
 public interface Fun4<A,B,C,D,E,F>
 {

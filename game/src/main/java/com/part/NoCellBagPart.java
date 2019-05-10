@@ -30,12 +30,12 @@ public class NoCellBagPart extends BasePart {
         player.noCellBagPart = this;
         Cache<Long, NoCellBagEntry> cache = cacheManager.getCache(getCacheName(), Long.class, NoCellBagEntry.class);
         noCellBagEntry = cache.get(player.getPlayerId());
-        if(Objects.isNull(noCellBagEntry)){
-            noCellBagEntry=new NoCellBagEntry(player.getPlayerId());
-            cache.put(player.getPlayerId(),noCellBagEntry);
+        if (Objects.isNull(noCellBagEntry)) {
+            noCellBagEntry = new NoCellBagEntry(player.getPlayerId());
+            cache.put(player.getPlayerId(), noCellBagEntry);
         }
-        noCellBag= new CommonNoCellBag();
-        noCellBag.init(noCellBagEntry.map, templateManager,player);
+        noCellBag = new CommonNoCellBag();
+        noCellBag.init(noCellBagEntry.map, templateManager, player);
 
     }
 

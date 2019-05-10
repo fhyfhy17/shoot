@@ -45,7 +45,7 @@ public class GateMessageHandler extends MessageThreadHandler {
                 ServerInfoManager.sendMessage(loginServerId, message);
                 break;
             case GAME:
-                ConnectManager connectManager =  SpringUtils.getBean(ConnectManager.class);
+                ConnectManager connectManager = SpringUtils.getBean(ConnectManager.class);
                 Session session = connectManager.getUserIdToConnectMap().get(message.getUid());
                 ServerInfoManager.sendMessage(session.getGameId(), message);
                 break;

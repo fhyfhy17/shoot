@@ -18,5 +18,5 @@ public class Constant {
     public static final Message DEFAULT_ERROR_REPLY = LOGIN_MSG.STC_UNIFIED_EXCEPTION.newBuilder().build();
 
     public static final String ZOOKEEPER_PATH = "/cluster/nodes";
-    
+
 }

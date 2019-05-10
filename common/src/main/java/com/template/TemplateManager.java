@@ -46,7 +46,7 @@ public class TemplateManager {
                     + "templates"
                     + File.separator
                     + templateAnno.path();
-          
+
             Class<? extends AbstractTemplate> subclass = o.getClass().asSubclass(AbstractTemplate.class);
             this.templates.put(subclass,
                     loader.loadTemplate(new File(path), subclass)

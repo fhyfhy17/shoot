@@ -23,13 +23,13 @@ public class ControllerHandler {
     private FunType funType;
     private Object fun;
 
-    public ControllerHandler(BaseController action, Method method, int msgId, MethodAccessor methodAccessor,FunType funType,Object fun) {
+    public ControllerHandler(BaseController action, Method method, int msgId, MethodAccessor methodAccessor, FunType funType, Object fun) {
 
         this.action = action;
         this.method = method;
         this.msgId = msgId;
         this.methodAccessor = methodAccessor;
-        this.funType =funType;
+        this.funType = funType;
         this.fun = fun;
         Class<?>[] parameterTypes = this.method.getParameterTypes();
         MethodParameter[] parameters = new MethodParameter[parameterTypes.length];

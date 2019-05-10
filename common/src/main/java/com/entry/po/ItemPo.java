@@ -38,8 +38,6 @@ public class ItemPo implements Comparable<ItemPo> {
     public boolean hasRedPoint;
 
 
-
-
     public ItemPo() {
     }
 

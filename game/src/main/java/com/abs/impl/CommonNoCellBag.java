@@ -12,18 +12,13 @@ import java.util.Map;
  */
 
 @Slf4j
-public  class CommonNoCellBag extends NoCellBagAbs
-{
+public class CommonNoCellBag extends NoCellBagAbs {
 
 
-    
-    
-    public void init(Map<Integer,Long> map,TemplateManager templateManager,Player player)
-    {
-        super.init(map,templateManager,player);
-        
+    public void init(Map<Integer, Long> map, TemplateManager templateManager, Player player) {
+        super.init(map, templateManager, player);
+
     }
-
 
 
 }

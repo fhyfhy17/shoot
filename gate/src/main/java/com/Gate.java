@@ -23,8 +23,7 @@ public class Gate implements CommandLineRunner {
 
 
     @EventListener
-    void afterSpringBoot(ApplicationReadyEvent event) throws Exception
-    {
+    void afterSpringBoot(ApplicationReadyEvent event) throws Exception {
         ControllerFactory.init();
         //启动 netty
         NettyServer nettyServer = new NettyServer();

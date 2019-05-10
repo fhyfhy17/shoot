@@ -45,10 +45,10 @@ public class ServerInfoManager {
     public static void removeServer(ServerInfo serverInfo) {
         serverInfos.remove(serverInfo.getServerId());
         log.info("服务退出={}  ,所有服务={}", serverInfo, serverInfos);
-        if(serverInfo.getServerId().equals(ContextUtil.id)){
+        if (serverInfo.getServerId().equals(ContextUtil.id)) {
             ZookeeperUtil.connectZookeeper(serverInfo);
         }
-  
+
     }
 
     /**

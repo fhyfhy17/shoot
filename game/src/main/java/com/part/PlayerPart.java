@@ -23,9 +23,9 @@ public class PlayerPart extends BasePart {
         player.playerPart = this;
         Cache<Long, PlayerEntry> cache = cacheManager.getCache(getCacheName(), Long.class, PlayerEntry.class);
         playerEntry = cache.get(player.getPlayerId());
-        if(Objects.isNull(playerEntry)){
-            playerEntry=new PlayerEntry(player.getPlayerId());
-            cache.put(player.getPlayerId(),playerEntry);
+        if (Objects.isNull(playerEntry)) {
+            playerEntry = new PlayerEntry(player.getPlayerId());
+            cache.put(player.getPlayerId(), playerEntry);
         }
     }
 

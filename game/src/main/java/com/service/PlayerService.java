@@ -39,7 +39,7 @@ public class PlayerService {
 
     @Autowired
     private OnlineService onlineService;
-    
+
     @Autowired
     private List<BasePart> parts;
 
@@ -60,8 +60,7 @@ public class PlayerService {
         builder.setPlayerInfo(buildPlayerInfo(player.playerPart.getPlayerEntry()));
     }
 
-    private Player loadPlayer(long playerId) throws StatusException
-    {
+    private Player loadPlayer(long playerId) throws StatusException {
 
         Cache<Long, PlayerEntry> playerEntryCache = CacheHelper.getPlayerEntryCache();
 
@@ -74,7 +73,7 @@ public class PlayerService {
         player.setPlayerId(playerEntry.getId());
         player.setUid(playerEntry.getUid());
         player.initParts(parts);
-    
+
 
         return player;
 

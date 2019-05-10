@@ -20,7 +20,7 @@ public class TestController extends BaseController {
     private TestService testService;
 
 
-    public LOGIN_MSG.STC_TEST test(UidContext uidContext,LOGIN_MSG.CTS_TEST req) {
+    public LOGIN_MSG.STC_TEST test(UidContext uidContext, LOGIN_MSG.CTS_TEST req) {
 //        log.info("test收到word = {}", req.getWord());
         LOGIN_MSG.STC_TEST.Builder builder = LOGIN_MSG.STC_TEST.newBuilder();
         builder.setWord(req.getWord());

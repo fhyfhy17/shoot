@@ -70,64 +70,61 @@ public class MessageThreadHandler implements Runnable {
                 if (handler == null) {
                     throw new IllegalStateException("收到不存在的消息，消息ID=" + cmdId);
                 }
-    
-    
+
+
                 //拦截器前
                 if (!HandlerExecutionChain.applyPreHandle(message, handler)) {
                     continue;
                 }
-                Object result =null;
-                Object[] m=handler.getMethodArgumentValues(message);
-                switch(handler.getFunType()){
+                Object result = null;
+                Object[] m = handler.getMethodArgumentValues(message);
+                switch (handler.getFunType()) {
                     case Fun1:
-                        result=(((Fun1)handler.getFun()).apply(handler.getAction(),m[0]));
+                        result = (((Fun1) handler.getFun()).apply(handler.getAction(), m[0]));
                         break;
                     case Fun2:
-                        result=(((Fun2)handler.getFun()).apply(handler.getAction(),m[0],m[1]));
+                        result = (((Fun2) handler.getFun()).apply(handler.getAction(), m[0], m[1]));
                         break;
                     case Fun3:
-                        result=(((Fun3)handler.getFun()).apply(handler.getAction(),m[0],m[1],m[2]));
+                        result = (((Fun3) handler.getFun()).apply(handler.getAction(), m[0], m[1], m[2]));
                         break;
                     case Fun4:
-                        result=(((Fun4)handler.getFun()).apply(handler.getAction(),m[0],m[1],m[2],m[3]));
+                        result = (((Fun4) handler.getFun()).apply(handler.getAction(), m[0], m[1], m[2], m[3]));
                         break;
-                     default:
-                         System.out.println("default");
-                         break;
+                    default:
+                        System.out.println("default");
+                        break;
                 }
-                
-             
+
+
                 ////针对method的每个参数进行处理， 处理多参数,返回result（这是老的invoke执行controller 暂时废弃）
                 //com.google.protobuf.Message result = (com.google.protobuf.Message) handler.invokeForController(message);
                 ////拦截器后
-                if(com.google.protobuf.Message.class.isAssignableFrom(result.getClass())){
-                    
-                    HandlerExecutionChain.applyPostHandle(message, (com.google.protobuf.Message)result, handler);
+                if (com.google.protobuf.Message.class.isAssignableFrom(result.getClass())) {
+
+                    HandlerExecutionChain.applyPostHandle(message, (com.google.protobuf.Message) result, handler);
                 }
-                
+
             }
             //服务之间的错误，只在本地打印，  如果是RPC发回去一个错误类型也就够了
             catch (StatusException se) {
                 // Status报错， 执行方法时，抛出主动定义的错误，方便多层调用时无法中断方法，这里主动回复给有result参数的协议
                 Class<?> returnType = handler.getMethod().getReturnType();
                 if (returnType.isAssignableFrom(com.google.protobuf.Message.class)) {
-                    com.google.protobuf.Message.Builder builder=ProtoUtil.setFieldByName(ProtoUtil.createBuilerByClassName(returnType.getName()) ,"result",TipStatus.fail(se.getTip()));
-                    Message message1=ProtoUtil.buildMessage(builder.build(),message.getUid(),null);
+                    com.google.protobuf.Message.Builder builder = ProtoUtil.setFieldByName(ProtoUtil.createBuilerByClassName(returnType.getName()), "result", TipStatus.fail(se.getTip()));
+                    Message message1 = ProtoUtil.buildMessage(builder.build(), message.getUid(), null);
                     //TODO 要存UID在哪个gate里
-                    ServerInfoManager.sendMessage("gate-1",message1);
+                    ServerInfoManager.sendMessage("gate-1", message1);
                 }
-            }
-            catch(ServerBusinessException sbe){
+            } catch (ServerBusinessException sbe) {
                 // 业务报错，
-                log.error("",sbe);
+                log.error("", sbe);
                 //TODO  也发给前端，方便调试
-            }
-            
-        catch (Exception e) {
-             // 系统报错
-            log.error("", e);
-            HandlerExecutionChain.applyPostHandle(message, Constant.DEFAULT_ERROR_REPLY, handler);
-            
+            } catch (Exception e) {
+                // 系统报错
+                log.error("", e);
+                HandlerExecutionChain.applyPostHandle(message, Constant.DEFAULT_ERROR_REPLY, handler);
+
             }
         }
     }

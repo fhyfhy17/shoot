@@ -15,8 +15,8 @@ import java.util.Map;
 @SeqClassName(name = "seq.NoCellBagEntry")
 @ToString
 public class NoCellBagEntry extends BaseEntry {
-    
-    public Map<Integer,Long> map = new HashMap<>();
+
+    public Map<Integer, Long> map = new HashMap<>();
 
     public NoCellBagEntry(long id) {
         super(id);

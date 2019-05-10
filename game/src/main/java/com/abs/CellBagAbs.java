@@ -16,14 +16,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -31,8 +24,7 @@ import java.util.stream.Collectors;
  */
 
 @Slf4j
-public abstract class CellBagAbs
-{
+public abstract class CellBagAbs {
 
     private TemplateManager tm;
     public int maxIndex = 64;
@@ -42,7 +34,7 @@ public abstract class CellBagAbs
     private Player player;
 
 
-    public void init(Map<Integer, ItemPo> indexMap, TemplateManager templateManager,Player player) {
+    public void init(Map<Integer, ItemPo> indexMap, TemplateManager templateManager, Player player) {
         this.tm = templateManager;
         this.indexMap = indexMap;
         this.player = player;
@@ -99,7 +91,7 @@ public abstract class CellBagAbs
             } else {
                 //特殊数，代表不进背包，是货币型，进行其它操作
                 if (tempCell.bigType == ItemBigType.Currency) {
-                    ItemInfo itemInfo = new ItemInfo(tempCell.tempItemId,tempCell.tempNum);
+                    ItemInfo itemInfo = new ItemInfo(tempCell.tempItemId, tempCell.tempNum);
                     player.noCellBagPart.getNoCellBag().addItem(itemInfo);
                 }
 
@@ -140,7 +132,7 @@ public abstract class CellBagAbs
             ItemTemplate t = tm.getTemplate(ItemTemplate.class, itemInfo.id);
 
             if (t.getBigType() == ItemBigType.Currency) {
-                TempCell tempCell = new TempCell(ItemBigType.Currency,itemInfo.id, 0, itemInfo.num);
+                TempCell tempCell = new TempCell(ItemBigType.Currency, itemInfo.id, 0, itemInfo.num);
                 tempCells.add(tempCell);
                 it.remove();
                 continue;
@@ -156,7 +148,7 @@ public abstract class CellBagAbs
                     break;
                 }
                 int canPutNum = calCanPutNum(t, itemInfo, entry.getValue().num);
-                TempCell tempCell = new TempCell(ItemBigType.Item,entry.getKey(), entry.getValue().index, canPutNum);
+                TempCell tempCell = new TempCell(ItemBigType.Item, entry.getKey(), entry.getValue().index, canPutNum);
                 tempCells.add(tempCell);
 
             }
@@ -185,7 +177,7 @@ public abstract class CellBagAbs
                     index = tempEmptyList.remove(0);
                 }
                 int canPutNum = calCanPutNum(t, itemInfo, 0);
-                TempCell tempCell = new TempCell(ItemBigType.Item,itemInfo.id, index, canPutNum);
+                TempCell tempCell = new TempCell(ItemBigType.Item, itemInfo.id, index, canPutNum);
                 tempCells.add(tempCell);
             }
         }
@@ -203,19 +195,20 @@ public abstract class CellBagAbs
             return canPutNum;
         }
     }
-    
-    
+
+
     private int calCanGetNum(ItemInfo itemInfo, int hasNum) {
         int canGetNum = hasNum;
         if (canGetNum >= itemInfo.num) {
             canGetNum -= itemInfo.num;
-            itemInfo.num =0;
+            itemInfo.num = 0;
             return canGetNum;
         } else {
             itemInfo.num -= canGetNum;
             return canGetNum;
         }
     }
+
     /**
      * 添加物品，尽量放，放不下的发邮件
      *
@@ -314,60 +307,52 @@ public abstract class CellBagAbs
         }
     }
 
-    
-    private void setCellEmpty(int index){
-        ItemPo itemPo=indexMap.get(index);
-        if(Objects.isNull(itemPo))
-        {
+
+    private void setCellEmpty(int index) {
+        ItemPo itemPo = indexMap.get(index);
+        if (Objects.isNull(itemPo)) {
             return;
         }
-        indexMap.put(index,null);
+        indexMap.put(index, null);
         idIndexMap.get(itemPo.id).remove(index);
         emptyList.add(index);
     }
-    
-    public boolean costItems(List<ItemInfo> list)
-    {
-        List<TempCell> tempCells=testGet(list);
-        if(Objects.isNull(tempCells))
-        {
+
+    public boolean costItems(List<ItemInfo> list) {
+        List<TempCell> tempCells = testGet(list);
+        if (Objects.isNull(tempCells)) {
             return false;
         }
-        for(TempCell tempCell : tempCells)
-        {
-            ItemPo itemPo=indexMap.get(tempCell.tempIndex);
-            itemPo.num-=tempCell.getTempNum();
-            if(itemPo.num==0)
-            {
+        for (TempCell tempCell : tempCells) {
+            ItemPo itemPo = indexMap.get(tempCell.tempIndex);
+            itemPo.num -= tempCell.getTempNum();
+            if (itemPo.num == 0) {
                 setCellEmpty(itemPo.index);
             }
         }
         return true;
     }
-    
-    public List<TempCell> testGet(List<ItemInfo> list){
+
+    public List<TempCell> testGet(List<ItemInfo> list) {
         List<TempCell> tempCells = new ArrayList<>();
-    
+
         for (ItemInfo itemInfo : list) {
             //先判断一遍够不够
-           if( idIndexMap.get(itemInfo.id).values().stream().mapToInt(ItemPo::getNum).sum()<itemInfo.num){
-               return null;
-           }
+            if (idIndexMap.get(itemInfo.id).values().stream().mapToInt(ItemPo::getNum).sum() < itemInfo.num) {
+                return null;
+            }
         }
-    
-        for(ItemInfo itemInfo : list)
-        {
-            Map<Integer,ItemPo> integerItemPoMap=idIndexMap.get(itemInfo.id);
-            List<ItemPo> itemPos=Util.mapValueSortReturnList(integerItemPoMap);
-        
-        
-            for(ItemPo itemPo : itemPos)
-            {
-                int canGetNum=calCanGetNum(itemInfo,itemPo.num);
-                TempCell tempCell=new TempCell(ItemBigType.Item,itemInfo.id,itemPo.index,canGetNum);
+
+        for (ItemInfo itemInfo : list) {
+            Map<Integer, ItemPo> integerItemPoMap = idIndexMap.get(itemInfo.id);
+            List<ItemPo> itemPos = Util.mapValueSortReturnList(integerItemPoMap);
+
+
+            for (ItemPo itemPo : itemPos) {
+                int canGetNum = calCanGetNum(itemInfo, itemPo.num);
+                TempCell tempCell = new TempCell(ItemBigType.Item, itemInfo.id, itemPo.index, canGetNum);
                 tempCells.add(tempCell);
-                if(itemInfo.num<=0)
-                {
+                if (itemInfo.num <= 0) {
                     break;
                 }
             }
@@ -375,50 +360,49 @@ public abstract class CellBagAbs
         return tempCells;
 
     }
-    
+
     public boolean costItems(Map<Integer, Integer> map) {
         return costItems(map.entrySet().stream()
                 .map(x -> new ItemInfo(x.getKey(), x.getValue()))
                 .collect(Collectors.toList()));
     }
-    
-    
+
+
     public boolean costItems(Integer itemId, Integer num) {
         return costItems(Lists.newArrayList(new ItemInfo(itemId, num)));
     }
-    
+
     public boolean costItems(ItemInfo... itemInfos) {
         return addItemRefuse(Arrays.asList(itemInfos));
-        
+
     }
-    
+
     /**
      * 使用物品
+     *
      * @param itemId 物品ID
-     * @param num 个数
+     * @param num    个数
      * @return 使用成功
      */
-    public boolean useItem(int itemId,int num){
-        if(!costItems(itemId,num))
-        {
+    public boolean useItem(int itemId, int num) {
+        if (!costItems(itemId, num)) {
             return false;
         }
         //TODO  使用条件等
-        ItemTemplate t=tm.getTemplate(ItemTemplate.class,itemId);
-        switch(t.getType())
-        {
+        ItemTemplate t = tm.getTemplate(ItemTemplate.class, itemId);
+        switch (t.getType()) {
             case ItemUseType.OpenBox:
-                
+
                 break;
             case ItemUseType.Cost:
-            
+
                 break;
             default:
                 log.error("未配置使用类型");
                 break;
         }
         return true;
-    
+
     }
 
     @Data

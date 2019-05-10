@@ -18,6 +18,7 @@ public class RouteUtil {
     public enum Route {
         LOGIN,
         GAME,
-        X,;
+        X,
+        ;
     }
 }

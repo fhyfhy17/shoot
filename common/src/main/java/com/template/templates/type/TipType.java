@@ -12,11 +12,15 @@ public class TipType {
 
     public static final int AccountError = 5;//账户错误
 
+    public static final int MailNoExist = 6;//邮件不存在
+
+    public static final int BagNotEnough = 7;//背包空间不足
+
 
     public static final int FIRST_ID = 1;//第一个ID
 
-    public static final int LAST_ID = 5;//最后一个ID
+    public static final int LAST_ID = 7;//最后一个ID
 
-    public static final int TYPE_SIZE = 5;//ID数量
+    public static final int TYPE_SIZE = 7;//ID数量
 
 }

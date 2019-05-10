@@ -50,8 +50,8 @@ public class NettyServerMsgHandler extends ChannelInboundHandlerAdapter {
             if (session == null) {
                 return;
             }
-            connectManager.dealMessage(session,message);
-            
+            connectManager.dealMessage(session, message);
+
         } catch (Exception ex) {
             log.error("将关闭客户端连接...", ex);
             ctx.close();

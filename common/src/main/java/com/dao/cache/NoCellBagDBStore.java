@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.cache.integration.CacheLoaderException;
 
 @Repository
-public class NoCellBagDBStore implements CacheLoaderWriter<Long,NoCellBagEntry> {
+public class NoCellBagDBStore implements CacheLoaderWriter<Long, NoCellBagEntry> {
 
     @Override
     public NoCellBagEntry load(Long key) throws CacheLoaderException {

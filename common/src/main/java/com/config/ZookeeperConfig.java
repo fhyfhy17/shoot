@@ -26,7 +26,7 @@ public class ZookeeperConfig {
     private ServerInfo serverInfo;
 
     @Bean("curator")
-    public CuratorFramework getCurator(){
+    public CuratorFramework getCurator() {
         RetryPolicy retryPolicy = new RetryForever(20);
         CuratorFramework curator = CuratorFrameworkFactory.builder()
                 .connectString("127.0.0.1")
@@ -35,13 +35,13 @@ public class ZookeeperConfig {
                 .retryPolicy(retryPolicy).build();
         return curator;
     }
-    
+
 
     @PostConstruct
     public void curatorFramework() throws Exception {
-    
-    
-        CuratorFramework curator=getCurator();
+
+
+        CuratorFramework curator = getCurator();
         curator.start();
 
         //递规创建路径，用在第一次在系统中启动时创建路径

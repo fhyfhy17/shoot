@@ -1,13 +1,11 @@
 package com.util;
 
 import com.alibaba.fastjson.JSON;
+import com.entry.po.ItemInfo;
+import com.google.common.collect.Lists;
 import com.pojo.ServerInfo;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -31,8 +29,8 @@ public class Util {
                 .collect(Collectors.toMap((Map.Entry<K, V> k) -> k.getKey(), (Map.Entry<K, V> v) -> v.getValue(), (k, v) -> v, LinkedHashMap::new));
 
     }
-    
-    
+
+
     /**
      * 通用 Map根据Value排序，返回值的List
      *
@@ -42,7 +40,7 @@ public class Util {
      * @return value的List
      */
     public static <K, V extends Comparable> List<V> mapValueSortReturnList(Map<K, V> map) {
-        List<V> collect=map.values().stream().sorted().collect(Collectors.toList());
+        List<V> collect = map.values().stream().sorted().collect(Collectors.toList());
         return collect;
     }
 
@@ -61,5 +59,16 @@ public class Util {
     public static ServerInfo transToServerInfo(String serverString) {
         ServerInfo serverInfo = JSON.parseObject(serverString.split("==")[1], ServerInfo.class);
         return serverInfo;
+    }
+
+    public static List<ItemInfo> createItemInfoList(List<List<Integer>> list) {
+        List<ItemInfo> itemInfos = Lists.newArrayList();
+        for (List<Integer> integers : list) {
+            ItemInfo itemInfo = new ItemInfo();
+            itemInfo.setId(integers.get(0));
+            itemInfo.setNum(integers.get(1));
+            itemInfos.add(itemInfo);
+        }
+        return itemInfos;
     }
 }

@@ -18,8 +18,7 @@ public class LoginController extends BaseController {
     @Autowired
     private LoginService loginService;
 
-    public LOGIN_MSG.STC_LOGIN login(UidContext context, LOGIN_MSG.CTS_LOGIN req) throws StatusException
-    {
+    public LOGIN_MSG.STC_LOGIN login(UidContext context, LOGIN_MSG.CTS_LOGIN req) throws StatusException {
         String username = req.getUsername();
         String password = req.getPassword();
         String sessionId = req.getSessionId();

@@ -13,14 +13,12 @@ import java.util.Map;
  */
 
 @Slf4j
-public class CommonCellBag extends CellBagAbs
-{
-	
-	
-	public void init(Map<Integer,ItemPo> indexMap,TemplateManager templateManager,Player player)
-	{
-		super.init(indexMap,templateManager,player);
-	}
-	
-	
+public class CommonCellBag extends CellBagAbs {
+
+
+    public void init(Map<Integer, ItemPo> indexMap, TemplateManager templateManager, Player player) {
+        super.init(indexMap, templateManager, player);
+    }
+
+
 }

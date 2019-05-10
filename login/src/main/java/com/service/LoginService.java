@@ -16,12 +16,11 @@ public class LoginService {
     private UserRepository userRepository;
 
 
-    public UserEntry login(String username, String password) throws StatusException
-    {
+    public UserEntry login(String username, String password) throws StatusException {
         //TODO 多点登录判断
         Optional<UserEntry> user = userRepository.findByUserNameAndPassWord(username, password);
 
-        
+
         //TODO 当前是没账号，送账号，正式的要请求SDK或者  通过账号密码系统
         return user.orElseGet(() -> {
             UserEntry userEntry = new UserEntry(IdCreator.nextId(UserEntry.class));

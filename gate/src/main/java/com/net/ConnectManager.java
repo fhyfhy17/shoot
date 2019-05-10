@@ -34,10 +34,10 @@ public class ConnectManager {
     private MessageGroup m;
     @Autowired
     private NettyMessageFilter nettyMessageFilter;
-    
+
     @Value("${netty.needCheck}")
     private boolean needCheck;
-    
+
     @PostConstruct
     public void startup() {
         m = new MessageGroup(TypeEnum.GroupEnum.GATE_GROUP.name()) {
@@ -77,9 +77,9 @@ public class ConnectManager {
         this.userIdToConnectMap.put(uid, session);
         return session;
     }
-	
-	
-	public void removeConnect(Channel channel) {
+
+
+    public void removeConnect(Channel channel) {
         if (channel == null) {
             return;
         }
@@ -92,8 +92,7 @@ public class ConnectManager {
             return;
         }
         Session sessionNow = this.userIdToConnectMap.get(session.getUid());
-		if(sessionNow.getId().equals(session.getId()))
-		{
+        if (sessionNow.getId().equals(session.getId())) {
             this.userIdToConnectMap.remove(session.getUid());
         }
 
@@ -105,73 +104,60 @@ public class ConnectManager {
             session.writeMsg(message);
         }
     }
-    
-    
-    public void dealUid(Session session,NettyMessage message) throws InvalidProtocolBufferException
-    {
+
+
+    public void dealUid(Session session, NettyMessage message) throws InvalidProtocolBufferException {
         // 登录流程
-        if(message.getId()==LOGIN_MSG.CTS_LOGIN.getDescriptor().getOptions().getExtension(Options.messageId))
-        {
+        if (message.getId() == LOGIN_MSG.CTS_LOGIN.getDescriptor().getOptions().getExtension(Options.messageId)) {
             //没有uid的时候，先用session做 区分，hash 分发到login
-            LOGIN_MSG.CTS_LOGIN.Builder cts_login=LOGIN_MSG.CTS_LOGIN.parseFrom(message.getData()).toBuilder();
+            LOGIN_MSG.CTS_LOGIN.Builder cts_login = LOGIN_MSG.CTS_LOGIN.parseFrom(message.getData()).toBuilder();
             cts_login.setSessionId(session.getId());
             message.setData(cts_login.build().toByteArray());
-        }
-        else
-        {
-            if(session.getUid()==0)
-            {
+        } else {
+            if (session.getUid() == 0) {
                 //TODO 返回消息，请登录
                 return;
             }
             message.setUid(session.getUid());
         }
     }
-    
+
     /**
      * 包检测
      */
     public boolean checkMessage(Session session, NettyMessage message) {
-    
-        if(needCheck)
-        {
+
+        if (needCheck) {
             // 重复包检测
-            if(!nettyMessageFilter.checkAutoIncrease(session,message))
-            {
+            if (!nettyMessageFilter.checkAutoIncrease(session, message)) {
                 return false;
             }
-        
+
             // 篡改包检测
-            if(!nettyMessageFilter.checkCode(session,message))
-            {
+            if (!nettyMessageFilter.checkCode(session, message)) {
                 return false;
             }
         }
-        try
-        {
+        try {
             //处理Uid
-            dealUid(session,message);
-        }
-        catch(InvalidProtocolBufferException e)
-        {
-            log.error("",e);
+            dealUid(session, message);
+        } catch (InvalidProtocolBufferException e) {
+            log.error("", e);
             return false;
         }
-        
+
         return true;
 
         // 解密  //TODO 加解密甚是爽朗
 //        if (session.getPacketEncrypt().isEncrypt()) {
 //            session.getPacketEncrypt().decode(packet.getByteArray(), packet.getIncode());
 //        }
-    
-    
+
+
     }
-    
-    public void dealMessage(Session session,NettyMessage message)
-    {
-        if(checkMessage(session,message))
-        {
+
+    public void dealMessage(Session session, NettyMessage message) {
+        if (checkMessage(session, message)) {
             m.messageReceived(message);
         }
     }

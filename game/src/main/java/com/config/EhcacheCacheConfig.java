@@ -45,6 +45,8 @@ public class EhcacheCacheConfig {
     private BagDBStore bagDBStore;
     @Autowired
     private NoCellBagDBStore noCellBagDBStore;
+    @Autowired
+    private MailDBStore mailDBStore;
 
     @DependsOn("cacheManagerMy")
     @Bean
@@ -139,4 +141,21 @@ public class EhcacheCacheConfig {
         return unionEntryCache;
     }
 
+    @DependsOn("cacheManagerMy")
+    @Bean
+    public Cache mailEntryCache() {
+        Cache<Long, MailEntry> mailEntryCache = cacheManager.createCache(CacheEnum.MailEntryCache.name(),
+                CacheConfigurationBuilder.newCacheConfigurationBuilder(Long.class, MailEntry.class, ResourcePoolsBuilder.newResourcePoolsBuilder().heap(10, MemoryUnit.GB))
+                        .withLoaderWriter(mailDBStore)
+                        .add(WriteBehindConfigurationBuilder
+                                .newUnBatchedWriteBehindConfiguration()
+                                .queueSize(queueSize)
+                                .concurrencyLevel(concurrencyLevel)
+                                .useThreadPool(poolName)
+
+                        )
+                        .build());
+
+        return mailEntryCache;
+    }
 }

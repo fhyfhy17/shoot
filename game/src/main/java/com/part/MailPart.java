@@ -1,6 +1,7 @@
 package com.part;
 
 import com.dao.CenterMailRepository;
+import com.dao.MailRepository;
 import com.entry.CenterMailEntry;
 import com.entry.MailEntry;
 import com.entry.po.MailPo;
@@ -34,6 +35,9 @@ public class MailPart extends BasePart {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private MailRepository mailRepository;
 
     @Override
     public void onLoad() {
@@ -108,6 +112,10 @@ public class MailPart extends BasePart {
         } else {
             throw new StatusException(TipType.MailNoExist);
         }
+    }
+
+    public void delMail(long mailId) {
+        mailRepository.deleteById(mailId);
     }
 
 

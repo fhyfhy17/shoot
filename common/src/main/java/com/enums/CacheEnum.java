@@ -13,6 +13,8 @@ public enum CacheEnum {
     BagEntryCache,
     /***/
     NoCellBagEntryCache,
+    /***/
+    MailEntryCache,
     ;
 
     public static CacheEnum getEnumByName(String name) {

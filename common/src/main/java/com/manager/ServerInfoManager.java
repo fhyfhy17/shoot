@@ -7,6 +7,7 @@ import com.pojo.Message;
 import com.pojo.ServerInfo;
 import com.util.ContextUtil;
 import com.util.SerializeUtil;
+import com.util.ZookeeperUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -44,6 +45,10 @@ public class ServerInfoManager {
     public static void removeServer(ServerInfo serverInfo) {
         serverInfos.remove(serverInfo.getServerId());
         log.info("服务退出={}  ,所有服务={}", serverInfo, serverInfos);
+        if(serverInfo.getServerId().equals(ContextUtil.id)){
+            ZookeeperUtil.connectZookeeper(serverInfo);
+        }
+  
     }
 
     /**

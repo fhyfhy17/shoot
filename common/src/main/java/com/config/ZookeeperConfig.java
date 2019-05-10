@@ -2,19 +2,18 @@ package com.config;
 
 
 import com.Constant;
-import com.alibaba.fastjson.JSON;
 import com.manager.ServerInfoManager;
 import com.pojo.ServerInfo;
-import com.util.ContextUtil;
 import com.util.Util;
+import com.util.ZookeeperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.retry.RetryForever;
-import org.apache.zookeeper.CreateMode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
@@ -26,17 +25,23 @@ public class ZookeeperConfig {
     @Autowired
     private ServerInfo serverInfo;
 
-
-    @PostConstruct
-    public void curatorFramework() throws Exception {
-
+    @Bean("curator")
+    public CuratorFramework getCurator(){
         RetryPolicy retryPolicy = new RetryForever(20);
         CuratorFramework curator = CuratorFrameworkFactory.builder()
                 .connectString("127.0.0.1")
                 .namespace("shoot")
-                .sessionTimeoutMs(3000)
+                .sessionTimeoutMs(6000)
                 .retryPolicy(retryPolicy).build();
+        return curator;
+    }
+    
 
+    @PostConstruct
+    public void curatorFramework() throws Exception {
+    
+    
+        CuratorFramework curator=getCurator();
         curator.start();
 
         //递规创建路径，用在第一次在系统中启动时创建路径
@@ -65,9 +70,7 @@ public class ZookeeperConfig {
                     }
                 }
         );
-        //创建临时节点
-        String uuid = ContextUtil.id + "==" + JSON.toJSONString(serverInfo);
-        curator.create().withMode(CreateMode.EPHEMERAL).forPath(Constant.ZOOKEEPER_PATH + "/" + uuid, uuid.getBytes());
+        ZookeeperUtil.connectZookeeper(serverInfo);
 
     }
 }

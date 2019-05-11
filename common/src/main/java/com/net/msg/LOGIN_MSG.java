@@ -172,20 +172,20 @@ public final class LOGIN_MSG {
 
         /**
          * <code>string username = 1;</code>
-         */
-        public com.google.protobuf.ByteString
-        getUsernameBytes() {
-            java.lang.Object ref = username_;
-            if (ref instanceof java.lang.String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8(
-                                (java.lang.String) ref);
-                username_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
+     */
+    public com.google.protobuf.ByteString
+    getUsernameBytes() {
+        java.lang.Object ref = username_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            username_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
         }
+    }
 
         public static final int PASSWORD_FIELD_NUMBER = 2;
         private volatile java.lang.Object password_;
@@ -208,7 +208,7 @@ public final class LOGIN_MSG {
 
         /**
          * <code>string password = 2;</code>
-         */
+     */
         public com.google.protobuf.ByteString
         getPasswordBytes() {
             java.lang.Object ref = password_;
@@ -1014,12 +1014,12 @@ public final class LOGIN_MSG {
             } catch (com.google.protobuf.InvalidProtocolBufferException e) {
                 throw e.setUnfinishedMessage(this);
             } catch (java.io.IOException e) {
-                throw new com.google.protobuf.InvalidProtocolBufferException(
-                        e).setUnfinishedMessage(this);
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+                e).setUnfinishedMessage(this);
             } finally {
                 this.unknownFields = unknownFields.build();
                 makeExtensionsImmutable();
-            }
+      }
         }
 
         public static final com.google.protobuf.Descriptors.Descriptor
@@ -2266,7 +2266,7 @@ public final class LOGIN_MSG {
                     }
                 }
             } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                throw e.setUnfinishedMessage(this);
+        throw e.setUnfinishedMessage(this);
             } catch (java.io.IOException e) {
                 throw new com.google.protobuf.InvalidProtocolBufferException(
                         e).setUnfinishedMessage(this);
@@ -2643,10 +2643,10 @@ public final class LOGIN_MSG {
             return PARSER;
         }
 
-        @java.lang.Override
-        public com.google.protobuf.Parser<STC_HEART> getParserForType() {
-            return PARSER;
-        }
+    @java.lang.Override
+    public com.google.protobuf.Parser<STC_HEART> getParserForType() {
+        return PARSER;
+    }
 
         @java.lang.Override
         public com.net.msg.LOGIN_MSG.STC_HEART getDefaultInstanceForType() {
@@ -2751,9 +2751,9 @@ public final class LOGIN_MSG {
             return com.net.msg.LOGIN_MSG.internal_static_CTS_TEST_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
                             com.net.msg.LOGIN_MSG.CTS_TEST.class, com.net.msg.LOGIN_MSG.CTS_TEST.Builder.class);
-        }
+    }
 
-        public static final int WORD_FIELD_NUMBER = 1;
+    public static final int WORD_FIELD_NUMBER = 1;
         private volatile java.lang.Object word_;
 
         /**
@@ -3316,7 +3316,7 @@ public final class LOGIN_MSG {
                                     input, unknownFields, extensionRegistry, tag)) {
                                 done = true;
                             }
-                            break;
+              break;
                         }
                     }
                 }
@@ -3341,7 +3341,7 @@ public final class LOGIN_MSG {
         internalGetFieldAccessorTable() {
             return com.net.msg.LOGIN_MSG.internal_static_STC_TEST_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            com.net.msg.LOGIN_MSG.STC_TEST.class, com.net.msg.LOGIN_MSG.STC_TEST.Builder.class);
+              com.net.msg.LOGIN_MSG.STC_TEST.class, com.net.msg.LOGIN_MSG.STC_TEST.Builder.class);
         }
 
         public static final int WORD_FIELD_NUMBER = 1;
@@ -5117,22 +5117,22 @@ public final class LOGIN_MSG {
             com.google.protobuf.UnknownFieldSet.Builder unknownFields =
                     com.google.protobuf.UnknownFieldSet.newBuilder();
             try {
-                boolean done = false;
-                while (!done) {
-                    int tag = input.readTag();
-                    switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        default: {
-                            if (!parseUnknownFieldProto3(
-                                    input, unknownFields, extensionRegistry, tag)) {
-                                done = true;
-                            }
-                            break;
-                        }
+        boolean done = false;
+        while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+                case 0:
+                    done = true;
+                    break;
+                default: {
+                    if (!parseUnknownFieldProto3(
+                            input, unknownFields, extensionRegistry, tag)) {
+                        done = true;
                     }
+                    break;
                 }
+            }
+        }
             } catch (com.google.protobuf.InvalidProtocolBufferException e) {
                 throw e.setUnfinishedMessage(this);
             } catch (java.io.IOException e) {
@@ -5504,12 +5504,12 @@ public final class LOGIN_MSG {
                     com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws com.google.protobuf.InvalidProtocolBufferException {
                 return new CTS_PLAYER_LIST(input, extensionRegistry);
-            }
-        };
+      }
+    };
 
-        public static com.google.protobuf.Parser<CTS_PLAYER_LIST> parser() {
-            return PARSER;
-        }
+    public static com.google.protobuf.Parser<CTS_PLAYER_LIST> parser() {
+        return PARSER;
+    }
 
         @java.lang.Override
         public com.google.protobuf.Parser<CTS_PLAYER_LIST> getParserForType() {
@@ -5625,8 +5625,8 @@ public final class LOGIN_MSG {
             } finally {
                 if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
                     players_ = java.util.Collections.unmodifiableList(players_);
-                }
-                this.unknownFields = unknownFields.build();
+        }
+        this.unknownFields = unknownFields.build();
                 makeExtensionsImmutable();
             }
         }
@@ -6451,11 +6451,11 @@ public final class LOGIN_MSG {
                         case 0:
                             done = true;
                             break;
-                        case 8: {
+            case 8: {
 
-                            uid_ = input.readInt64();
-                            break;
-                        }
+                uid_ = input.readInt64();
+                break;
+            }
                         case 16: {
 
                             playerId_ = input.readInt64();
@@ -9139,11 +9139,10 @@ public final class LOGIN_MSG {
             // @@protoc_insertion_point(message_implements:STC_PlayerInfo)
             STC_PlayerInfoOrBuilder {
         private static final long serialVersionUID = 0L;
-
-        // Use STC_PlayerInfo.newBuilder() to construct.
-        private STC_PlayerInfo(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-            super(builder);
-        }
+    // Use STC_PlayerInfo.newBuilder() to construct.
+    private STC_PlayerInfo(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+    }
 
         private STC_PlayerInfo() {
         }
@@ -9769,10 +9768,10 @@ public final class LOGIN_MSG {
             // @@protoc_insertion_point(interface_extends:STC_UNIFIED_EXCEPTION)
             com.google.protobuf.MessageOrBuilder {
 
-        /**
-         * <code>string msg = 1;</code>
-         */
-        java.lang.String getMsg();
+    /**
+     * <code>string msg = 1;</code>
+     */
+    java.lang.String getMsg();
 
         /**
          * <code>string msg = 1;</code>
@@ -9783,9 +9782,9 @@ public final class LOGIN_MSG {
 
     /**
      * <pre>
-     * 统一错误回复
-     * </pre>
-     * <p>
+   *统一错误回复
+   * </pre>
+   *
      * Protobuf type {@code STC_UNIFIED_EXCEPTION}
      */
     public static final class STC_UNIFIED_EXCEPTION extends
@@ -9812,7 +9811,7 @@ public final class LOGIN_MSG {
         private STC_UNIFIED_EXCEPTION(
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
+        throws com.google.protobuf.InvalidProtocolBufferException {
             this();
             if (extensionRegistry == null) {
                 throw new java.lang.NullPointerException();
@@ -10370,8 +10369,8 @@ public final class LOGIN_MSG {
 
         /**
          * <code>string msg = 1;</code>
-         */
-        java.lang.String getMsg();
+     */
+    java.lang.String getMsg();
 
         /**
          * <code>string msg = 1;</code>
@@ -10877,9 +10876,9 @@ public final class LOGIN_MSG {
                     java.lang.String value) {
                 if (value == null) {
                     throw new NullPointerException();
-                }
+  }
 
-                msg_ = value;
+        msg_ = value;
                 onChanged();
                 return this;
             }
@@ -10890,8 +10889,8 @@ public final class LOGIN_MSG {
             public Builder clearMsg() {
 
                 msg_ = getDefaultInstance().getMsg();
-                onChanged();
-                return this;
+        onChanged();
+        return this;
             }
 
             /**
@@ -10900,9 +10899,9 @@ public final class LOGIN_MSG {
             public Builder setMsgBytes(
                     com.google.protobuf.ByteString value) {
                 if (value == null) {
-                    throw new NullPointerException();
-                }
-                checkByteStringIsUtf8(value);
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
 
                 msg_ = value;
                 onChanged();
@@ -10918,7 +10917,7 @@ public final class LOGIN_MSG {
             @java.lang.Override
             public final Builder mergeUnknownFields(
                     final com.google.protobuf.UnknownFieldSet unknownFields) {
-                return super.mergeUnknownFields(unknownFields);
+        return super.mergeUnknownFields(unknownFields);
             }
 
 
@@ -10927,77 +10926,76 @@ public final class LOGIN_MSG {
 
         // @@protoc_insertion_point(class_scope:TEST_TIME)
         private static final com.net.msg.LOGIN_MSG.TEST_TIME DEFAULT_INSTANCE;
-
-        static {
-            DEFAULT_INSTANCE = new com.net.msg.LOGIN_MSG.TEST_TIME();
-        }
+    static {
+      DEFAULT_INSTANCE = new com.net.msg.LOGIN_MSG.TEST_TIME();
+    }
 
         public static com.net.msg.LOGIN_MSG.TEST_TIME getDefaultInstance() {
             return DEFAULT_INSTANCE;
         }
 
         private static final com.google.protobuf.Parser<TEST_TIME>
-                PARSER = new com.google.protobuf.AbstractParser<TEST_TIME>() {
+        PARSER = new com.google.protobuf.AbstractParser<TEST_TIME>() {
             @java.lang.Override
             public TEST_TIME parsePartialFrom(
                     com.google.protobuf.CodedInputStream input,
                     com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                    throws com.google.protobuf.InvalidProtocolBufferException {
+          throws com.google.protobuf.InvalidProtocolBufferException {
                 return new TEST_TIME(input, extensionRegistry);
             }
         };
 
         public static com.google.protobuf.Parser<TEST_TIME> parser() {
-            return PARSER;
-        }
+      return PARSER;
+    }
 
-        @java.lang.Override
-        public com.google.protobuf.Parser<TEST_TIME> getParserForType() {
-            return PARSER;
-        }
+    @java.lang.Override
+    public com.google.protobuf.Parser<TEST_TIME> getParserForType() {
+        return PARSER;
+    }
 
         @java.lang.Override
         public com.net.msg.LOGIN_MSG.TEST_TIME getDefaultInstanceForType() {
             return DEFAULT_INSTANCE;
-        }
-
     }
 
-    private static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_CTS_LOGIN_descriptor;
+  }
+
+  private static final com.google.protobuf.Descriptors.Descriptor
+          internal_static_CTS_LOGIN_descriptor;
     private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
             internal_static_CTS_LOGIN_fieldAccessorTable;
-    private static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_STC_LOGIN_descriptor;
+  private static final com.google.protobuf.Descriptors.Descriptor
+          internal_static_STC_LOGIN_descriptor;
     private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
             internal_static_STC_LOGIN_fieldAccessorTable;
-    private static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_CTS_HEART_descriptor;
+  private static final com.google.protobuf.Descriptors.Descriptor
+          internal_static_CTS_HEART_descriptor;
     private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
             internal_static_CTS_HEART_fieldAccessorTable;
     private static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_STC_HEART_descriptor;
+    internal_static_STC_HEART_descriptor;
     private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
             internal_static_STC_HEART_fieldAccessorTable;
     private static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_CTS_TEST_descriptor;
+    internal_static_CTS_TEST_descriptor;
     private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
             internal_static_CTS_TEST_fieldAccessorTable;
     private static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_STC_TEST_descriptor;
+    internal_static_STC_TEST_descriptor;
     private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
             internal_static_STC_TEST_fieldAccessorTable;
     private static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_LTGAME_RESET_COUNT_descriptor;
-    private static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_LTGAME_RESET_COUNT_fieldAccessorTable;
+    internal_static_LTGAME_RESET_COUNT_descriptor;
+  private static final
+  com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internal_static_LTGAME_RESET_COUNT_fieldAccessorTable;
     private static final com.google.protobuf.Descriptors.Descriptor
             internal_static_MyMessage_descriptor;
     private static final
@@ -11159,54 +11157,54 @@ public final class LOGIN_MSG {
                 new java.lang.String[]{"Players",});
         internal_static_PLAYER_INFO_descriptor =
                 getDescriptor().getMessageTypes().get(10);
-        internal_static_PLAYER_INFO_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_PLAYER_INFO_descriptor,
-                new java.lang.String[]{"Uid", "PlayerId", "Level", "Name", "Coin",});
-        internal_static_CTS_GAME_LOGIN_PLAYER_descriptor =
-                getDescriptor().getMessageTypes().get(11);
-        internal_static_CTS_GAME_LOGIN_PLAYER_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_CTS_GAME_LOGIN_PLAYER_descriptor,
-                new java.lang.String[]{"PlayerId",});
-        internal_static_STC_GAME_LOGIN_PLAYER_descriptor =
-                getDescriptor().getMessageTypes().get(12);
-        internal_static_STC_GAME_LOGIN_PLAYER_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_STC_GAME_LOGIN_PLAYER_descriptor,
-                new java.lang.String[]{"PlayerInfo", "Result",});
-        internal_static_CTS_PlayerInfo_descriptor =
-                getDescriptor().getMessageTypes().get(13);
-        internal_static_CTS_PlayerInfo_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_CTS_PlayerInfo_descriptor,
-                new java.lang.String[]{});
-        internal_static_STC_PlayerInfo_descriptor =
-                getDescriptor().getMessageTypes().get(14);
-        internal_static_STC_PlayerInfo_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_STC_PlayerInfo_descriptor,
-                new java.lang.String[]{"PlayerInfo",});
-        internal_static_STC_UNIFIED_EXCEPTION_descriptor =
-                getDescriptor().getMessageTypes().get(15);
-        internal_static_STC_UNIFIED_EXCEPTION_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_STC_UNIFIED_EXCEPTION_descriptor,
-                new java.lang.String[]{"Msg",});
-        internal_static_TEST_TIME_descriptor =
-                getDescriptor().getMessageTypes().get(16);
-        internal_static_TEST_TIME_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_TEST_TIME_descriptor,
-                new java.lang.String[]{"Msg",});
-        com.google.protobuf.ExtensionRegistry registry =
-                com.google.protobuf.ExtensionRegistry.newInstance();
-        registry.add(com.net.msg.Options.messageId);
-        com.google.protobuf.Descriptors.FileDescriptor
-                .internalUpdateFileDescriptor(descriptor, registry);
-        com.net.msg.Options.getDescriptor();
-        com.net.msg.COMMON_MSG.getDescriptor();
-    }
+    internal_static_PLAYER_INFO_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_PLAYER_INFO_descriptor,
+        new java.lang.String[] { "Uid", "PlayerId", "Level", "Name", "Coin", });
+    internal_static_CTS_GAME_LOGIN_PLAYER_descriptor =
+      getDescriptor().getMessageTypes().get(11);
+    internal_static_CTS_GAME_LOGIN_PLAYER_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_CTS_GAME_LOGIN_PLAYER_descriptor,
+        new java.lang.String[] { "PlayerId", });
+    internal_static_STC_GAME_LOGIN_PLAYER_descriptor =
+      getDescriptor().getMessageTypes().get(12);
+    internal_static_STC_GAME_LOGIN_PLAYER_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_STC_GAME_LOGIN_PLAYER_descriptor,
+        new java.lang.String[] { "PlayerInfo", "Result", });
+    internal_static_CTS_PlayerInfo_descriptor =
+      getDescriptor().getMessageTypes().get(13);
+    internal_static_CTS_PlayerInfo_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_CTS_PlayerInfo_descriptor,
+        new java.lang.String[] { });
+    internal_static_STC_PlayerInfo_descriptor =
+      getDescriptor().getMessageTypes().get(14);
+    internal_static_STC_PlayerInfo_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_STC_PlayerInfo_descriptor,
+        new java.lang.String[] { "PlayerInfo", });
+    internal_static_STC_UNIFIED_EXCEPTION_descriptor =
+      getDescriptor().getMessageTypes().get(15);
+    internal_static_STC_UNIFIED_EXCEPTION_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_STC_UNIFIED_EXCEPTION_descriptor,
+        new java.lang.String[] { "Msg", });
+    internal_static_TEST_TIME_descriptor =
+      getDescriptor().getMessageTypes().get(16);
+    internal_static_TEST_TIME_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_TEST_TIME_descriptor,
+        new java.lang.String[] { "Msg", });
+    com.google.protobuf.ExtensionRegistry registry =
+        com.google.protobuf.ExtensionRegistry.newInstance();
+    registry.add(com.net.msg.Options.messageId);
+    com.google.protobuf.Descriptors.FileDescriptor
+        .internalUpdateFileDescriptor(descriptor, registry);
+    com.net.msg.Options.getDescriptor();
+    com.net.msg.COMMON_MSG.getDescriptor();
+  }
 
-    // @@protoc_insertion_point(outer_class_scope)
+  // @@protoc_insertion_point(outer_class_scope)
 }

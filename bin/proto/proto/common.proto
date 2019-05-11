@@ -8,3 +8,8 @@ message Status{
 	bool result = 1;//状态，成功失败
 	int32 tip = 2 ;//失败状态码
 }
+
+message ItemInfo{
+	int32 itemId = 1;
+	int32 itemNum = 2;
+}

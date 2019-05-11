@@ -16,11 +16,13 @@ public class TipType {
 
     public static final int BagNotEnough = 7;//背包空间不足
 
+    public static final int MailHasItem = 8;//邮件有物品，不能删除
+
 
     public static final int FIRST_ID = 1;//第一个ID
 
-    public static final int LAST_ID = 7;//最后一个ID
+    public static final int LAST_ID = 8;//最后一个ID
 
-    public static final int TYPE_SIZE = 7;//ID数量
+    public static final int TYPE_SIZE = 8;//ID数量
 
 }

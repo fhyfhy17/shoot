@@ -14,6 +14,6 @@ public class MailPo {
     private boolean hasReceived;
 
     private List<ItemInfo> itemList = Lists.newArrayList();
-    private long mailReceiveTime;
+    private long mailTime; //接收mail时间
 
 }

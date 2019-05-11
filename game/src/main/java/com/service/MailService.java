@@ -53,7 +53,7 @@ public class MailService {
         MailPo mailPo = new MailPo();
         mailPo.setMailId(IdCreator.nextId(MailEntry.class));
         mailPo.setMailTemplateId(mailTemplateId);
-        mailPo.setMailReceiveTime(Instant.now().toEpochMilli());
+        mailPo.setMailTime(Instant.now().toEpochMilli());
         mailPo.setItemList(itemInfoList);
         return mailPo;
     }

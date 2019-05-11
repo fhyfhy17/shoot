@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -95,7 +96,7 @@ public class MailPart extends BasePart {
     }
 
     //领取邮件物品
-    public void receiveItems(long mailId) throws StatusException {
+    public MailPo receiveItems(long mailId) throws StatusException {
         MailPo mail = null;
         for (MailPo mailPo : mailEntry.getMailList()) {
             if (mailPo.getMailId() == mailId) {
@@ -112,10 +113,16 @@ public class MailPart extends BasePart {
         } else {
             throw new StatusException(TipType.MailNoExist);
         }
+        return mail;
     }
 
     public void delMail(long mailId) {
-        mailRepository.deleteById(mailId);
+        Iterator<MailPo> it = mailEntry.getMailList().iterator();
+        if (it.hasNext()) {
+            if (mailId == it.next().getMailId()) {
+                it.remove();
+            }
+        }
     }
 
 

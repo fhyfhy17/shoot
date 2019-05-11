@@ -113,15 +113,29 @@ public class MailPart extends BasePart {
         } else {
             throw new StatusException(TipType.MailNoExist);
         }
+        mail.setHasReceived(true);
         return mail;
     }
 
-    public void delMail(long mailId) {
+    public void delMail(List<Long> mailIds) throws StatusException {
+        for (Long mailId : mailIds) {
+            for (MailPo mailPo : mailEntry.getMailList()) {
+                if (mailId == mailPo.getMailId() && mailPo.isHasReceived()) {
+                    throw new StatusException(TipType.MailHasItem);
+                }
+            }
+        }
+
+
         Iterator<MailPo> it = mailEntry.getMailList().iterator();
         if (it.hasNext()) {
-            if (mailId == it.next().getMailId()) {
-                it.remove();
+            MailPo mailPo = it.next();
+            for (Long mailId : mailIds) {
+                if (mailId == mailPo.getMailId()) {
+                    it.remove();
+                }
             }
+
         }
     }
 

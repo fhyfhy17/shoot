@@ -18,9 +18,8 @@ public class MailController extends BaseController {
     //删除邮件
     public MAIL_MSG.STC_DEL_MAIL delMail(Player player, MAIL_MSG.CTS_DEL_MAIL req) throws StatusException {
         MAIL_MSG.STC_DEL_MAIL.Builder builder = MAIL_MSG.STC_DEL_MAIL.newBuilder();
-        for (Long mailId : req.getMailIdList()) {
-            player.mailPart.delMail(mailId);
-        }
+
+        player.mailPart.delMail(req.getMailIdList());
         builder.addAllMailId(req.getMailIdList());
         return builder.build();
     }

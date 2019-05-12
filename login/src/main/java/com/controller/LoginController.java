@@ -18,12 +18,12 @@ public class LoginController extends BaseController {
     @Autowired
     private LoginService loginService;
 
-    public LOGIN_MSG.STC_LOGIN login(UidContext context, LOGIN_MSG.CTS_LOGIN req) throws StatusException {
+    public LOGIN_MSG.GTC_LOGIN login(UidContext context, LOGIN_MSG.CTG_LOGIN req) throws StatusException {
         String username = req.getUsername();
         String password = req.getPassword();
         String sessionId = req.getSessionId();
 
-        LOGIN_MSG.STC_LOGIN.Builder builder = LOGIN_MSG.STC_LOGIN.newBuilder();
+        LOGIN_MSG.GTC_LOGIN.Builder builder = LOGIN_MSG.GTC_LOGIN.newBuilder();
         UserEntry user = loginService.login(username, password);
         builder.setSessionId(sessionId);
         if (!Objects.isNull(user)) {

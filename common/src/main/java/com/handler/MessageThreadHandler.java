@@ -62,9 +62,11 @@ public class MessageThreadHandler implements Runnable {
         while (!pulseQueues.isEmpty()) {
             ControllerHandler handler = null;
             Message message = null;
+            String gate = null;
             try {
                 message = pulseQueues.poll();
                 final int cmdId = message.getId();
+                gate = message.getGate();
 
                 handler = ControllerFactory.getControllerMap().get(cmdId);
                 if (handler == null) {
@@ -98,7 +100,7 @@ public class MessageThreadHandler implements Runnable {
 
 
                 ////针对method的每个参数进行处理， 处理多参数,返回result（这是老的invoke执行controller 暂时废弃）
-                //com.google.protobuf.Message result = (com.google.protobuf.Message) handler.invokeForController(message);
+                //com.google.protobuf.Message result = (com.google.protobuf.Message) com.handler.invokeForController(message);
                 ////拦截器后
                 if (com.google.protobuf.Message.class.isAssignableFrom(result.getClass())) {
 
@@ -113,8 +115,7 @@ public class MessageThreadHandler implements Runnable {
                 if (returnType.isAssignableFrom(com.google.protobuf.Message.class)) {
                     com.google.protobuf.Message.Builder builder = ProtoUtil.setFieldByName(ProtoUtil.createBuilerByClassName(returnType.getName()), "result", TipStatus.fail(se.getTip()));
                     Message message1 = ProtoUtil.buildMessage(builder.build(), message.getUid(), null);
-                    //TODO 要存UID在哪个gate里
-                    ServerInfoManager.sendMessage("gate-1", message1);
+                    ServerInfoManager.sendMessage(gate, message1);
                 }
             } catch (ServerBusinessException sbe) {
                 // 业务报错，

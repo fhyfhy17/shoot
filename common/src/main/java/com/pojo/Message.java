@@ -12,4 +12,5 @@ public class Message implements Serializable {
     private int id; // 协议号
     private byte[] data; // 协议内容
     private String from;
+    private String gate;
 }

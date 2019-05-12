@@ -11,7 +11,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.DefaultSerializers;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.net.msg.LOGIN_MSG;
+import com.net.msg.COMMON_MSG;
 import com.pojo.Message;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
@@ -167,7 +167,7 @@ public class SerializeUtil {
         return JSON.parseObject(s, Message.class);
     }
 
-    static LOGIN_MSG.MyMessage.Builder builder = LOGIN_MSG.MyMessage.newBuilder();
+    static COMMON_MSG.MyMessage.Builder builder = COMMON_MSG.MyMessage.newBuilder();
 
     private static byte[] protoMts(Message m) {
         builder.setUid(m.getUid());
@@ -176,18 +176,21 @@ public class SerializeUtil {
             builder.setData(ByteString.copyFrom(m.getData()));
         }
         builder.setFrom(m.getFrom());
+        builder.setGate(m.getGate());
         return builder.build().toByteArray();
     }
 
     private static Message protoStm(byte[] s) {
         Message m2 = new Message();
         try {
-            LOGIN_MSG.MyMessage m = LOGIN_MSG.MyMessage.parseFrom(s);
+
+            COMMON_MSG.MyMessage m = COMMON_MSG.MyMessage.parseFrom(s);
 
             m2.setId(m.getId());
             m2.setUid(m.getUid());
             m2.setData(m.getData().toByteArray());
             m2.setFrom(m.getFrom());
+            m2.setGate(m.getGate());
             return m2;
 
         } catch (InvalidProtocolBufferException e) {

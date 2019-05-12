@@ -32,7 +32,7 @@ public class ClientSession {
 //                        System.out.println("输入错误，请重新输入1登录 输入2登出   ");
 //                    }
                     if ("1".equals(line)) {
-                        LOGIN_MSG.CTS_LOGIN.Builder builder = LOGIN_MSG.CTS_LOGIN.newBuilder();
+                        LOGIN_MSG.CTG_LOGIN.Builder builder = LOGIN_MSG.CTG_LOGIN.newBuilder();
                         builder.setUsername("bbbbb");
                         builder.setPassword("1a");
 
@@ -47,7 +47,7 @@ public class ClientSession {
 
                     if ("2".equals(line)) {
                         for (int i = 0; i < 1; i++) {
-                            LOGIN_MSG.CTS_TEST.Builder builder = LOGIN_MSG.CTS_TEST.newBuilder();
+                            LOGIN_MSG.CTG_TEST.Builder builder = LOGIN_MSG.CTG_TEST.newBuilder();
                             builder.setWord("啊啊等等");
                             NettyMessage m = new NettyMessage();
                             m.setId(10005);
@@ -60,7 +60,7 @@ public class ClientSession {
                     }
                     if ("3".equals(line)) {
 
-                        LOGIN_MSG.CTS_PLAYER_LIST.Builder builder = LOGIN_MSG.CTS_PLAYER_LIST.newBuilder();
+                        LOGIN_MSG.CTG_PLAYER_LIST.Builder builder = LOGIN_MSG.CTG_PLAYER_LIST.newBuilder();
 
                         NettyMessage m = new NettyMessage();
                         m.setId(10008);
@@ -73,7 +73,7 @@ public class ClientSession {
                     }
                     if ("4".equals(line)) {
 
-                        LOGIN_MSG.CTS_PlayerInfo.Builder builder = LOGIN_MSG.CTS_PlayerInfo.newBuilder();
+                        LOGIN_MSG.CTG_PlayerInfo.Builder builder = LOGIN_MSG.CTG_PlayerInfo.newBuilder();
 
                         NettyMessage m = new NettyMessage();
                         m.setId(10012);

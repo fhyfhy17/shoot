@@ -10,7 +10,6 @@ public class ContextUtil {
     public static int type;
     public static int tcpPort;
     public static String zkIpPort;
-    public static String ti;
     public static int nettyPort;
 
 
@@ -35,10 +34,6 @@ public class ContextUtil {
         ContextUtil.zkIpPort = zkIpPort;
     }
 
-    @Value("${server.ti}")
-    public void setTi(String ti) {
-        ContextUtil.ti = ti;
-    }
 
 
     @Value("${netty.port:0}")

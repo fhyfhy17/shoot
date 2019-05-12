@@ -15,6 +15,6 @@ public class UidContextMethodArgumentResolver implements ActionMethodArgumentRes
 
     @Override
     public Object resolveArgument(MethodParameter parameter, Message message) throws Exception {
-        return new UidContext(message.getUid(), message.getFrom());
+        return new UidContext(message.getUid(), message.getFrom(),message.getGate());
     }
 }

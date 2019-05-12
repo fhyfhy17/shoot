@@ -35,10 +35,10 @@ public class NettyClientMsgHandler extends ChannelInboundHandlerAdapter {
             if (message.getId() == 10009) {
 
 
-                LOGIN_MSG.STC_PLAYER_LIST stc_player_list = LOGIN_MSG.STC_PLAYER_LIST.parseFrom(message.getData());
+                LOGIN_MSG.GTC_PLAYER_LIST stc_player_list = LOGIN_MSG.GTC_PLAYER_LIST.parseFrom(message.getData());
                 LOGIN_MSG.PLAYER_INFO player = stc_player_list.getPlayers(0);
                 long playerId = player.getPlayerId();
-                LOGIN_MSG.CTS_GAME_LOGIN_PLAYER.Builder loginBuilder = LOGIN_MSG.CTS_GAME_LOGIN_PLAYER.newBuilder();
+                LOGIN_MSG.CTG_GAME_LOGIN_PLAYER.Builder loginBuilder = LOGIN_MSG.CTG_GAME_LOGIN_PLAYER.newBuilder();
                 loginBuilder.setPlayerId(playerId);
 
                 NettyMessage m = new NettyMessage();
@@ -55,9 +55,9 @@ public class NettyClientMsgHandler extends ChannelInboundHandlerAdapter {
             if (message.getId() == 10002) {
 
 
-                LOGIN_MSG.STC_LOGIN login = LOGIN_MSG.STC_LOGIN.parseFrom(message.getData());
+                LOGIN_MSG.GTC_LOGIN login = LOGIN_MSG.GTC_LOGIN.parseFrom(message.getData());
                 long uid = login.getUid();
-                LOGIN_MSG.CTS_PLAYER_LIST.Builder csPl = LOGIN_MSG.CTS_PLAYER_LIST.newBuilder();
+                LOGIN_MSG.CTG_PLAYER_LIST.Builder csPl = LOGIN_MSG.CTG_PLAYER_LIST.newBuilder();
 
 
                 NettyMessage m = new NettyMessage();

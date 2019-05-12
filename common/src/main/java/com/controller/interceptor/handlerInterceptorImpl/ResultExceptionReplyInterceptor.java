@@ -7,7 +7,6 @@ import com.manager.ServerInfoManager;
 import com.net.msg.LOGIN_MSG;
 import com.net.msg.Options;
 import com.pojo.Message;
-import com.util.ContextUtil;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -22,19 +21,16 @@ public class ResultExceptionReplyInterceptor implements HandlerInterceptor {
             return;
         }
 
-        Message messageResult = buildMessage();
-        ServerInfoManager.sendMessage(message.getFrom(), messageResult);
-    }
-
-    private Message buildMessage() {
         Message messageResult = new Message();
         LOGIN_MSG.STC_UNIFIED_EXCEPTION.Builder builder = LOGIN_MSG.STC_UNIFIED_EXCEPTION.newBuilder();
         builder.setMsg("服务器报错!");
 
         messageResult.setId(builder.getDescriptorForType().getOptions().getExtension(Options.messageId));
-        messageResult.setUid(0);
-        messageResult.setFrom(ContextUtil.id);
+        messageResult.setUid(message.getUid());
         messageResult.setData(builder.build().toByteArray());
-        return messageResult;
+
+        ServerInfoManager.sendMessage(message.getGate(), messageResult);
     }
+
+
 }

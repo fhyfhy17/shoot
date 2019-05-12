@@ -49,7 +49,7 @@ public class PlayerService {
     public void login(PlayerLoginEvent playerLoginEvent) throws StatusException {
         long playerId = playerLoginEvent.getPlayerId();
         long uid = playerLoginEvent.getUid();
-        LOGIN_MSG.STC_GAME_LOGIN_PLAYER.Builder builder = playerLoginEvent.getBuilder();
+        LOGIN_MSG.GTC_GAME_LOGIN_PLAYER.Builder builder = playerLoginEvent.getBuilder();
         Player player = loadPlayer(playerId);
         onlineService.putPlayer(uid, player);
         onlineService.putPlayer(player);
@@ -79,7 +79,7 @@ public class PlayerService {
 
     }
 
-    public void playerList(long uid, LOGIN_MSG.STC_PLAYER_LIST.Builder builder) {
+    public void playerList(long uid, LOGIN_MSG.GTC_PLAYER_LIST.Builder builder) {
         Optional<UserEntry> user = userRepository.findById(uid);
         UserEntry userEntry = user.get();
         List<Long> playerIds = userEntry.getPlayerIds();

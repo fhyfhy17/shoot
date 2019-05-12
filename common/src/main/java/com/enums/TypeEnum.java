@@ -66,6 +66,7 @@ public interface TypeEnum {
         GATE_GROUP,//
         GAME_GROUP,//
         LOGIN_GROUP,//
+        BUS_GROUP,//
         ;
 
     }

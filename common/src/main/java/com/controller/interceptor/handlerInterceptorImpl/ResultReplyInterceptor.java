@@ -31,6 +31,7 @@ public class ResultReplyInterceptor implements HandlerInterceptor {
         messageResult.setId(resultMessage.getDescriptorForType().getOptions().getExtension(Options.messageId));
         messageResult.setUid(message.getUid());
         messageResult.setFrom(ContextUtil.id);
+        messageResult.setGate(message.getGate());
         messageResult.setData(resultMessage.toByteArray());
         return messageResult;
     }

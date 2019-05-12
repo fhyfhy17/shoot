@@ -7,9 +7,9 @@ import lombok.Data;
 @Data
 public class PlayerLoginEvent extends PlayerEventData {
     private long uid;
-    private LOGIN_MSG.STC_GAME_LOGIN_PLAYER.Builder builder;
+    private LOGIN_MSG.GTC_GAME_LOGIN_PLAYER.Builder builder;
 
-    public PlayerLoginEvent(long playerId, long uid, LOGIN_MSG.STC_GAME_LOGIN_PLAYER.Builder builder) {
+    public PlayerLoginEvent(long playerId, long uid, LOGIN_MSG.GTC_GAME_LOGIN_PLAYER.Builder builder) {
         super(playerId);
         this.uid = uid;
         this.builder = builder;

@@ -16,22 +16,22 @@ public class LoginController extends BaseController {
     private PlayerService playerService;
 
 
-    public LOGIN_MSG.STC_PLAYER_LIST playerList(UidContext uidContext, LOGIN_MSG.CTS_PLAYER_LIST req) {
-        LOGIN_MSG.STC_PLAYER_LIST.Builder builder = LOGIN_MSG.STC_PLAYER_LIST.newBuilder();
+    public LOGIN_MSG.GTC_PLAYER_LIST playerList(UidContext uidContext, LOGIN_MSG.CTG_PLAYER_LIST req) {
+        LOGIN_MSG.GTC_PLAYER_LIST.Builder builder = LOGIN_MSG.GTC_PLAYER_LIST.newBuilder();
 
         playerService.playerList(uidContext.getUid(), builder);
 
         return builder.build();
     }
 
-    public LOGIN_MSG.STC_GAME_LOGIN_PLAYER gameLogin(UidContext uidContext, LOGIN_MSG.CTS_GAME_LOGIN_PLAYER req) {
-        LOGIN_MSG.STC_GAME_LOGIN_PLAYER.Builder builder = LOGIN_MSG.STC_GAME_LOGIN_PLAYER.newBuilder();
+    public LOGIN_MSG.GTC_GAME_LOGIN_PLAYER gameLogin(UidContext uidContext, LOGIN_MSG.CTG_GAME_LOGIN_PLAYER req) {
+        LOGIN_MSG.GTC_GAME_LOGIN_PLAYER.Builder builder = LOGIN_MSG.GTC_GAME_LOGIN_PLAYER.newBuilder();
         EventDispatcher.playerEventDispatch(new PlayerLoginEvent(req.getPlayerId(), uidContext.getUid(), builder));
         return builder.build();
     }
 
-    public LOGIN_MSG.STC_PlayerInfo getPlayerInfo(UidContext uidContext, Player player, LOGIN_MSG.CTS_PlayerInfo req) {
-        LOGIN_MSG.STC_PlayerInfo.Builder builder = LOGIN_MSG.STC_PlayerInfo.newBuilder();
+    public LOGIN_MSG.GTC_PlayerInfo getPlayerInfo(UidContext uidContext, Player player, LOGIN_MSG.CTG_PlayerInfo req) {
+        LOGIN_MSG.GTC_PlayerInfo.Builder builder = LOGIN_MSG.GTC_PlayerInfo.newBuilder();
 
         builder.setPlayerInfo(playerService.buildPlayerInfo(player.playerPart.getPlayerEntry()));
         return builder.build();

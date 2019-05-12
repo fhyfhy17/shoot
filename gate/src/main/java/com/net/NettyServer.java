@@ -41,7 +41,7 @@ public class NettyServer {
 //                                ch.pipeline().addLast("ping", new IdleStateHandler(120, 0, 0));
                                 ch.pipeline().addLast("decode", new MessageDecoder());
                                 ch.pipeline().addLast("encode", new MessageEncoder());
-                                ch.pipeline().addLast("handler", new NettyServerMsgHandler(SpringUtils.getBean(ConnectManager.class)));
+                                ch.pipeline().addLast("com.handler", new NettyServerMsgHandler(SpringUtils.getBean(ConnectManager.class)));
                             }
                         }).option(ChannelOption.SO_BACKLOG, 10240)
                         .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT) // 使用内存池

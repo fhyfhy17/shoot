@@ -34,6 +34,7 @@ public class GateMessageHandler extends MessageThreadHandler {
 
     private void dispatch(Message message) {
         message.setFrom(ContextUtil.id);
+        message.setGate(ContextUtil.id);
         int msgId = message.getId();
         switch (RouteUtil.route(msgId)) {
             case LOGIN:

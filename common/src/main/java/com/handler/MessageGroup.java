@@ -54,7 +54,7 @@ public abstract class MessageGroup {
         // 分配执行器执行
         if (msg.getId() == 10001) {
             try {
-                index = Math.abs(LOGIN_MSG.CTS_LOGIN.parseFrom(msg.getData()).getSessionId().hashCode()) % handlerCount;
+                index = Math.abs(LOGIN_MSG.CTG_LOGIN.parseFrom(msg.getData()).getSessionId().hashCode()) % handlerCount;
             } catch (InvalidProtocolBufferException e) {
                 log.error("", e);
             }

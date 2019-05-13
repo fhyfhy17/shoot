@@ -22,7 +22,7 @@ public class ResultExceptionReplyInterceptor implements HandlerInterceptor {
         }
 
         Message messageResult = new Message();
-        LOGIN_MSG.STC_UNIFIED_EXCEPTION.Builder builder = LOGIN_MSG.STC_UNIFIED_EXCEPTION.newBuilder();
+        LOGIN_MSG.GTC_UNIFIED_EXCEPTION.Builder builder = LOGIN_MSG.GTC_UNIFIED_EXCEPTION.newBuilder();
         builder.setMsg("服务器报错!");
 
         messageResult.setId(builder.getDescriptorForType().getOptions().getExtension(Options.messageId));

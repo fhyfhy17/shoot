@@ -16,12 +16,12 @@ public class BusOnlineController extends BaseController {
     @Autowired
     private BusOnlineService busOnlineService;
 
-    public void registOnline(BUS_MSG.GTB_REGIST_ONLINE req) {
+    public void registOnline(UidContext uidContext,BUS_MSG.GTB_REGIST_ONLINE req) {
         busOnlineService.putOnlineContext(
                 new OnlineContext(req.getUid(), req.getPlayerId(), req.getGate(), req.getGame()));
     }
 
-    public void offline(BUS_MSG.GTB_OFFLINE req) {
+    public void offline(UidContext uidContext,BUS_MSG.GTB_OFFLINE req) {
         busOnlineService.delOnlineContext(req.getUid());
     }
 

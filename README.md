@@ -1,5 +1,5 @@
 
-# Shoot ,distributeed_game_server的进一步封装逻辑的代码
+# Shoot ,[distributeed_game_server](https://github.com/fhyfhy17/distributed_game_server)的进一步封装逻辑的代码
 
 
 -----

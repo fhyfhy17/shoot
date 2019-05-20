@@ -22,12 +22,13 @@ public class BusOnlineController extends BaseController {
     }
 
     public void offline(UidContext uidContext,BUS_MSG.GTB_OFFLINE req) {
-        busOnlineService.delOnlineContext(req.getUid());
+        busOnlineService.delOnlineContext(uidContext,req.getUid());
     }
 
     public void onlineHeart(UidContext uidContext,BUS_MSG.GTB_ONLINE_UIDS_HEART req){
         String from = uidContext.getFrom();
         List<Long> uidsList = req.getUidsList();
+        busOnlineService.onHeart(from,uidsList);
     }
 
 }

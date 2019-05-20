@@ -12,9 +12,11 @@ import java.util.List;
 public abstract class MessageGroup {
 
     private volatile boolean running = false;
-    private int handlerCount = 8; // 执行器数量
+    protected int handlerCount = 8; // 执行器数量
     private String name;
     public List<MessageThreadHandler> hanlderList = new ArrayList<>();
+    public List<MessageThreadHandler> unionHandlerList = new ArrayList<>();
+    
 
     public MessageGroup(String name) {
         this.name = name;
@@ -37,17 +39,27 @@ public abstract class MessageGroup {
         // 初始化hanlder
         this.initHandlers();
     }
-
-    private void initHandlers() {
+    
+    public void initHandlers() {
         for (int i = 0; i < this.handlerCount; i++) {
             MessageThreadHandler handler = getMessageThreadHandler();
-            new Thread(handler, this.name + i).start();
+            new Thread(handler, this.name +"-common"+ i).start();
             hanlderList.add(handler);
+            MessageThreadHandler unionHandler = getUnionMessageThreadHandler();
+            if(unionHandler!=null){
+                new Thread(handler, this.name+"-union" + i).start();
+                unionHandlerList.add(handler);
+            }
+            
         }
     }
 
     public abstract MessageThreadHandler getMessageThreadHandler();
-
+    
+    public  MessageThreadHandler getUnionMessageThreadHandler(){
+        return null;
+    }
+    
     public void messageReceived(Message msg) {
         int index = 0;
 

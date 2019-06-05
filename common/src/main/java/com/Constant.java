@@ -15,7 +15,7 @@ public class Constant {
 
     public static final int MESSAGE_RECEIVE_DEPLOY_NUM = 5;
 
-    public static final Message DEFAULT_ERROR_REPLY = LOGIN_MSG.STC_UNIFIED_EXCEPTION.newBuilder().build();
+    public static final Message DEFAULT_ERROR_REPLY = LOGIN_MSG.GTC_UNIFIED_EXCEPTION.newBuilder().build();
 
     public static final String ZOOKEEPER_PATH = "/cluster/nodes";
 

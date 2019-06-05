@@ -44,7 +44,7 @@ public class BusOnlineService {
 
     public void onHeart(String from , List<Long> uids){
         Collection<OnlineContext> onlineContexts = onlineMapByGame.get(from);
-        onlineContexts
+
 
     }
 

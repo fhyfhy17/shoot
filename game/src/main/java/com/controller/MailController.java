@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.annotation.Controllor;
 import com.entry.po.MailPo;
 import com.exception.StatusException;
 import com.net.msg.MAIL_MSG;
@@ -14,7 +15,7 @@ import java.util.List;
 @Slf4j
 public class MailController extends BaseController {
 
-
+    @Controllor
     //删除邮件
     public MAIL_MSG.GTC_DEL_MAIL delMail(Player player, MAIL_MSG.CTG_DEL_MAIL req) throws StatusException {
         MAIL_MSG.GTC_DEL_MAIL.Builder builder = MAIL_MSG.GTC_DEL_MAIL.newBuilder();
@@ -24,6 +25,7 @@ public class MailController extends BaseController {
         return builder.build();
     }
 
+    @Controllor
     // 邮件列表
     public MAIL_MSG.GTC_MAIL_LIST mailList(Player player, MAIL_MSG.CTG_MAIL_LIST req) {
         MAIL_MSG.GTC_MAIL_LIST.Builder builder = MAIL_MSG.GTC_MAIL_LIST.newBuilder();
@@ -40,6 +42,7 @@ public class MailController extends BaseController {
         return builder.build();
     }
 
+    @Controllor
     //领取邮件
     public MAIL_MSG.GTC_RECEIVE_ITEMS receiveItems(Player player, MAIL_MSG.CTG_RECEIVE_ITEMS req) throws StatusException {
         MAIL_MSG.GTC_RECEIVE_ITEMS.Builder builder = MAIL_MSG.GTC_RECEIVE_ITEMS.newBuilder();

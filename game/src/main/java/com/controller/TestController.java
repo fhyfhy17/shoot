@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.annotation.Controllor;
 import com.entry.PlayerEntry;
 import com.event.EventDispatcher;
 import com.event.playerEvent.TestEvent;
@@ -19,7 +20,7 @@ public class TestController extends BaseController {
     @Autowired
     private TestService testService;
 
-
+    @Controllor
     public LOGIN_MSG.GTC_TEST test(UidContext uidContext, LOGIN_MSG.CTG_TEST req) {
 //        log.info("test收到word = {}", req.getWord());
         LOGIN_MSG.GTC_TEST.Builder builder = LOGIN_MSG.GTC_TEST.newBuilder();
@@ -45,6 +46,7 @@ public class TestController extends BaseController {
         return null;
     }
 
+    @Controllor
     public MessageLite resetCount(LOGIN_MSG.LTGAME_RESET_COUNT req) {
         CountUtil.start();
         return null;

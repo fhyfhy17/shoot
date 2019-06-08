@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.annotation.Controllor;
 import com.controller.fun.*;
 import com.google.common.collect.Maps;
 import com.google.protobuf.Message;
@@ -14,6 +15,7 @@ import java.lang.invoke.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Objects;
 
 
 @Slf4j
@@ -28,13 +30,13 @@ public class ControllerFactory {
             Method[] declaredMethods = controller.getClass().getDeclaredMethods();
 
             for (Method method : declaredMethods) {
-                if (method.getName().startsWith("CGLIB")) {
-                    continue;
-                }
+//                if (method.getName().startsWith("CGLIB")) {
+//                    continue;
+//                }
 
 
                 for (Class<?> parameterClass : method.getParameterTypes()) {
-                    if (Message.class.isAssignableFrom(parameterClass)) {
+                    if (!Objects.isNull(method.getAnnotation(Controllor.class))) {
                         try {
                             Class cl = Class.forName(parameterClass.getName());
                             Method methodB = cl.getMethod("newBuilder");

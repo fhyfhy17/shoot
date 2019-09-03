@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 
 @Controller
 public class LoginController extends BaseController {
@@ -27,22 +26,30 @@ public class LoginController extends BaseController {
         String sessionId = req.getSessionId();
 
         LOGIN_MSG.GTC_LOGIN.Builder builder = LOGIN_MSG.GTC_LOGIN.newBuilder();
-        CompletableFuture<UserEntry> user = loginService.login(username, password);
+        //CompletableFuture<UserEntry> user = loginService.login(username, password);
+        UserEntry user = loginService.login(username, password);
         builder.setSessionId(sessionId);
+        
+    
+        if (!Objects.isNull(user)) {
+            builder.setResult(TipStatus.suc());
+            builder.setUid(user.getId());
+        }else {
+            builder.setResult(TipStatus.fail(TipType.AccountError));
+        }
 
-
-        user.
-
-                whenCompleteAsync((userEntry, throwable) -> {
-
-            if (!Objects.isNull(userEntry)) {
-                builder.setUid(userEntry.getId());
-                builder.setResult(TipStatus.suc());
-            } else {
-                builder.setResult(TipStatus.fail(TipType.AccountError));
-            }
-
-        });
+        //user.
+        //
+        //        whenCompleteAsync((userEntry, throwable) -> {
+        //
+        //    if (!Objects.isNull(userEntry)) {
+        //        builder.setUid(userEntry.getId());
+        //        builder.setResult(TipStatus.suc());
+        //    } else {
+        //        builder.setResult(TipStatus.fail(TipType.AccountError));
+        //    }
+        //
+        //});
 
 
         return builder.build();

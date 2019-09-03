@@ -5,6 +5,7 @@ import com.Constant;
 import com.manager.ServerInfoManager;
 import com.pojo.ServerInfo;
 import com.util.ContextUtil;
+import com.util.StringUtil;
 import com.util.Util;
 import com.util.ZookeeperUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ public class ZookeeperConfig {
     public CuratorFramework getCurator() {
         RetryPolicy retryPolicy = new RetryForever(20);
         CuratorFramework curator = CuratorFrameworkFactory.builder()
-                .connectString(ContextUtil.zkIpPort.substring(0,ContextUtil.zkIpPort.indexOf(":")))
+                .connectString(StringUtil.getSplitePrefix(ContextUtil.zkIpPort,":"))
                 .namespace("shoot")
                 .sessionTimeoutMs(6000)
                 .retryPolicy(retryPolicy).build();

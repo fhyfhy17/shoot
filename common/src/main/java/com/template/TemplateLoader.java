@@ -2,6 +2,7 @@ package com.template;
 
 import com.template.templates.AbstractTemplate;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -15,7 +16,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -89,23 +95,18 @@ public class TemplateLoader {
 
                     Type genericReturnType = f.getGenericType();
 
-                    int wrapCount = 0;
+                    int wrapCount = 1;
 
                     Class<?> typeClass = null;
                     if (genericReturnType instanceof ParameterizedType) {
                         ParameterizedType g2 = (ParameterizedType) genericReturnType;
-
-
-                        Type[] actualTypeArguments = g2.getActualTypeArguments();
-                        Type t = actualTypeArguments[0];
-                        if (t instanceof Class) {
-                            typeClass = (Class<?>) t;
-                        } else if (g2.getRawType().getTypeName().equals("java.util.List")) {
-                            Type actualTypeArguments1 = g2.getActualTypeArguments()[0];
-                            ParameterizedType g3 = (ParameterizedType) actualTypeArguments1;
-                            typeClass = (Class<?>) (g3.getActualTypeArguments()[0]);
+                        Type t = g2.getActualTypeArguments()[0];
+                        while(!(t instanceof Class)){
+                            ParameterizedType g3 = (ParameterizedType) t;
+                            t = g3.getActualTypeArguments()[0];
                             wrapCount++;
                         }
+                        typeClass = (Class<?>)t;
                     }
                     if (typeClass == String.class) {
                         if (wrapCount == 0) {
@@ -219,6 +220,18 @@ public class TemplateLoader {
                     "Config namespace error {}: class={} colName={} type={} namespace={}",
                     e.getMessage(), object.getClass().getSimpleName(), fieldName, field, fieldValue);
         }
+    }
+    
+    private static void parse(Class<?> clazz,int layers,String value){
+        if(StringUtils.isEmpty(value)){
+            return;
+        }
+        
+        for(int i=0;i<layers;i++)
+        {
+        
+        }
+    
     }
 
     private static double formatDouble(String strVal) {

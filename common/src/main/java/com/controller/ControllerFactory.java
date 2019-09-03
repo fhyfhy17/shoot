@@ -33,32 +33,36 @@ public class ControllerFactory {
 //                if (method.getName().startsWith("CGLIB")) {
 //                    continue;
 //                }
-
-
-                for (Class<?> parameterClass : method.getParameterTypes()) {
-                    if (!Objects.isNull(method.getAnnotation(Controllor.class))) {
-                        try {
-                            Class cl = Class.forName(parameterClass.getName());
-                            Method methodB = cl.getMethod("newBuilder");
-                            Object obj = methodB.invoke(null, null);
-                            Message.Builder msgBuilder = (Message.Builder) obj;
-                            int msgId = msgBuilder.build().getDescriptorForType().getOptions().getExtension(Options.messageId);
-                            if (controllerMap.containsKey(msgId)) {
-                                log.error("重复的msgid ={} controllerName ={} methodName ={}", msgId, controller.getClass().getSimpleName(), method.getName());
-                                continue;
-                            }
-                            MethodAccessor methodAccessor = ReflectionFactory.getReflectionFactory().newMethodAccessor(method);
-
-                            Pair<Object, FunType> add = addFunType(controller, method);
-
-                            controllerMap.put(msgId, new ControllerHandler(controller, method, msgId, methodAccessor, add.getValue(), add.getKey()));
-
-                        } catch (IllegalAccessException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException e) {
-                            log.error("", e);
-                        }
-                        break;
-                    }
+                if(Objects.isNull(method.getAnnotation(Controllor.class))){
+                    continue;
                 }
+                
+                for (Class<?> parameterClass : method.getParameterTypes()) {
+                    if (!Message.class.isAssignableFrom(parameterClass)) {
+                        continue;
+                    }
+                    try {
+                        Class cl = Class.forName(parameterClass.getName());
+                        Method methodB = cl.getMethod("newBuilder");
+                        Object obj = methodB.invoke(null, null);
+                        Message.Builder msgBuilder = (Message.Builder) obj;
+                        int msgId = msgBuilder.build().getDescriptorForType().getOptions().getExtension(Options.messageId);
+                        if (controllerMap.containsKey(msgId)) {
+                            log.error("重复的msgid ={} controllerName ={} methodName ={}", msgId, controller.getClass().getSimpleName(), method.getName());
+                            continue;
+                        }
+                        MethodAccessor methodAccessor = ReflectionFactory.getReflectionFactory().newMethodAccessor(method);
+
+                        Pair<Object, FunType> add = addFunType(controller, method);
+
+                        controllerMap.put(msgId, new ControllerHandler(controller, method, msgId, methodAccessor, add.getValue(), add.getKey()));
+
+                    } catch (IllegalAccessException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException e) {
+                        log.error("", e);
+                    }
+                    break;
+                }
+                
             }
         });
     }

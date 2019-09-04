@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class Message implements Serializable {
+public class Packet implements Serializable {
 
     private static final long serialVersionUID = 1123834342L;
     private long uid; // uid

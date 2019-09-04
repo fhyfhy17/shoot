@@ -3,6 +3,7 @@ package com.util;
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.Message;
 import com.net.msg.Options;
+import com.pojo.Packet;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 
@@ -39,8 +40,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static com.pojo.Message buildMessage(com.google.protobuf.Message proto, long uid, @Nullable String from) {
-        com.pojo.Message messageResult = new com.pojo.Message();
+    public static Packet buildMessage(com.google.protobuf.Message proto,long uid,@Nullable String from) {
+        Packet messageResult = new Packet();
         messageResult.setId(protoGetMessageId(proto));
         messageResult.setUid(uid);
         messageResult.setFrom(null == from ? ContextUtil.id : from);

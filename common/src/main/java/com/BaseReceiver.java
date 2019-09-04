@@ -1,11 +1,11 @@
 package com;
 
-import com.pojo.Message;
+import com.pojo.Packet;
 
 
 public abstract class BaseReceiver {
 
-    public abstract void onReceive(Message message);
+    public abstract void onReceive(Packet message);
 
 
 }

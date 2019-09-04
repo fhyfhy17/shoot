@@ -12,7 +12,7 @@ import com.esotericsoftware.kryo.serializers.DefaultSerializers;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.net.msg.COMMON_MSG;
-import com.pojo.Message;
+import com.pojo.Packet;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 import org.nustaq.serialization.FSTConfiguration;
@@ -31,7 +31,7 @@ public class SerializeUtil {
     private static Kryo k = new Kryo();
 
     static {
-        k.register(Message.class);
+        k.register(Packet.class);
         k.setReferences(true);
         k.setInstantiatorStrategy(new StdInstantiatorStrategy());
         k.setDefaultSerializer(DefaultSerializers.ByteSerializer.class);
@@ -45,7 +45,7 @@ public class SerializeUtil {
     public static final int type = 2;
 
 
-    public static Message stm(byte[] s) {
+    public static Packet stm(byte[] s) {
         if (type == 1) {
             return kryoStm(s);
         } else if (type == 2) {
@@ -58,7 +58,7 @@ public class SerializeUtil {
 //        return null;
     }
 
-    public static byte[] mts(Message m) {
+    public static byte[] mts(Packet m) {
         if (type == 1) {
             return kryoMts(m);
         } else if (type == 2) {
@@ -72,8 +72,8 @@ public class SerializeUtil {
 //        return null;
     }
 
-    private static Message colferStm(byte[] s) {
-        Message message = new Message();
+    private static Packet colferStm(byte[] s) {
+        Packet message = new Packet();
 
         ColferMessage m = new ColferMessage();
         m.unmarshal(s, 0);
@@ -84,7 +84,7 @@ public class SerializeUtil {
         return message;
     }
 
-    private static byte[] colferMts(Message message) {
+    private static byte[] colferMts(Packet message) {
         ColferMessage colfer = new ColferMessage();
         colfer.setId(message.getId());
         colfer.setUid(message.getUid());
@@ -97,12 +97,12 @@ public class SerializeUtil {
         return body;
     }
 
-    private static Message fstStm(byte[] s) {
-        return (Message) configuration.asObject(s);
+    private static Packet fstStm(byte[] s) {
+        return (Packet) configuration.asObject(s);
     }
 
-    private static byte[] fstMts(Message message) {
-        Message m = new Message();
+    private static byte[] fstMts(Packet message) {
+        Packet m = new Packet();
         m.setData(message.getData());
         m.setFrom(message.getFrom());
         m.setUid(message.getUid());
@@ -120,14 +120,14 @@ public class SerializeUtil {
 //    }
 
 
-    private static Message kryoStm(byte[] s) {
-        Message m = null;
+    private static Packet kryoStm(byte[] s) {
+        Packet m = null;
         try (
                 ByteArrayInputStream bais = new ByteArrayInputStream(s);
                 Input input = new Input(bais)
 
         ) {
-            m = k.readObject(input, Message.class);
+            m = k.readObject(input, Packet.class);
         } catch (IOException e) {
             log.error("", e);
         }
@@ -135,8 +135,8 @@ public class SerializeUtil {
         return m;
     }
 
-    private static byte[] kryoMts(Message m) {
-        Message m2 = new Message();
+    private static byte[] kryoMts(Packet m) {
+        Packet m2 = new Packet();
         m2.setId(m.getId());
         m2.setUid(m.getUid());
         m2.setFrom(m.getFrom());
@@ -158,18 +158,18 @@ public class SerializeUtil {
     }
 
 
-    private static byte[] fastMts(Message m) {
+    private static byte[] fastMts(Packet m) {
         String s = JSON.toJSONString(m);
         return s.getBytes();
     }
 
-    private static Message fastStm(byte[] s) {
-        return JSON.parseObject(s, Message.class);
+    private static Packet fastStm(byte[] s) {
+        return JSON.parseObject(s, Packet.class);
     }
 
     static COMMON_MSG.MyMessage.Builder builder = COMMON_MSG.MyMessage.newBuilder();
 
-    private static byte[] protoMts(Message m) {
+    private static byte[] protoMts(Packet m) {
         builder.setUid(m.getUid());
         builder.setId(m.getId());
         if (m.getData() != null) {
@@ -180,8 +180,8 @@ public class SerializeUtil {
         return builder.build().toByteArray();
     }
 
-    private static Message protoStm(byte[] s) {
-        Message m2 = new Message();
+    private static Packet protoStm(byte[] s) {
+        Packet m2 = new Packet();
         try {
 
             COMMON_MSG.MyMessage m = COMMON_MSG.MyMessage.parseFrom(s);
@@ -204,7 +204,7 @@ public class SerializeUtil {
         for (int i = 0; i < 1; i++) {
             sb.append("这是测试");
         }
-        Message m = new Message();
+        Packet m = new Packet();
         m.setId(1);
         m.setFrom("a");
         m.setUid(1);

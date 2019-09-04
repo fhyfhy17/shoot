@@ -5,7 +5,7 @@ import com.handler.MessageThreadHandler;
 import com.net.ConnectManager;
 import com.net.msg.LOGIN_MSG;
 import com.net.msg.Options;
-import com.pojo.Message;
+import com.pojo.Packet;
 import com.util.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +16,7 @@ public class GateToClientMessageHandler extends MessageThreadHandler {
     public void pulse() {
         while (!pulseQueues.isEmpty()) {
             try {
-                Message message = pulseQueues.poll();
+                Packet message = pulseQueues.poll();
 
                 dispatch(message);
 
@@ -27,7 +27,7 @@ public class GateToClientMessageHandler extends MessageThreadHandler {
     }
 
 
-    private void dispatch(Message message) throws InvalidProtocolBufferException {
+    private void dispatch(Packet message) throws InvalidProtocolBufferException {
         ConnectManager connectManager = SpringUtils.getBean(ConnectManager.class);
 
         //如果是登录返回消息

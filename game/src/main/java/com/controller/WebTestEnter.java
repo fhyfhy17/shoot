@@ -10,7 +10,7 @@ import com.mongoListener.SaveEventListener;
 import com.net.msg.LOGIN_MSG;
 import com.net.msg.Options;
 import com.node.RemoteNode;
-import com.pojo.Message;
+import com.pojo.Packet;
 import com.service.UnionService;
 import com.util.ContextUtil;
 import com.util.IdCreator;
@@ -181,7 +181,7 @@ public class WebTestEnter {
     @RequestMapping("/test/vertxMessage")
     public void testVertxMessage() {
         Random r = new Random();
-        Message message = new Message();
+        Packet message = new Packet();
         LOGIN_MSG.TEST_TIME.Builder builder = LOGIN_MSG.TEST_TIME.newBuilder();
         builder.setMsg("abcdefghigklmnopqrstuvwxyz");
 
@@ -199,7 +199,7 @@ public class WebTestEnter {
 
     @RequestMapping("/test/zeromqMessage")
     public void testZeromqMessage() {
-        Message message = new Message();
+        Packet message = new Packet();
         LOGIN_MSG.TEST_TIME.Builder builder = LOGIN_MSG.TEST_TIME.newBuilder();
         builder.setMsg("abcdefghigklmnopqrstuvwxyz");
 

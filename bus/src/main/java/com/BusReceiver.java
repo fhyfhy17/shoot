@@ -4,7 +4,7 @@ import com.enums.TypeEnum;
 import com.handler.BusMessageHandler;
 import com.handler.MessageGroup;
 import com.handler.MessageThreadHandler;
-import com.pojo.Message;
+import com.pojo.Packet;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +25,7 @@ public class BusReceiver extends BaseReceiver {
                 return new BusMessageHandler();
             }
             @Override
-            public void messageReceived(Message msg) {
+            public void messageReceived(Packet msg) {
         
                 // 分配执行器执行
                 int index = msg.getFrom().hashCode() % handlerCount;
@@ -41,7 +41,7 @@ public class BusReceiver extends BaseReceiver {
     }
 
     @Override
-    public void onReceive(Message message) {
+    public void onReceive(Packet message) {
         m.messageReceived(message);
     }
 

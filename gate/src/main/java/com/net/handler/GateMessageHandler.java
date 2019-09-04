@@ -5,7 +5,7 @@ import com.handler.MessageThreadHandler;
 import com.manager.ServerInfoManager;
 import com.net.ConnectManager;
 import com.net.Session;
-import com.pojo.Message;
+import com.pojo.Packet;
 import com.util.ContextUtil;
 import com.util.RouteUtil;
 import com.util.SpringUtils;
@@ -20,7 +20,7 @@ public class GateMessageHandler extends MessageThreadHandler {
     public void pulse() {
         while (!pulseQueues.isEmpty()) {
             try {
-                Message message = pulseQueues.poll();
+                Packet message = pulseQueues.poll();
                 final long uid = message.getUid();
                 final int cmdId = message.getId();
                 dispatch(message);
@@ -32,7 +32,7 @@ public class GateMessageHandler extends MessageThreadHandler {
     }
 
 
-    private void dispatch(Message message) {
+    private void dispatch(Packet message) {
         message.setFrom(ContextUtil.id);
         message.setGate(ContextUtil.id);
         int msgId = message.getId();

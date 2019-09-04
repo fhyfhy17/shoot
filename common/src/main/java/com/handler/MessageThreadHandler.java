@@ -11,7 +11,7 @@ import com.controller.interceptor.HandlerExecutionChain;
 import com.exception.StatusException;
 import com.exception.exceptionNeedSendToClient.ServerBusinessException;
 import com.manager.ServerInfoManager;
-import com.pojo.Message;
+import com.pojo.Packet;
 import com.util.ProtoUtil;
 import com.util.TipStatus;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class MessageThreadHandler implements Runnable {
 
     private StopWatch stopWatch = new StopWatch();
 
-    protected final ConcurrentLinkedQueue<Message> pulseQueues = new ConcurrentLinkedQueue<>();
+    protected final ConcurrentLinkedQueue<Packet> pulseQueues = new ConcurrentLinkedQueue<>();
 
     @Override
     public void run() {
@@ -53,7 +53,7 @@ public class MessageThreadHandler implements Runnable {
         }
     }
 
-    public void messageReceived(Message msg) {
+    public void messageReceived(Packet msg) {
         pulseQueues.add(msg);
     }
 
@@ -61,12 +61,12 @@ public class MessageThreadHandler implements Runnable {
     public void pulse() {
         while (!pulseQueues.isEmpty()) {
             ControllerHandler handler = null;
-            Message message = null;
+            Packet packet = null;
             String gate = null;
             try {
-                message = pulseQueues.poll();
-                final int cmdId = message.getId();
-                gate = message.getGate();
+                packet = pulseQueues.poll();
+                final int cmdId = packet.getId();
+                gate = packet.getGate();
 
                 handler = ControllerFactory.getControllerMap().get(cmdId);
                 if (handler == null) {
@@ -75,11 +75,11 @@ public class MessageThreadHandler implements Runnable {
 
 
                 //拦截器前
-                if (!HandlerExecutionChain.applyPreHandle(message, handler)) {
+                if (!HandlerExecutionChain.applyPreHandle(packet, handler)) {
                     continue;
                 }
                 Object result = null;
-                Object[] m = handler.getMethodArgumentValues(message);
+                Object[] m = handler.getMethodArgumentValues(packet);
                 switch (handler.getFunType()) {
                     case Fun1:
                         result = (((Fun1) handler.getFun()).apply(handler.getAction(), m[0]));
@@ -100,11 +100,11 @@ public class MessageThreadHandler implements Runnable {
 
 
                 ////针对method的每个参数进行处理， 处理多参数,返回result（这是老的invoke执行controller 暂时废弃）
-                //com.google.protobuf.Message result = (com.google.protobuf.Message) com.handler.invokeForController(message);
+                //com.google.protobuf.Message result = (com.google.protobuf.Message) com.handler.invokeForController(packet);
                 ////拦截器后
                 if (com.google.protobuf.Message.class.isAssignableFrom(result.getClass())) {
 
-                    HandlerExecutionChain.applyPostHandle(message, (com.google.protobuf.Message) result, handler);
+                    HandlerExecutionChain.applyPostHandle(packet, (com.google.protobuf.Message) result, handler);
                 }
 
             }
@@ -114,7 +114,7 @@ public class MessageThreadHandler implements Runnable {
                 Class<?> returnType = handler.getMethod().getReturnType();
                 if (returnType.isAssignableFrom(com.google.protobuf.Message.class)) {
                     com.google.protobuf.Message.Builder builder = ProtoUtil.setFieldByName(ProtoUtil.createBuilerByClassName(returnType.getName()), "result", TipStatus.fail(se.getTip()));
-                    Message message1 = ProtoUtil.buildMessage(builder.build(), message.getUid(), null);
+                    Packet message1 = ProtoUtil.buildMessage(builder.build(), packet.getUid(), null);
                     ServerInfoManager.sendMessage(gate, message1);
                 }
             } catch (ServerBusinessException sbe) {
@@ -124,7 +124,7 @@ public class MessageThreadHandler implements Runnable {
             } catch (Exception e) {
                 // 系统报错
                 log.error("", e);
-                HandlerExecutionChain.applyPostHandle(message, Constant.DEFAULT_ERROR_REPLY, handler);
+                HandlerExecutionChain.applyPostHandle(packet, Constant.DEFAULT_ERROR_REPLY, handler);
 
             }
         }

@@ -8,7 +8,7 @@ import com.manager.ServerInfoManager;
 import com.net.handler.GateMessageHandler;
 import com.net.msg.LOGIN_MSG;
 import com.net.msg.Options;
-import com.pojo.Message;
+import com.pojo.Packet;
 import com.pojo.NettyMessage;
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
@@ -98,7 +98,7 @@ public class ConnectManager {
 
     }
 
-    public void writeToClient(long uid, Message message) {
+    public void writeToClient(long uid, Packet message) {
         Session session = userIdToConnectMap.get(uid);
         if (session != null) {
             session.writeMsg(message);

@@ -19,4 +19,5 @@ public class Constant {
 
     public static final String ZOOKEEPER_PATH = "/cluster/nodes";
 
+    public static final int RPC_PACKET_ID = -1;
 }

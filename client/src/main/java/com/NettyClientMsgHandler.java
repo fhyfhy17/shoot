@@ -1,7 +1,7 @@
 package com;
 
 import com.net.msg.LOGIN_MSG;
-import com.pojo.Message;
+import com.pojo.Packet;
 import com.util.ProtoUtil;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
@@ -31,7 +31,7 @@ public class NettyClientMsgHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
         try {
-            Message message = (Message) msg;
+            Packet message = (Packet) msg;
             if (message.getId() == 10009) {
 
 

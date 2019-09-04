@@ -1,9 +1,10 @@
 package com;
 
 
-import com.pojo.Message;
+import com.pojo.Packet;
 
-public class NettyMessage extends Message {
+public class NettyMessage extends Packet
+{
     private int autoIncrease;
     private long checkCode;
 

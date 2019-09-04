@@ -3,7 +3,7 @@ package com.manager;
 import cn.hutool.core.util.RandomUtil;
 import com.enums.TypeEnum;
 import com.node.RemoteNode;
-import com.pojo.Message;
+import com.pojo.Packet;
 import com.pojo.ServerInfo;
 import com.util.ContextUtil;
 import com.util.SerializeUtil;
@@ -93,7 +93,7 @@ public class ServerInfoManager {
     }
 
 
-    public static void sendMessage(String queue, Message message) {
+    public static void sendMessage(String queue, Packet message) {
         RemoteNode remoteNode = ServerInfoManager.getRemoteNode(queue);
         remoteNode.sendReqMsg(SerializeUtil.mts(message));
     }

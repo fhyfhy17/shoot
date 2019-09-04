@@ -3,7 +3,7 @@ package com.controller.resolver.resolverImpl;
 import com.controller.resolver.ActionMethodArgumentResolver;
 import com.controller.resolver.MethodParameter;
 import com.exception.exceptionNeedSendToClient.NoPlayerException;
-import com.pojo.Message;
+import com.pojo.Packet;
 import com.pojo.Player;
 import com.service.OnlineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class PlayerMethodArgumentResolver implements ActionMethodArgumentResolve
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, Message message) throws Exception {
+    public Object resolveArgument(MethodParameter parameter, Packet message) throws Exception {
         Player playerByUid = onlineService.getPlayerByUid(message.getUid());
         if (Objects.isNull(playerByUid)) {
             throw new NoPlayerException("查询player时为空： uid为：" + message.getUid());

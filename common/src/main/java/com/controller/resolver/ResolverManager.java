@@ -1,6 +1,6 @@
 package com.controller.resolver;
 
-import com.pojo.Message;
+import com.pojo.Packet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +11,7 @@ public class ResolverManager {
 
     private static List<ActionMethodArgumentResolver> actionMethodArgumentResolvers;
 
-    public static Object resolve(MethodParameter parameter, Message message) throws Exception {
+    public static Object resolve(MethodParameter parameter, Packet message) throws Exception {
         for (ActionMethodArgumentResolver actionMethodArgumentResolver : actionMethodArgumentResolvers) {
             if (actionMethodArgumentResolver.supportsParameter(parameter)) {
                 return actionMethodArgumentResolver.resolveArgument(parameter, message);

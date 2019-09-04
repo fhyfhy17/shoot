@@ -10,9 +10,11 @@ import com.template.templates.type.TipType;
 import com.util.CountUtil;
 import com.util.TipStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 @Controller
 public class LoginController extends BaseController {
@@ -20,7 +22,8 @@ public class LoginController extends BaseController {
     private LoginService loginService;
 
     @Controllor
-    public LOGIN_MSG.GTC_LOGIN login(UidContext context, LOGIN_MSG.CTG_LOGIN req) throws StatusException {
+    @Async
+    public CompletableFuture<LOGIN_MSG.GTC_LOGIN> login(UidContext context,LOGIN_MSG.CTG_LOGIN req) throws StatusException {
         String username = req.getUsername();
         String password = req.getPassword();
         String sessionId = req.getSessionId();
@@ -52,7 +55,7 @@ public class LoginController extends BaseController {
         //});
 
 
-        return builder.build();
+        return CompletableFuture.completedFuture(builder.build());
 
     }
 

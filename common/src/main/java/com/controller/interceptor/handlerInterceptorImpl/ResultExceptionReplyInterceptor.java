@@ -5,7 +5,7 @@ import com.controller.ControllerHandler;
 import com.controller.interceptor.HandlerInterceptor;
 import com.manager.ServerInfoManager;
 import com.net.msg.LOGIN_MSG;
-import com.pojo.Message;
+import com.pojo.Packet;
 import com.util.ProtoUtil;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -16,12 +16,12 @@ import org.springframework.stereotype.Component;
 //只针对前端消息，服务之间暂时不需要
 public class ResultExceptionReplyInterceptor implements HandlerInterceptor {
     @Override
-    public void postHandle(Message message, ControllerHandler handler, com.google.protobuf.Message result) {
+    public void postHandle(Packet message,ControllerHandler handler,com.google.protobuf.Message result) {
         if (!Constant.DEFAULT_ERROR_REPLY.equals(result)) {
             return;
         }
 
-        Message messageResult = new Message();
+        Packet messageResult = new Packet();
         LOGIN_MSG.GTC_UNIFIED_EXCEPTION.Builder builder = LOGIN_MSG.GTC_UNIFIED_EXCEPTION.newBuilder();
         builder.setMsg("服务器报错!");
 

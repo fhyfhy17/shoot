@@ -2,7 +2,7 @@ package com.handler;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.net.msg.LOGIN_MSG;
-import com.pojo.Message;
+import com.pojo.Packet;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public abstract class MessageGroup {
         return null;
     }
     
-    public void messageReceived(Message msg) {
+    public void messageReceived(Packet msg) {
         int index = 0;
 
         // 分配执行器执行

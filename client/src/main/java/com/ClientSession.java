@@ -1,7 +1,7 @@
 package com;
 
 import com.net.msg.LOGIN_MSG;
-import com.pojo.Message;
+import com.pojo.Packet;
 import io.netty.channel.Channel;
 
 import java.util.Scanner;
@@ -118,7 +118,7 @@ public class ClientSession {
         ClientSession.autoIncrease = autoIncrease;
     }
 
-    public static long buildCheckCode(Message message) {
+    public static long buildCheckCode(Packet message) {
         CRC32 crc32 = new CRC32();
         crc32.update(message.getData());
         return crc32.getValue();

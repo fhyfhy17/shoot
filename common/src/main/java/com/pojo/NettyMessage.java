@@ -1,7 +1,8 @@
 package com.pojo;
 
 
-public class NettyMessage extends Message {
+public class NettyMessage extends Packet
+{
     private int autoIncrease;
     private long checkCode;
 

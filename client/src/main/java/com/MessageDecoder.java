@@ -1,6 +1,6 @@
 package com;
 
-import com.pojo.Message;
+import com.pojo.Packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -28,7 +28,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
         // 解析成为消息格式
         int commandId = buffer.readInt();
 
-        Message pushMsg = new Message();
+        Packet pushMsg = new Packet();
         pushMsg.setId(commandId);
 
         // 结算消息长度(总长度 - (自身 + 4byte))

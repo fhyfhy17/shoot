@@ -4,7 +4,7 @@ import com.enums.TypeEnum;
 import com.handler.MessageGroup;
 import com.handler.MessageThreadHandler;
 import com.net.handler.GateToClientMessageHandler;
-import com.pojo.Message;
+import com.pojo.Packet;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -25,7 +25,7 @@ public class GateReceiver extends BaseReceiver {
     }
 
     @Override
-    public void onReceive(Message message) {
+    public void onReceive(Packet message) {
         //这收到其它服务器返回消息直接刷到前端了
         m.messageReceived(message);
     }

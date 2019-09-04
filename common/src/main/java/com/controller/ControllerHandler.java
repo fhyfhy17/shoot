@@ -3,7 +3,7 @@ package com.controller;
 import com.controller.fun.FunType;
 import com.controller.resolver.MethodParameter;
 import com.controller.resolver.ResolverManager;
-import com.pojo.Message;
+import com.pojo.Packet;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,13 +39,13 @@ public class ControllerHandler {
         this.parameters = parameters;
     }
 
-    public Object invokeForController(Message message) throws Exception {
+    public Object invokeForController(Packet message) throws Exception {
         Object[] args = getMethodArgumentValues(message);
         return this.methodAccessor.invoke(this.action, args);
 
     }
 
-    public Object[] getMethodArgumentValues(Message message) throws Exception {
+    public Object[] getMethodArgumentValues(Packet message) throws Exception {
         Object[] args = new Object[parameters.length];
         for (int i = 0; i < args.length; i++) {
             MethodParameter methodParameter = this.parameters[i];

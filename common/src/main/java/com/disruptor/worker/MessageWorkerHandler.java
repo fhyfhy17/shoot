@@ -5,7 +5,7 @@ import com.controller.ControllerHandler;
 import com.controller.interceptor.HandlerExecutionChain;
 import com.disruptor.DisruptorEvent;
 import com.disruptor.MessageEvent;
-import com.pojo.Message;
+import com.pojo.Packet;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -17,7 +17,7 @@ public class MessageWorkerHandler extends WorkerHandler {
     @Override
     public void onEvent(DisruptorEvent event) throws Exception {
         MessageEvent messageEvent = (MessageEvent) event.getBaseEvent();
-        Message message = messageEvent.getMessage();
+        Packet message = messageEvent.getMessage();
         try {
             final int cmdId = message.getId();
 

@@ -13,7 +13,7 @@ import com.event.playerEvent.PlayerLoginEvent;
 import com.exception.StatusException;
 import com.google.common.eventbus.Subscribe;
 import com.net.msg.LOGIN_MSG;
-import com.part.BasePart;
+import com.module.BaseModule;
 import com.pojo.Player;
 import com.template.templates.type.TipType;
 import com.util.IdCreator;
@@ -41,7 +41,7 @@ public class PlayerService {
     private OnlineService onlineService;
 
     @Autowired
-    private List<BasePart> parts;
+    private List<BaseModule> modules;
 
 
     @Subscribe
@@ -72,7 +72,7 @@ public class PlayerService {
         Player player = new Player();
         player.setPlayerId(playerEntry.getId());
         player.setUid(playerEntry.getUid());
-        player.initParts(parts);
+        player.initParts(modules);
 
 
         return player;

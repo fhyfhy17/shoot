@@ -1,6 +1,6 @@
 package com.pojo;
 
-import com.part.*;
+import com.module.*;
 import com.util.SpringUtils;
 import lombok.Data;
 import org.ehcache.CacheManager;
@@ -13,20 +13,20 @@ public class Player {
     private long playerId;
     private long uid;
 
-    public PlayerPart playerPart;
-    public BagPart bagPart;
-    public NoCellBagPart noCellBagPart;
-    public MailPart mailPart;
+    public PlayerModule playerPart;
+    public BagModule bagPart;
+    public NoCellBagModule noCellBagPart;
+    public MailModule mailPart;
 
     private CacheManager cacheManager;
 
-    private List<BasePart> parts;
+    private List<BaseModule> parts;
 
     public Player() {
         cacheManager = SpringUtils.getBean(CacheManager.class);
     }
 
-    public void initParts(List<BasePart> parts) {
+    public void initParts(List<BaseModule> parts) {
         this.parts = parts;
 
         parts.forEach(x -> {
@@ -38,34 +38,34 @@ public class Player {
 
 
     public void onDaily() {
-        parts.forEach(BasePart::onDaily);
+        parts.forEach(BaseModule::onDaily);
     }
 
     public void onLogin() {
-        parts.forEach(BasePart::onLogin);
+        parts.forEach(BaseModule::onLogin);
     }
 
     public void onLogout() {
-        parts.forEach(BasePart::onLogout);
+        parts.forEach(BaseModule::onLogout);
     }
 
     public void onActivityOpen() {
-        parts.forEach(BasePart::onActivityOpen);
+        parts.forEach(BaseModule::onActivityOpen);
     }
 
     public void onActivityClose() {
-        parts.forEach(BasePart::onActivityClose);
+        parts.forEach(BaseModule::onActivityClose);
     }
 
     public void onActivityReset() {
-        parts.forEach(BasePart::onActivityReset);
+        parts.forEach(BaseModule::onActivityReset);
     }
 
     public void onLevelUp() {
-        parts.forEach(BasePart::onLevelUp);
+        parts.forEach(BaseModule::onLevelUp);
     }
 
     public void onSecond() {
-        parts.forEach(BasePart::onSecond);
+        parts.forEach(BaseModule::onSecond);
     }
 }

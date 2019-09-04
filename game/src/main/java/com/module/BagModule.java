@@ -1,4 +1,4 @@
-package com.part;
+package com.module;
 
 import com.abs.CellBagAbs;
 import com.abs.impl.CommonCellBag;
@@ -17,7 +17,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @Order(2)
-public class BagPart extends BasePart {
+public class BagModule extends BaseModule
+{
 
     private BagEntry bagEntry;
     @Autowired

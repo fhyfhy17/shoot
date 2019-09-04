@@ -1,4 +1,4 @@
-package com.part;
+package com.module;
 
 import com.entry.PlayerEntry;
 import lombok.Getter;
@@ -13,7 +13,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @Order(1)
-public class PlayerPart extends BasePart {
+public class PlayerModule extends BaseModule
+{
 
 
     private PlayerEntry playerEntry;

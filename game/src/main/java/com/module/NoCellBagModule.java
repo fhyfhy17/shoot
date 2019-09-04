@@ -1,4 +1,4 @@
-package com.part;
+package com.module;
 
 import com.abs.NoCellBagAbs;
 import com.abs.impl.CommonNoCellBag;
@@ -17,7 +17,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @Order(2)
-public class NoCellBagPart extends BasePart {
+public class NoCellBagModule extends BaseModule
+{
 
     private NoCellBagEntry noCellBagEntry;
     @Autowired

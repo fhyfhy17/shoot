@@ -1,4 +1,4 @@
-package com.part;
+package com.module;
 
 import com.dao.CenterMailRepository;
 import com.dao.MailRepository;
@@ -25,7 +25,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @Order(2)
-public class MailPart extends BasePart {
+public class MailModule extends BaseModule
+{
 
     private MailEntry mailEntry;
     @Autowired

@@ -1,4 +1,4 @@
-package com.part;
+package com.module;
 
 import com.entry.BaseEntry;
 import com.pojo.Player;
@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Getter
 @Setter
-public abstract class BasePart {
+public abstract class BaseModule{
 
     @Autowired
     protected CacheManager cacheManager;

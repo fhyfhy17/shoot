@@ -41,11 +41,17 @@ public class ProtoUtil {
 
     public static com.pojo.Message buildMessage(com.google.protobuf.Message proto, long uid, @Nullable String from) {
         com.pojo.Message messageResult = new com.pojo.Message();
-        messageResult.setId(proto.getDescriptorForType().getOptions().getExtension(Options.messageId));
+        messageResult.setId(protoGetMessageId(proto));
         messageResult.setUid(uid);
         messageResult.setFrom(null == from ? ContextUtil.id : from);
         messageResult.setData(proto.toByteArray());
         return messageResult;
     }
-
+    
+    public static  int protoGetMessageId(Message.Builder builder){
+        return  builder.getDescriptorForType().getOptions().getExtension(Options.messageId);
+    }
+    public static  int protoGetMessageId(Message message){
+        return message.getDescriptorForType().getOptions().getExtension(Options.messageId);
+    }
 }

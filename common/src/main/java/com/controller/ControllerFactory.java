@@ -1,17 +1,25 @@
 package com.controller;
 
 import com.annotation.Controllor;
-import com.controller.fun.*;
+import com.controller.fun.Fun1;
+import com.controller.fun.Fun2;
+import com.controller.fun.Fun3;
+import com.controller.fun.Fun4;
+import com.controller.fun.FunType;
 import com.google.common.collect.Maps;
 import com.google.protobuf.Message;
-import com.net.msg.Options;
 import com.util.Pair;
+import com.util.ProtoUtil;
 import com.util.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import sun.reflect.MethodAccessor;
 import sun.reflect.ReflectionFactory;
 
-import java.lang.invoke.*;
+import java.lang.invoke.CallSite;
+import java.lang.invoke.LambdaConversionException;
+import java.lang.invoke.LambdaMetafactory;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -46,7 +54,7 @@ public class ControllerFactory {
                         Method methodB = cl.getMethod("newBuilder");
                         Object obj = methodB.invoke(null, null);
                         Message.Builder msgBuilder = (Message.Builder) obj;
-                        int msgId = msgBuilder.build().getDescriptorForType().getOptions().getExtension(Options.messageId);
+                        int msgId =ProtoUtil.protoGetMessageId(msgBuilder);
                         if (controllerMap.containsKey(msgId)) {
                             log.error("重复的msgid ={} controllerName ={} methodName ={}", msgId, controller.getClass().getSimpleName(), method.getName());
                             continue;

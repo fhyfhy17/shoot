@@ -3,9 +3,9 @@ package com.controller.interceptor.handlerInterceptorImpl;
 import com.controller.ControllerHandler;
 import com.controller.interceptor.HandlerInterceptor;
 import com.manager.ServerInfoManager;
-import com.net.msg.Options;
 import com.pojo.Message;
 import com.util.ContextUtil;
+import com.util.ProtoUtil;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +28,7 @@ public class ResultReplyInterceptor implements HandlerInterceptor {
 
     private Message buildMessage(com.google.protobuf.Message resultMessage, Message message) {
         Message messageResult = new Message();
-        messageResult.setId(resultMessage.getDescriptorForType().getOptions().getExtension(Options.messageId));
+        messageResult.setId(ProtoUtil.protoGetMessageId(resultMessage));
         messageResult.setUid(message.getUid());
         messageResult.setFrom(ContextUtil.id);
         messageResult.setGate(message.getGate());

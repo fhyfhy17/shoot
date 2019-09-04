@@ -1,8 +1,8 @@
 package com;
 
 import com.net.msg.LOGIN_MSG;
-import com.net.msg.Options;
 import com.pojo.Message;
+import com.util.ProtoUtil;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -42,7 +42,7 @@ public class NettyClientMsgHandler extends ChannelInboundHandlerAdapter {
                 loginBuilder.setPlayerId(playerId);
 
                 NettyMessage m = new NettyMessage();
-                m.setId(loginBuilder.build().getDescriptorForType().getOptions().getExtension(Options.messageId));
+                m.setId(ProtoUtil.protoGetMessageId(loginBuilder));
                 m.setData(loginBuilder.build().toByteArray());
                 m.setAutoIncrease(ClientSession.getAutoIncrease() + 1);
                 ClientSession.setAutoIncrease(ClientSession.getAutoIncrease() + 1);
@@ -61,7 +61,7 @@ public class NettyClientMsgHandler extends ChannelInboundHandlerAdapter {
 
 
                 NettyMessage m = new NettyMessage();
-                m.setId(csPl.build().getDescriptorForType().getOptions().getExtension(Options.messageId));
+                m.setId(ProtoUtil.protoGetMessageId(csPl));
                 m.setData(csPl.build().toByteArray());
                 m.setAutoIncrease(ClientSession.getAutoIncrease() + 1);
                 ClientSession.setAutoIncrease(ClientSession.getAutoIncrease() + 1);

@@ -5,8 +5,8 @@ import com.controller.ControllerHandler;
 import com.controller.interceptor.HandlerInterceptor;
 import com.manager.ServerInfoManager;
 import com.net.msg.LOGIN_MSG;
-import com.net.msg.Options;
 import com.pojo.Message;
+import com.util.ProtoUtil;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +25,7 @@ public class ResultExceptionReplyInterceptor implements HandlerInterceptor {
         LOGIN_MSG.GTC_UNIFIED_EXCEPTION.Builder builder = LOGIN_MSG.GTC_UNIFIED_EXCEPTION.newBuilder();
         builder.setMsg("服务器报错!");
 
-        messageResult.setId(builder.getDescriptorForType().getOptions().getExtension(Options.messageId));
+        messageResult.setId(ProtoUtil.protoGetMessageId(builder));
         messageResult.setUid(message.getUid());
         messageResult.setData(builder.build().toByteArray());
 

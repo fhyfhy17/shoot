@@ -29,8 +29,7 @@ public class RpcHolder{
 	
 	public void receiveResponse(RpcResponse rpcResponse){
 		String requestId = rpcResponse.getRequestId();
-		SettableFuture<RpcResponse> rpcResponseFuture = requestContext.get(requestId);
-		requestContext.remove(requestId);
+		SettableFuture<RpcResponse> rpcResponseFuture = requestContext.remove(requestId);
 		rpcResponseFuture.set(rpcResponse);
 	}
 }

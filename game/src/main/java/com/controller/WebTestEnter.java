@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -58,15 +59,36 @@ public class WebTestEnter {
 //    @Autowired
 //    RedissonConfig redissonConfig;
     
+ 
+    
     @RequestMapping("/test/rpc")
     public void rpc() {
-        GameToBus gameToBus=rpcProxy.serviceProxy(GameToBus.class,123,TypeEnum.ServerTypeEnum.LOGIN,123);
+        //GameToBus gameToBus=rpcProxy.serviceProxy(GameToBus.class,123,TypeEnum.ServerTypeEnum.LOGIN,123);
         //String s=gameToBus.needResponse("你好哇");
         StopWatch stopWatch = new StopWatch();
+    
         stopWatch.start();
-        for(int i=0;i<1000;i++)
+        CountDownLatch countDownLatch =new CountDownLatch(10);
+        for(int i=0;i<10;i++)
         {
-            gameToBus.noNeedResponse0();
+            new Thread(()->{
+                for(int j=0;j<100;j++)
+                {
+                    GameToBus gameToBus=rpcProxy.serviceProxy(GameToBus.class,123,TypeEnum.ServerTypeEnum.LOGIN,123);
+                    gameToBus.needResponse("");
+                    //log.info("发送 RPC 请求时间  "+ System.currentTimeMillis());
+                }
+                countDownLatch.countDown();
+            }).start();
+            
+        }
+        try
+        {
+            countDownLatch.await();
+        }
+        catch(InterruptedException e)
+        {
+            e.printStackTrace();
         }
         stopWatch.stop();
         log.info("共用时："+stopWatch.getTime());

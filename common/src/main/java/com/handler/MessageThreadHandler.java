@@ -77,6 +77,7 @@ public class MessageThreadHandler implements Runnable {
                 final int cmdId = packet.getId();
                 gate = packet.getGate();
                 if(packet.getId() == Constant.RPC_RESPONSE_ID){
+                    //log.info("收到 RPC 返回时间  "+ System.currentTimeMillis());
                     SpringUtils.getBean(RpcHolder.class).receiveResponse(ProtostuffUtil.deserializeObject(packet.getData(),RpcResponse.class));
                     return;
                 }
@@ -91,6 +92,7 @@ public class MessageThreadHandler implements Runnable {
                     rpcRequest=ProtostuffUtil.deserializeObject(packet.getData(),RpcRequest.class);
                     String key = rpcRequest.getClassName()+"_"+rpcRequest.getMethodName();
                     handler=ControllerFactory.getRpcControllerMap().get(key);
+                    //log.info("收到 RPC 请求时间  "+ System.currentTimeMillis());
                     if (handler == null) {
                         throw new IllegalStateException("收到不存在的Rpc消息，消息KEY=" + key );
                     }
@@ -107,6 +109,7 @@ public class MessageThreadHandler implements Runnable {
                 }else {
                     m = rpcRequest.getParameters();
                 }
+                
                 //
                 switch (handler.getFunType()) {
                     case Fun0:
@@ -143,6 +146,7 @@ public class MessageThreadHandler implements Runnable {
                     rpcResponse.setRequestId(rpcRequest.getId());
                     rpcResponse.setData(result);
                     ServerInfoManager.sendMessage(packet.getFrom(),ProtoUtil.buildRpcResponseMessage(ProtostuffUtil.serializeObject(rpcResponse,RpcResponse.class),packet.getUid(),null));
+                    //log.info("响应 发回去 的  "+ System.currentTimeMillis());
                 }
 
             }

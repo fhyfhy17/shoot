@@ -80,6 +80,7 @@ public class LoginController extends BaseController implements GameToBus{
     @Suspendable
     @Override
     public String needResponse(String a){
+        //log.info("neeResponse : "+ a);
         return a;
     }
     @Controllor

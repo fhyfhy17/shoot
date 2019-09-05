@@ -4,6 +4,7 @@ package com.controller;
 import co.paralleluniverse.fibers.Suspendable;
 import com.annotation.Controllor;
 import com.annotation.Rpc;
+import com.entry.PlayerEntry;
 import com.entry.UserEntry;
 import com.exception.StatusException;
 import com.net.msg.LOGIN_MSG;
@@ -11,6 +12,7 @@ import com.rpc.interfaces.gameToBus.GameToBus;
 import com.service.LoginService;
 import com.template.templates.type.TipType;
 import com.util.CountUtil;
+import com.util.IdCreator;
 import com.util.TipStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,5 +88,13 @@ public class LoginController extends BaseController implements GameToBus{
     @Override
     public void noNeedResponse(String a){
         log.info("异步");
+    }
+    
+    @Controllor
+    @Rpc(needResponse=false)
+    @Suspendable
+    @Override
+    public PlayerEntry aaa(String a){
+        return new PlayerEntry(IdCreator.nextId(PlayerEntry.class));
     }
 }

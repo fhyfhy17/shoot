@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class RPCResponse
+public class RpcResponse
 {
 	private String requestId;
 	private Object data;

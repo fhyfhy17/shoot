@@ -2,6 +2,7 @@ package com.rpc.interfaces.gameToBus;
 
 import co.paralleluniverse.fibers.Suspendable;
 import com.annotation.Rpc;
+import com.entry.PlayerEntry;
 
 public interface GameToBus
 {
@@ -12,4 +13,9 @@ public interface GameToBus
 	@Suspendable
 	@Rpc(needResponse=false)
 	public void noNeedResponse(String a);
+	
+	@Suspendable
+	@Rpc(needResponse=true)
+	PlayerEntry aaa(String a);
+	
 }

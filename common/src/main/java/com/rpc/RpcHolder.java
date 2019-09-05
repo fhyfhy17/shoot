@@ -12,21 +12,24 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class RpcHolder{
-	private ConcurrentHashMap<String,SettableFuture<RPCResponse>> requestContext = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<String,SettableFuture<RpcResponse>> requestContext = new ConcurrentHashMap<>();
 	
-	public SettableFuture<RPCResponse> sendRequest(RpcRequest rpcRequest,Object hashkey,TypeEnum.ServerTypeEnum serverType,long uid) {
+	public SettableFuture<RpcResponse> sendRequest(RpcRequest rpcRequest,Object hashkey,TypeEnum.ServerTypeEnum serverType,long uid,boolean needResponse) {
 		String requestId = rpcRequest.getId();
-		SettableFuture<RPCResponse> future = new SettableFuture<>();
-		requestContext.put(requestId, future);
+		SettableFuture<RpcResponse> future = null;
+		if(needResponse){
+			future = new SettableFuture<>();
+			requestContext.put(requestId, future);
+		}
 		Assert.notNull(requestId, "requestId 不能为空");
 		String s=ServerInfoManager.hashChooseServer(hashkey,serverType);
 		ServerInfoManager.sendMessage(s,ProtoUtil.buildRpcRequstMessage(ProtostuffUtil.serializeObject(rpcRequest,RpcRequest.class),uid,null));
 		return future;
 	}
 	
-	public void receiveResponse(RPCResponse rpcResponse){
+	public void receiveResponse(RpcResponse rpcResponse){
 		String requestId = rpcResponse.getRequestId();
-		SettableFuture<RPCResponse> rpcResponseFuture = requestContext.get(requestId);
+		SettableFuture<RpcResponse> rpcResponseFuture = requestContext.get(requestId);
 		requestContext.remove(requestId);
 		rpcResponseFuture.set(rpcResponse);
 	}

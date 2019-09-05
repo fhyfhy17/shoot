@@ -62,6 +62,8 @@ public class WebTestEnter {
     public void rpc() {
         GameToBus gameToBus=rpcProxy.serviceProxy(GameToBus.class,123,TypeEnum.ServerTypeEnum.LOGIN,123);
         String s=gameToBus.needResponse("你好哇");
+        PlayerEntry aaa=gameToBus.aaa("");
+        System.out.println(aaa);
         System.out.println(s);
     }
     

@@ -2,6 +2,7 @@ package com.rpc;
 
 import co.paralleluniverse.fibers.Suspendable;
 import co.paralleluniverse.strands.SettableFuture;
+import com.annotation.Rpc;
 import com.enums.TypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,9 +44,14 @@ public class RpcProxy
 				rpcRequest.setClassName(name);
 				rpcRequest.setMethodName(methodName);
 				rpcRequest.setParameters(args);
-			
-				SettableFuture<RPCResponse> rpcResponseSettableFuture = rpcHolder.sendRequest(rpcRequest, hashkey,serverType,uid);
-				RPCResponse rpcResponse = rpcResponseSettableFuture.get();
+				Rpc rpc=method.getAnnotation(Rpc.class);
+				if(!rpc.needResponse()){
+					rpcHolder.sendRequest(rpcRequest, hashkey,serverType,uid,false);
+					return null;
+				}
+				
+				SettableFuture<RpcResponse> rpcResponseSettableFuture = rpcHolder.sendRequest(rpcRequest, hashkey,serverType,uid,true);
+				RpcResponse rpcResponse = rpcResponseSettableFuture.get();
 				return rpcResponse.getData();
 			}
 		});

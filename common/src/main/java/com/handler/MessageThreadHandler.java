@@ -13,7 +13,7 @@ import com.exception.exceptionNeedSendToClient.ServerBusinessException;
 import com.google.protobuf.Message;
 import com.manager.ServerInfoManager;
 import com.pojo.Packet;
-import com.rpc.RPCResponse;
+import com.rpc.RpcResponse;
 import com.rpc.RpcHolder;
 import com.rpc.RpcRequest;
 import com.util.ProtoUtil;
@@ -76,7 +76,7 @@ public class MessageThreadHandler implements Runnable {
                 final int cmdId = packet.getId();
                 gate = packet.getGate();
                 if(packet.getId() == Constant.RPC_RESPONSE_ID){
-                    SpringUtils.getBean(RpcHolder.class).receiveResponse(ProtostuffUtil.deserializeObject(packet.getData(),RPCResponse.class));
+                    SpringUtils.getBean(RpcHolder.class).receiveResponse(ProtostuffUtil.deserializeObject(packet.getData(),RpcResponse.class));
                     return;
                 }
                 isRpc = packet.getId() == Constant.RPC_REQUEST_ID;
@@ -135,10 +135,10 @@ public class MessageThreadHandler implements Runnable {
                 }
                 
                 if(isRpc&& result.getClass()!=Void.class){
-                    RPCResponse rpcResponse = new RPCResponse();
+                    RpcResponse rpcResponse = new RpcResponse();
                     rpcResponse.setRequestId(rpcRequest.getId());
                     rpcResponse.setData(result);
-                    ServerInfoManager.sendMessage(packet.getFrom(),ProtoUtil.buildRpcResponseMessage(ProtostuffUtil.serializeObject(rpcResponse,RPCResponse.class),packet.getUid(),null));
+                    ServerInfoManager.sendMessage(packet.getFrom(),ProtoUtil.buildRpcResponseMessage(ProtostuffUtil.serializeObject(rpcResponse,RpcResponse.class),packet.getUid(),null));
                 }
 
             }

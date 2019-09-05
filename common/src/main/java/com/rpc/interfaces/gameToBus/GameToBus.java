@@ -10,9 +10,11 @@ public interface GameToBus
 	@Rpc(needResponse=true)
 	public String needResponse(String a);
 	
-	@Suspendable
 	@Rpc(needResponse=false)
-	public void noNeedResponse(String a);
+	Object noNeedResponse(String a);
+	
+	@Rpc(needResponse=false)
+	Object noNeedResponse0();
 	
 	@Suspendable
 	@Rpc(needResponse=true)

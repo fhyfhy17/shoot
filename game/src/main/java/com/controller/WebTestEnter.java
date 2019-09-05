@@ -61,10 +61,15 @@ public class WebTestEnter {
     @RequestMapping("/test/rpc")
     public void rpc() {
         GameToBus gameToBus=rpcProxy.serviceProxy(GameToBus.class,123,TypeEnum.ServerTypeEnum.LOGIN,123);
-        String s=gameToBus.needResponse("你好哇");
-        PlayerEntry aaa=gameToBus.aaa("");
-        System.out.println(aaa);
-        System.out.println(s);
+        //String s=gameToBus.needResponse("你好哇");
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        for(int i=0;i<1000;i++)
+        {
+            gameToBus.noNeedResponse0();
+        }
+        stopWatch.stop();
+        log.info("共用时："+stopWatch.getTime());
     }
     
     

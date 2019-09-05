@@ -2,6 +2,7 @@ package com.controller;
 
 import com.annotation.Controllor;
 import com.annotation.Rpc;
+import com.controller.fun.Fun0;
 import com.controller.fun.Fun1;
 import com.controller.fun.Fun2;
 import com.controller.fun.Fun3;
@@ -91,6 +92,10 @@ public class ControllerFactory {
             FunType f = null;
             boolean isVoid = void.class.isAssignableFrom(method.getReturnType());
             switch (method.getParameters().length) {
+                case 0:
+                    fun = getFun0Obj(method, controller, isVoid);
+                    f = FunType.Fun0;
+                    break;
                 case 1:
                     fun = getFun1Obj(method, controller, isVoid);
                     f = FunType.Fun1;
@@ -118,7 +123,32 @@ public class ControllerFactory {
 
         return pair;
     }
-
+    
+    private static Object getFun0Obj(Method method, BaseController controller, boolean isVoid) {
+     
+        MethodHandles.Lookup lookup = MethodHandles.lookup();
+        CallSite site2 = null;
+        try {
+            site2 = LambdaMetafactory.metafactory(lookup,
+                    "apply",
+                    MethodType.methodType(Fun0.class),
+                    MethodType.methodType(isVoid ? void.class : Object.class, Object.class),
+                    lookup.findVirtual(controller.getClass(), method.getName(), MethodType.methodType(method.getReturnType())),
+                    MethodType.methodType(method.getReturnType(), controller.getClass())
+            );
+            
+        } catch (LambdaConversionException | IllegalAccessException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        try {
+            return (Fun0) site2.getTarget().invokeExact();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        return null;
+    }
+    
+    
     private static Object getFun1Obj(Method method, BaseController controller, boolean isVoid) {
         Class<?>[] types = method.getParameterTypes();
         MethodHandles.Lookup lookup = MethodHandles.lookup();

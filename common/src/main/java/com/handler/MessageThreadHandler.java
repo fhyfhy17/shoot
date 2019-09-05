@@ -3,6 +3,7 @@ package com.handler;
 import com.Constant;
 import com.controller.ControllerFactory;
 import com.controller.ControllerHandler;
+import com.controller.fun.Fun0;
 import com.controller.fun.Fun1;
 import com.controller.fun.Fun2;
 import com.controller.fun.Fun3;
@@ -13,9 +14,9 @@ import com.exception.exceptionNeedSendToClient.ServerBusinessException;
 import com.google.protobuf.Message;
 import com.manager.ServerInfoManager;
 import com.pojo.Packet;
-import com.rpc.RpcResponse;
 import com.rpc.RpcHolder;
 import com.rpc.RpcRequest;
+import com.rpc.RpcResponse;
 import com.util.ProtoUtil;
 import com.util.ProtostuffUtil;
 import com.util.SpringUtils;
@@ -106,8 +107,11 @@ public class MessageThreadHandler implements Runnable {
                 }else {
                     m = rpcRequest.getParameters();
                 }
-                
+                //
                 switch (handler.getFunType()) {
+                    case Fun0:
+                        result = (((Fun0) handler.getFun()).apply(handler.getAction()));
+                        break;
                     case Fun1:
                         result = (((Fun1) handler.getFun()).apply(handler.getAction(), m[0]));
                         break;
@@ -129,12 +133,12 @@ public class MessageThreadHandler implements Runnable {
                 ////针对method的每个参数进行处理， 处理多参数,返回result（这是老的invoke执行controller 暂时废弃）
                 //com.google.protobuf.Message result = (com.google.protobuf.Message) com.handler.invokeForController(packet);
                 ////拦截器后
-                if (com.google.protobuf.Message.class.isAssignableFrom(result.getClass())) {
+                if (result!=null&&Message.class.isAssignableFrom(result.getClass())) {
 
                     HandlerExecutionChain.applyPostHandle(packet, (com.google.protobuf.Message) result, handler);
                 }
                 
-                if(isRpc&& result.getClass()!=Void.class){
+                if(isRpc&& result!=null){
                     RpcResponse rpcResponse = new RpcResponse();
                     rpcResponse.setRequestId(rpcRequest.getId());
                     rpcResponse.setData(result);

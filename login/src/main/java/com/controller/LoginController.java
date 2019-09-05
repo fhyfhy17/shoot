@@ -1,14 +1,18 @@
 package com.controller;
 
 
+import co.paralleluniverse.fibers.Suspendable;
 import com.annotation.Controllor;
+import com.annotation.Rpc;
 import com.entry.UserEntry;
 import com.exception.StatusException;
 import com.net.msg.LOGIN_MSG;
+import com.rpc.interfaces.gameToBus.GameToBus;
 import com.service.LoginService;
 import com.template.templates.type.TipType;
 import com.util.CountUtil;
 import com.util.TipStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
@@ -17,7 +21,8 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 @Controller
-public class LoginController extends BaseController {
+@Slf4j
+public class LoginController extends BaseController implements GameToBus{
     @Autowired
     private LoginService loginService;
 
@@ -66,5 +71,20 @@ public class LoginController extends BaseController {
         String username = req.getMsg();
 
 
+    }
+    
+    @Controllor
+    @Rpc(needResponse=true)
+    @Suspendable
+    @Override
+    public String needResponse(String a){
+        return a;
+    }
+    @Controllor
+    @Rpc(needResponse=false)
+    @Suspendable
+    @Override
+    public void noNeedResponse(String a){
+        log.info("异步");
     }
 }

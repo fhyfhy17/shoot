@@ -176,7 +176,10 @@ public class SerializeUtil {
             builder.setData(ByteString.copyFrom(m.getData()));
         }
         builder.setFrom(m.getFrom());
-        builder.setGate(m.getGate());
+        if(m.getGate()!=null){
+            builder.setGate(m.getGate());
+        }
+       
         return builder.build().toByteArray();
     }
 

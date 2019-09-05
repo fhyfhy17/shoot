@@ -81,6 +81,7 @@ public interface TypeEnum {
         LOGIN,//
         BATTLE,//
         MATCH,//
+        BUS,//
         ;
     }
 

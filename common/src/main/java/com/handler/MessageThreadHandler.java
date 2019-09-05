@@ -10,9 +10,15 @@ import com.controller.fun.Fun4;
 import com.controller.interceptor.HandlerExecutionChain;
 import com.exception.StatusException;
 import com.exception.exceptionNeedSendToClient.ServerBusinessException;
+import com.google.protobuf.Message;
 import com.manager.ServerInfoManager;
 import com.pojo.Packet;
+import com.rpc.RPCResponse;
+import com.rpc.RpcHolder;
+import com.rpc.RpcRequest;
 import com.util.ProtoUtil;
+import com.util.ProtostuffUtil;
+import com.util.SpringUtils;
 import com.util.TipStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
@@ -63,23 +69,44 @@ public class MessageThreadHandler implements Runnable {
             ControllerHandler handler = null;
             Packet packet = null;
             String gate = null;
+            boolean isRpc;
+            RpcRequest rpcRequest = null;
             try {
                 packet = pulseQueues.poll();
                 final int cmdId = packet.getId();
                 gate = packet.getGate();
-
-                handler = ControllerFactory.getControllerMap().get(cmdId);
-                if (handler == null) {
-                    throw new IllegalStateException("收到不存在的消息，消息ID=" + cmdId);
+                if(packet.getId() == Constant.RPC_RESPONSE_ID){
+                    SpringUtils.getBean(RpcHolder.class).receiveResponse(ProtostuffUtil.deserializeObject(packet.getData(),RPCResponse.class));
+                    return;
                 }
-
+                isRpc = packet.getId() == Constant.RPC_REQUEST_ID;
+    
+                if(!isRpc){
+                    handler = ControllerFactory.getControllerMap().get(cmdId);
+                    if (handler == null) {
+                        throw new IllegalStateException("收到不存在的消息，消息ID=" + cmdId);
+                    }
+                }else {
+                    rpcRequest=ProtostuffUtil.deserializeObject(packet.getData(),RpcRequest.class);
+                    String key = rpcRequest.getClassName()+"_"+rpcRequest.getMethodName();
+                    handler=ControllerFactory.getRpcControllerMap().get(key);
+                    if (handler == null) {
+                        throw new IllegalStateException("收到不存在的Rpc消息，消息KEY=" + key );
+                    }
+                }
 
                 //拦截器前
                 if (!HandlerExecutionChain.applyPreHandle(packet, handler)) {
                     continue;
                 }
                 Object result = null;
-                Object[] m = handler.getMethodArgumentValues(packet);
+                Object[] m ;
+                if(!isRpc){
+                    m = handler.getMethodArgumentValues(packet);
+                }else {
+                    m = rpcRequest.getParameters();
+                }
+                
                 switch (handler.getFunType()) {
                     case Fun1:
                         result = (((Fun1) handler.getFun()).apply(handler.getAction(), m[0]));
@@ -106,14 +133,21 @@ public class MessageThreadHandler implements Runnable {
 
                     HandlerExecutionChain.applyPostHandle(packet, (com.google.protobuf.Message) result, handler);
                 }
+                
+                if(isRpc&& result.getClass()!=Void.class){
+                    RPCResponse rpcResponse = new RPCResponse();
+                    rpcResponse.setRequestId(rpcRequest.getId());
+                    rpcResponse.setData(result);
+                    ServerInfoManager.sendMessage(packet.getFrom(),ProtoUtil.buildRpcResponseMessage(ProtostuffUtil.serializeObject(rpcResponse,RPCResponse.class),packet.getUid(),null));
+                }
 
             }
             //服务之间的错误，只在本地打印，  如果是RPC发回去一个错误类型也就够了
             catch (StatusException se) {
                 // Status报错， 执行方法时，抛出主动定义的错误，方便多层调用时无法中断方法，这里主动回复给有result参数的协议
                 Class<?> returnType = handler.getMethod().getReturnType();
-                if (returnType.isAssignableFrom(com.google.protobuf.Message.class)) {
-                    com.google.protobuf.Message.Builder builder = ProtoUtil.setFieldByName(ProtoUtil.createBuilerByClassName(returnType.getName()), "result", TipStatus.fail(se.getTip()));
+                if (returnType.isAssignableFrom(Message.class)) {
+                    Message.Builder builder = ProtoUtil.setFieldByName(ProtoUtil.createBuilerByClassName(returnType.getName()), "result", TipStatus.fail(se.getTip()));
                     Packet message1 = ProtoUtil.buildMessage(builder.build(), packet.getUid(), null);
                     ServerInfoManager.sendMessage(gate, message1);
                 }

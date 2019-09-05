@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.annotation.Controllor;
+import com.annotation.Rpc;
 import com.controller.fun.Fun1;
 import com.controller.fun.Fun2;
 import com.controller.fun.Fun3;
@@ -30,7 +31,7 @@ import java.util.Objects;
 public class ControllerFactory {
 
     private static Map<Integer, ControllerHandler> controllerMap = Maps.newHashMap();
-
+    private static Map<String, ControllerHandler> rpcControllerMap = Maps.newHashMap();
 
     public static void init() {
         Map<String, BaseController> allControllers = SpringUtils.getBeansOfType(BaseController.class);
@@ -45,32 +46,39 @@ public class ControllerFactory {
                     continue;
                 }
                 
-                for (Class<?> parameterClass : method.getParameterTypes()) {
-                    if (!Message.class.isAssignableFrom(parameterClass)) {
-                        continue;
-                    }
-                    try {
-                        Class cl = Class.forName(parameterClass.getName());
-                        Method methodB = cl.getMethod("newBuilder");
-                        Object obj = methodB.invoke(null, null);
-                        Message.Builder msgBuilder = (Message.Builder) obj;
-                        int msgId =ProtoUtil.protoGetMessageId(msgBuilder);
-                        if (controllerMap.containsKey(msgId)) {
-                            log.error("重复的msgid ={} controllerName ={} methodName ={}", msgId, controller.getClass().getSimpleName(), method.getName());
+                if(!Objects.isNull(method.getAnnotation(Rpc.class))){
+                    MethodAccessor methodAccessor = ReflectionFactory.getReflectionFactory().newMethodAccessor(method);
+    
+                    Pair<Object, FunType> add = addFunType(controller, method);
+    
+                    rpcControllerMap.put(method.getDeclaringClass().getGenericInterfaces()[0].getTypeName()+"_"+method.getName(), new ControllerHandler(controller, method, -1, methodAccessor, add.getValue(), add.getKey()));
+                }else{
+                    for (Class<?> parameterClass : method.getParameterTypes()) {
+                        if (!Message.class.isAssignableFrom(parameterClass)) {
                             continue;
                         }
-                        MethodAccessor methodAccessor = ReflectionFactory.getReflectionFactory().newMethodAccessor(method);
-
-                        Pair<Object, FunType> add = addFunType(controller, method);
-
-                        controllerMap.put(msgId, new ControllerHandler(controller, method, msgId, methodAccessor, add.getValue(), add.getKey()));
-
-                    } catch (IllegalAccessException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException e) {
-                        log.error("", e);
+                        try {
+                            Class cl = Class.forName(parameterClass.getName());
+                            Method methodB = cl.getMethod("newBuilder");
+                            Object obj = methodB.invoke(null, null);
+                            Message.Builder msgBuilder = (Message.Builder) obj;
+                            int msgId =ProtoUtil.protoGetMessageId(msgBuilder);
+                            if (controllerMap.containsKey(msgId)) {
+                                log.error("重复的msgid ={} controllerName ={} methodName ={}", msgId, controller.getClass().getSimpleName(), method.getName());
+                                continue;
+                            }
+                            MethodAccessor methodAccessor = ReflectionFactory.getReflectionFactory().newMethodAccessor(method);
+            
+                            Pair<Object, FunType> add = addFunType(controller, method);
+            
+                            controllerMap.put(msgId, new ControllerHandler(controller, method, msgId, methodAccessor, add.getValue(), add.getKey()));
+            
+                        } catch (IllegalAccessException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException e) {
+                            log.error("", e);
+                        }
+                        break;
                     }
-                    break;
                 }
-                
             }
         });
     }
@@ -212,5 +220,7 @@ public class ControllerFactory {
     public static Map<Integer, ControllerHandler> getControllerMap() {
         return controllerMap;
     }
-
+    public static Map<String, ControllerHandler> getRpcControllerMap() {
+        return rpcControllerMap;
+    }
 }

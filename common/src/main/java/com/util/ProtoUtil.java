@@ -40,12 +40,30 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static Packet buildMessage(com.google.protobuf.Message proto,long uid,@Nullable String from) {
+    public static Packet buildMessage(Message proto,long uid,@Nullable String from) {
         Packet messageResult = new Packet();
         messageResult.setId(protoGetMessageId(proto));
         messageResult.setUid(uid);
         messageResult.setFrom(null == from ? ContextUtil.id : from);
         messageResult.setData(proto.toByteArray());
+        return messageResult;
+    }
+    
+    public static Packet buildRpcRequstMessage(byte[] data,long uid,@Nullable String from) {
+        Packet messageResult = new Packet();
+        messageResult.setId(-1);
+        messageResult.setUid(uid);
+        messageResult.setFrom(null == from ? ContextUtil.id : from);
+        messageResult.setData(data);
+        return messageResult;
+    }
+    
+    public static Packet buildRpcResponseMessage(byte[] data,long uid,@Nullable String from) {
+        Packet messageResult = new Packet();
+        messageResult.setId(-2);
+        messageResult.setUid(uid);
+        messageResult.setFrom(null == from ? ContextUtil.id : from);
+        messageResult.setData(data);
         return messageResult;
     }
     

@@ -71,13 +71,13 @@ public class ServerInfoManager {
         return serverInfos.get(serverId);
     }
 
-    public static String hashChooseServer(long uid, TypeEnum.ServerTypeEnum typeEnum) {
+    public static String hashChooseServer(Object key, TypeEnum.ServerTypeEnum typeEnum) {
         List<ServerInfo> list = getServerInfosByType(typeEnum);
         if (list.size() < 1) {
             log.error("所有 {} 服务器都挂了", typeEnum);
             return null;
         }
-        int index = (int) (uid % list.size());
+        int index = (key.hashCode() % list.size());
         ServerInfo info = list.get(index);
         return info.getServerId();
     }

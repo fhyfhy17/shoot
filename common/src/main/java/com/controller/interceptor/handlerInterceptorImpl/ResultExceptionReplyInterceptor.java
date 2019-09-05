@@ -6,6 +6,7 @@ import com.controller.interceptor.HandlerInterceptor;
 import com.manager.ServerInfoManager;
 import com.net.msg.LOGIN_MSG;
 import com.pojo.Packet;
+import com.util.ContextUtil;
 import com.util.ProtoUtil;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,7 @@ public class ResultExceptionReplyInterceptor implements HandlerInterceptor {
 
         messageResult.setId(ProtoUtil.protoGetMessageId(builder));
         messageResult.setUid(message.getUid());
+        messageResult.setFrom(ContextUtil.id);
         messageResult.setData(builder.build().toByteArray());
 
         ServerInfoManager.sendMessage(message.getGate(), messageResult);

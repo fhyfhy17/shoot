@@ -34,13 +34,4 @@ public class BusOnlineController extends BaseController {
         List<Long> uidsList = req.getUidsList();
         busOnlineService.onHeart(from,uidsList);
     }
-    
-    
-    //@Controllor
-    //public void testRpc(UidContext uidContext req){
-    //    String from = uidContext.getFrom();
-    //    List<Long> uidsList = req.getUidsList();
-    //    busOnlineService.onHeart(from,uidsList);
-    //}
-
 }

@@ -4,6 +4,7 @@ import com.dao.PlayerRepository;
 import com.dao.UserRepository;
 import com.dao.cache.PlayerDBStore;
 import com.entry.PlayerEntry;
+import com.enums.TypeEnum;
 import com.lock.zk.ZkDistributedLock;
 import com.manager.ServerInfoManager;
 import com.mongoListener.SaveEventListener;
@@ -11,6 +12,8 @@ import com.net.msg.LOGIN_MSG;
 import com.net.msg.Options;
 import com.node.RemoteNode;
 import com.pojo.Packet;
+import com.rpc.RpcProxy;
+import com.rpc.interfaces.gameToBus.GameToBus;
 import com.service.UnionService;
 import com.util.ContextUtil;
 import com.util.IdCreator;
@@ -47,13 +50,22 @@ public class WebTestEnter {
     @Autowired
     private UnionService unionService;
 
+    @Autowired
+    private RpcProxy rpcProxy;
 //    @Autowired
 //    @Qualifier("ha")
 //    private HazelcastInstance hazelcastInstance;
 //    @Autowired
 //    RedissonConfig redissonConfig;
-
-
+    
+    @RequestMapping("/test/rpc")
+    public void rpc() {
+        GameToBus gameToBus=rpcProxy.serviceProxy(GameToBus.class,123,TypeEnum.ServerTypeEnum.LOGIN,123);
+        String s=gameToBus.needResponse("你好哇");
+        System.out.println(s);
+    }
+    
+    
     @RequestMapping("/test/a")
     public void test() {
         for (int i = 0; i < 100; i++) {
